@@ -1,0 +1,34 @@
+{
+  "name": "extract-tpa-style-webpack-plugin",
+  "version": "1.0.0",
+  "description": "A Webpack plugin that extract wix tpa styles into separate file that injects it as inline style at runtime.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "Wix",
+    "TPA",
+    "style",
+    "extract",
+    "Webpack",
+    "plugin"
+  ],
+  "author": "Felix Mosheev",
+  "license": "MIT",
+  "dependencies": {
+    "postcss-extract-styles": "^1.2.0",
+    "webpack": "^3.0.0",
+    "webpack-sources": "^1.1.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^3.1.0",
+    "jest": "^22.4.3",
+    "mz": "^2.7.0",
+    "rimraf": "^2.6.2",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3"
+  }
+}
