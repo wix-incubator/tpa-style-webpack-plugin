@@ -1,2 +1,2 @@
 import './second-entry';
-import './styles.scss';
+import './styles.css';
