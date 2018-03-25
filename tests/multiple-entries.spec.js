@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('mz/fs');
+const readFile = require('./helpers/readfile');
 
 const runWebpack = require('./helpers/run-webpack');
 const clearDir = require('./helpers/clear-dir');
@@ -9,10 +9,10 @@ describe('multiple-entries', () => {
   const entryName1 = 'app';
   const entryName2 = 'app1';
   let stats,
-  cssFile1,
-  tpaRuntimeFile1,
-  cssFile2,
-  tpaRuntimeFile2;
+    cssFile1,
+    tpaRuntimeFile1,
+    cssFile2,
+    tpaRuntimeFile2;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
@@ -26,10 +26,10 @@ describe('multiple-entries', () => {
       }
     });
 
-    cssFile1 = await fs.readFile(path.join(outputDirPath, `${entryName1}.styles.css`), 'utf8');
-    tpaRuntimeFile1 = await fs.readFile(path.join(outputDirPath, `${entryName1}.styles.tpa.js`), 'utf8');
-    cssFile2 = await fs.readFile(path.join(outputDirPath, `${entryName2}.styles.css`), 'utf8');
-    tpaRuntimeFile2 = await fs.readFile(path.join(outputDirPath, `${entryName2}.styles.tpa.js`), 'utf8');
+    cssFile1 = await readFile(path.join(outputDirPath, `${entryName1}.styles.css`), 'utf8');
+    tpaRuntimeFile1 = await readFile(path.join(outputDirPath, `${entryName1}.styles.tpa.js`), 'utf8');
+    cssFile2 = await readFile(path.join(outputDirPath, `${entryName2}.styles.css`), 'utf8');
+    tpaRuntimeFile2 = await readFile(path.join(outputDirPath, `${entryName2}.styles.tpa.js`), 'utf8');
   });
 
   it('should generate 2 css files without tpa styles', async() => {
