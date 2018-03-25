@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('mz/fs');
+const readFile = require('./helpers/readfile');
 
 const runWebpack = require('./helpers/run-webpack');
 const clearDir = require('./helpers/clear-dir');
@@ -8,8 +8,8 @@ describe('coreּ', () => {
   const outputDirPath = path.resolve(__dirname, './output/core');
   const entryName = 'app';
   let stats,
-  cssFile,
-  tpaRuntimeFile;
+    cssFile,
+    tpaRuntimeFile;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
@@ -22,8 +22,8 @@ describe('coreּ', () => {
       }
     });
 
-    cssFile = await fs.readFile(path.join(outputDirPath, `${entryName}.styles.css`), 'utf8');
-    tpaRuntimeFile = await fs.readFile(path.join(outputDirPath, `${entryName}.styles.tpa.js`), 'utf8');
+    cssFile = await readFile(path.join(outputDirPath, `${entryName}.styles.css`), 'utf8');
+    tpaRuntimeFile = await readFile(path.join(outputDirPath, `${entryName}.styles.tpa.js`), 'utf8');
   });
 
   it('should extract out TPA styles from regular css', async() => {
@@ -49,7 +49,7 @@ describe('coreּ', () => {
   });
 
   it('should include all the css that were required from the entry', () => {
-    expect(cssFile).toContain(`.second-styles`);
-    expect(tpaRuntimeFile).toContain(`.second-styles`);
+    expect(cssFile).toContain('.second-styles');
+    expect(tpaRuntimeFile).toContain('.second-styles');
   });
 });

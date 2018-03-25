@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('mz/fs');
+const readFile = require('./helpers/readfile');
 
 const runWebpack = require('./helpers/run-webpack');
 const clearDir = require('./helpers/clear-dir');
@@ -21,7 +21,7 @@ describe('html-plugin-integration', () => {
       }
     });
 
-    htmlFile = await fs.readFile(path.join(outputDirPath, `index.html`), 'utf8');
+    htmlFile = await readFile(path.join(outputDirPath, 'index.html'), 'utf8');
   });
 
   it('should should inject js tag for the runtime', async () => {
