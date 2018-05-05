@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTPAStylePlugin = require('../../src');
 const merge = require('webpack-merge');
@@ -8,16 +8,23 @@ const commonConfig = {
   output: {
     filename: '[name].bundle.js',
   },
+  mode: 'development',
   module: {
     rules: [{
       test: /\.css$/,
-      use: ExtractTextPlugin.extract(['css-loader'])
+      use: [
+        {
+        loader: MiniCssExtractPlugin.loader
+      },
+        {
+          loader: 'css-loader',
+        }]
     }]
   },
   plugins: [
-    new ExtractTextPlugin('[name].styles.css'),
-    new ExtractTPAStylePlugin(),
-    new HtmlWebpackPlugin()
+    new MiniCssExtractPlugin({ filename: '[name].styles.css' }),
+    new HtmlWebpackPlugin(),
+    new ExtractTPAStylePlugin()
   ]
 };
 

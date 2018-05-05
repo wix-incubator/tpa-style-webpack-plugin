@@ -7,6 +7,7 @@ const extractStyles = require('postcss-extract-styles');
 
 const addStylesTemplate = require('./addStyles').toString();
 const fileSuffix = '.tpa.js';
+const pluginName = 'extract-tpa-style';
 
 class ExtractTPAStylePlugin {
   constructor(options) {
@@ -47,9 +48,8 @@ class ExtractTPAStylePlugin {
   }
 
   apply(compiler) {
-    compiler.plugin('compilation', (compilation) => {
-
-      compilation.plugin('html-webpack-plugin-alter-asset-tags', (htmlPluginData, callback) => {
+    compiler.hooks.compilation.tap(pluginName, (compilation) => {
+      compilation.hooks.htmlWebpackPluginAlterAssetTags.tapAsync(pluginName, (htmlPluginData, callback) => {
         const publicPath = (compiler.options.output.publicPath || '');
 
         Object.keys(compilation.assets)
@@ -68,7 +68,7 @@ class ExtractTPAStylePlugin {
         callback(null, htmlPluginData);
       });
 
-      compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+      compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
           .then(() => callback())
           .catch(callback);
