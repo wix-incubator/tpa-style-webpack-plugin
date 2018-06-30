@@ -4,8 +4,9 @@ const path = require('path');
 const Chunk = require('webpack/lib/Chunk');
 const postcss = require('postcss');
 const extractStyles = require('postcss-extract-styles');
+const extractTPACustomSyntax = require('./postcss-plugin');
+const generateRuntime = require('./runtimeGenerator');
 
-const addStylesTemplate = require('./addStyles').toString();
 const fileSuffix = '.tpa.js';
 const pluginName = 'extract-tpa-style';
 
@@ -27,19 +28,28 @@ class ExtractTPAStylePlugin {
         chunk.files
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile => postcss([extractStyles(this._options)])
-            .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
+            .process(compilation.assets[cssFile].source(), { from: cssFile, to: cssFile })
             .then((result) => {
               compilation.assets[cssFile] = new RawSource(result.css);
 
-              const extractedFilename = cssFile.replace('.css', fileSuffix);
-              const newChunk = new Chunk(extractedFilename);
-              newChunk.files = [extractedFilename];
-              newChunk.ids = [];
-              compilation.chunks.push(newChunk);
-              const extractedStyles = `(${addStylesTemplate})()`
-                .replace('__CSS__', JSON.stringify(result.extracted))
-                .replace('__ID__', cssFile);
-              compilation.assets[extractedFilename] = new OriginalSource(extractedStyles);
+              return postcss([extractTPACustomSyntax({
+                onFinish: ({ cssVars, customSyntaxStrs }) => {
+                  const extractedFilename = cssFile.replace('.css', fileSuffix);
+                  const newChunk = new Chunk(extractedFilename);
+                  newChunk.files = [extractedFilename];
+                  newChunk.ids = [];
+                  compilation.chunks.push(newChunk);
+
+                  const extractedStyles = generateRuntime({
+                    css: result.extracted,
+                    filename: cssFile,
+                    cssVars,
+                    customSyntaxStrs
+                  });
+                  compilation.assets[extractedFilename] = new OriginalSource(extractedStyles);
+                }
+              })])
+                .process(result.extracted, { from: undefined });
             }))
       );
     });
