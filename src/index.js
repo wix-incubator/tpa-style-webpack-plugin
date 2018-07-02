@@ -40,13 +40,13 @@ class ExtractTPAStylePlugin {
                   newChunk.ids = [];
                   compilation.chunks.push(newChunk);
 
-                  const extractedStyles = generateRuntime({
+                  const generatedRuntime = generateRuntime({
                     css: result.extracted,
                     filename: cssFile,
                     cssVars,
                     customSyntaxStrs
                   });
-                  compilation.assets[extractedFilename] = new OriginalSource(extractedStyles);
+                  compilation.assets[extractedFilename] = new OriginalSource(generatedRuntime);
                 }
               })])
                 .process(result.extracted, { from: undefined });

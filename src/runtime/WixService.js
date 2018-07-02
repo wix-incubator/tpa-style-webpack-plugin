@@ -1,8 +1,9 @@
-var WixService = /** @class */ (function () {
-  function WixService(Wix) {
+export class WixService {
+  constructor(Wix) {
     this.Wix = Wix;
   }
-  WixService.prototype.getStyleParams = function () {
+
+  getStyleParams() {
     return this.shouldRunAsStandalone() ?
       Promise.resolve([{}, {}, {}]) :
       Promise.all([
@@ -10,30 +11,37 @@ var WixService = /** @class */ (function () {
         promisfy(this.Wix.Styles.getSiteTextPresets),
         promisfy(this.Wix.Styles.getStyleParams)
       ]);
-  };
-  WixService.prototype.listenToStyleParamsChange = function (cb) {
+  }
+
+  listenToStyleParamsChange(cb) {
     this.Wix.addEventListener(this.Wix.Events.STYLE_PARAMS_CHANGE, cb);
-  };
-  WixService.prototype.listenToSettingsUpdated = function (cb) {
+  }
+
+  listenToSettingsUpdated(cb) {
     this.Wix.addEventListener(this.Wix.Events.SETTINGS_UPDATED, cb);
-  };
-  WixService.prototype.isEditorMode = function () {
+  }
+
+  isEditorMode() {
     return this.Wix.Utils.getViewMode() === 'editor';
-  };
-  WixService.prototype.isPreviewMode = function () {
+  }
+
+  isPreviewMode() {
     return this.Wix.Utils.getViewMode() === 'preview';
-  };
-  WixService.prototype.isStandaloneMode = function () {
+  }
+
+  isStandaloneMode() {
     return this.Wix.Utils.getViewMode() === 'standalone';
-  };
-  WixService.prototype.shouldRunAsStandalone = function () {
+  }
+
+  shouldRunAsStandalone() {
     return this.isStandaloneMode() || this.withoutStyleCapabilites();
-  };
-  WixService.prototype.withoutStyleCapabilites = function () {
+  }
+
+  withoutStyleCapabilites() {
     return !this.Wix.Styles;
-  };
-  return WixService;
-}());
+  }
+}
+
 function promisfy(fn) {
-  return new Promise(function (resolve, reject) { return fn(function (res) { return res ? resolve(res) : reject({}); }); });
+  return new Promise((resolve, reject) => fn((res) => res ? resolve(res) : reject({})));
 }
