@@ -1,5 +1,7 @@
 import * as Color from 'color';
 
+const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
 export const defaultCssFunctions = {
   join: (color1, strength1, color2, strength2) => {
 

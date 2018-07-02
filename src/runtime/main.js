@@ -1,3 +1,4 @@
 import {defaultCssFunctions} from './defaultCssFunctions';
+import {WixService} from './WixService';
 
-console.log(defaultCssFunctions);
+console.log(defaultCssFunctions, WixService);
