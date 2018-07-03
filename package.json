@@ -39,6 +39,5 @@
     "webpack-merge": "^4.1.3"
   },
   "jest": {
-    "testEnvironment": "node"
   }
 }

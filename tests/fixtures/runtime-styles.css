@@ -1,0 +1,35 @@
+:root {
+  --bgColor: "color(color-15)";
+  --titleFontStyle: "font({theme: 'Body-M', size: '30px'})";
+  --buttonBackgroundColor: "color(color-8)";
+  --buttonBorderColor: "color(color-16)";
+  --buttonTextColor: "color(color-15)";
+  --buttonTextFont: "font({theme: 'Body-M', size: '22px', weight: 'bold'})";
+  --buttonBorderSize: "number(0)";
+  --paragraphWidth: "number(50)";
+}
+
+body {
+  color: "color(color-1)";
+  background-color: "color(--bgColor)";
+  font: "font({theme: 'Body-M', size: '16px', weight: 'bold'})";
+}
+
+h1 {
+  font: "font(--titleFontStyle)";
+}
+
+p {
+  width: "unit(--paragraphWidth, %)";
+}
+
+button {
+  outline: none;
+  background-color: "color(--buttonBackgroundColor)";
+  font: "font(--buttonTextFont)";
+  color: "color(--buttonTextColor)";
+  border: "unit(--buttonBorderSize, px)" solid "color(--buttonBorderColor)";
+  border-radius: "unit(--buttonBorderSize, px)";
+  width: 250px;
+  text-align: "string(--buttonAlignment)";
+}
