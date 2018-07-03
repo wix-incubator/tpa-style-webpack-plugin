@@ -1,7 +1,6 @@
 const addStylesTemplate = require('./addStyles').toString();
 
 
-
 module.exports =  function generateRuntime({css, filename, cssVars, customSyntaxStrs}) {
   const customStyles = generateCustomStyles(css, cssVars, customSyntaxStrs);
   return `(${addStylesTemplate})()`
@@ -10,5 +9,4 @@ module.exports =  function generateRuntime({css, filename, cssVars, customSyntax
 };
 
 function generateCustomStyles(css, cssVars, customSyntaxStrs) {
-  console.log(css, cssVars, customSyntaxStrs);
 }

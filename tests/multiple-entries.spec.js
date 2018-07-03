@@ -32,7 +32,7 @@ describe('multiple-entries', () => {
     tpaRuntimeFile2 = await readFile(path.join(outputDirPath, `${entryName2}.styles.tpa.js`), 'utf8');
   });
 
-  it('should generate 2 css files without tpa styles', async() => {
+  it('should generate 2 css files without tpa styles', () => {
     [cssFile1, cssFile2].forEach((file) => {
       expect(file).not.toContain('.only-tpa');
       expect(file).not.toContain('START');
