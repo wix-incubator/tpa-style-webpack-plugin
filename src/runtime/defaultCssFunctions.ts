@@ -5,7 +5,7 @@ import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
 
 const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
-export const defaultPlugins = {
+export const defaultCssPlugins = {
   join: (color1, strength1, color2, strength2) => {
 
     color1 = new Color(color1);

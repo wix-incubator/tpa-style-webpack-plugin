@@ -1,7 +1,7 @@
 import {CustomSyntaxHelper} from './CustomSyntaxHelper';
 import {generateTPAParams} from './generateTPAParams';
 import {processor} from './processor';
-import {defaultPlugins} from './defaultCssFunctions';
+import {defaultCssPlugins} from './defaultCssFunctions';
 import {Plugins} from './plugins';
 
 function escapeRegExp(str) {
@@ -9,8 +9,8 @@ function escapeRegExp(str) {
 }
 
 const plugins = new Plugins();
-Object.keys(defaultPlugins)
-  .forEach((funcName) => plugins.addCssFunction(funcName, defaultPlugins[funcName]));
+Object.keys(defaultCssPlugins)
+  .forEach((funcName) => plugins.addCssFunction(funcName, defaultCssPlugins[funcName]));
 
 export interface IInjectedData {
   css: string;
