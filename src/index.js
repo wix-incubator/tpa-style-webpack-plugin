@@ -1,5 +1,6 @@
 const OriginalSource = require('webpack-sources').OriginalSource;
 const RawSource = require('webpack-sources').RawSource;
+const ReplaceSource = require('webpack-sources').ReplaceSource;
 const path = require('path');
 const Chunk = require('webpack/lib/Chunk');
 const postcss = require('postcss');
@@ -28,12 +29,12 @@ class ExtractTPAStylePlugin {
         chunk.files
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile => postcss([extractStyles(this._options)])
-            .process(compilation.assets[cssFile].source(), { from: cssFile, to: cssFile })
+            .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
             .then((result) => {
               compilation.assets[cssFile] = new RawSource(result.css);
 
               return postcss([extractTPACustomSyntax({
-                onFinish: ({ cssVars, customSyntaxStrs }) => {
+                onFinish: ({cssVars, customSyntaxStrs}) => {
                   const extractedFilename = cssFile.replace('.css', fileSuffix);
                   const newChunk = new Chunk(extractedFilename);
                   newChunk.files = [extractedFilename];
@@ -49,7 +50,7 @@ class ExtractTPAStylePlugin {
                   compilation.assets[extractedFilename] = new OriginalSource(generatedRuntime);
                 }
               })])
-                .process(result.extracted, { from: undefined });
+                .process(result.extracted, {from: undefined});
             }))
       );
     });
@@ -58,6 +59,25 @@ class ExtractTPAStylePlugin {
   }
 
   apply(compiler) {
+    const runtimePath = path.resolve(__dirname, '../runtime.js');
+
+    compiler.hooks.normalModuleFactory.tap(pluginName, (nmf) => {
+      nmf.hooks.afterResolve.tapAsync(pluginName, (result, callback) => {
+        const resource = path.resolve(compiler.context, result.resource);
+
+        if (resource !== runtimePath) {
+          callback(null, result);
+          return;
+        }
+
+        result.loaders.push({
+          loader: path.join(__dirname, 'runtime-loader.js')
+        });
+
+        callback(null, result);
+      });
+    });
+
     compiler.hooks.compilation.tap(pluginName, (compilation) => {
       compilation.hooks.htmlWebpackPluginAlterAssetTags.tapAsync(pluginName, (htmlPluginData, callback) => {
         const publicPath = (compiler.options.output.publicPath || '');
@@ -80,10 +100,36 @@ class ExtractTPAStylePlugin {
 
       compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
+          .then(() => this.replaceSource(compilation, chunks))
           .then(() => callback())
           .catch(callback);
       });
     });
+  }
+
+  replaceSource(compilation, chunks) {
+    for (const chunk of chunks) {
+      if (!chunk.canBeInitial()) {
+        continue;
+      }
+
+      for (const file of chunk.files) {
+        // console.log('compilation.assets[file]', compilation.assets[file].source());
+        // console.log('file', file);
+        const newSource = new ReplaceSource(
+          compilation.assets[file],
+          file
+        );
+        const sourceCode = compilation.assets[file].source();
+        const placeHolder = '__CSS_PLACEHOLDER__';
+        const placeHolderPos = sourceCode.indexOf(placeHolder);
+
+        if (placeHolderPos > -1) {
+          newSource.replace(placeHolderPos, placeHolderPos + placeHolder.length - 1, 'OUR MAGIC CSS');
+          compilation.assets[file] = newSource;
+        }
+      }
+    }
   }
 }
 
