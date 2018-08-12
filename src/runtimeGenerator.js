@@ -8,5 +8,5 @@ module.exports =  function generateRuntime({css, filename, cssVars, customSyntax
     .replace('__ID__', filename);
 };
 
-function generateCustomStyles(css, cssVars, customSyntaxStrs) {
+function generateCustomStyles(cssTemplate, cssVars, customSyntaxStrs) {
 }

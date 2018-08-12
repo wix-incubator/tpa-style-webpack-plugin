@@ -1,6 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
+import typescript from 'rollup-plugin-typescript';
 
 export default {
   input: 'src/runtime/main.js',
@@ -18,6 +19,7 @@ export default {
       babelrc: false,
       presets: [['env', {modules: false}], ['stage-3']],
       plugins: ['external-helpers']
-    })
+    }),
+    typescript()
   ]
 };
