@@ -15,4 +15,5 @@ node_modules/
 .idea/
 
 tests/output
-dist/runtime.js
+dist
+src/runtime/*.js
