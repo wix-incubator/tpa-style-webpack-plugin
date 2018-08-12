@@ -15,5 +15,5 @@ node_modules/
 .idea/
 
 tests/output
-dist
-src/runtime/*.js
+src/runtime/**/*.js
+src/runtime/**/*.map

@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "color": "^3.0.0",
+    "parse-css-font": "^3.0.2",
     "postcss-extract-styles": "^1.2.0",
     "webpack": "^4.14.0",
     "webpack-sources": "^1.1.0"

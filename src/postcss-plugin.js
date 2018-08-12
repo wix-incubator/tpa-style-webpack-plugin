@@ -6,7 +6,6 @@ function isCssVar(key) {
 
 const customSyntaxRegex = /"\w+\([^"]*\)"/g;
 
-
 module.exports = postcss.plugin('postcss-wix-tpa-style', (opts = {}) => {
   const cssVars = {};
   const customSyntaxStrs = [];
@@ -15,7 +14,7 @@ module.exports = postcss.plugin('postcss-wix-tpa-style', (opts = {}) => {
     css.walkDecls((decl) => {
       let match;
 
-      if(isCssVar(decl.prop)) {
+      if (isCssVar(decl.prop)) {
         cssVars[decl.prop] = decl.value;
       }
       if (match = decl.value.match(customSyntaxRegex)) {
@@ -23,7 +22,7 @@ module.exports = postcss.plugin('postcss-wix-tpa-style', (opts = {}) => {
       }
     });
 
-    if(typeof opts.onFinish === 'function') {
+    if (typeof opts.onFinish === 'function') {
       opts.onFinish({cssVars, customSyntaxStrs});
     }
   };
