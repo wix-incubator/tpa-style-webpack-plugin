@@ -1,4 +1,4 @@
-import {defaultCssPlugins} from '../src/runtime/defaultCssFunctions';
+import {defaultCssPlugins} from '../../src/runtime/defaultCssFunctions';
 
 describe('defaultCssPlugins', () => {
   describe('join', () => {

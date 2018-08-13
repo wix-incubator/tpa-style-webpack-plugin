@@ -18,10 +18,14 @@ export interface IInjectedData {
   cssVars: { [key: string]: string };
 }
 
-export function getProcessedCss({siteColors, siteTextPresets, styleParams}) {
+export interface IOptions {
+  isRTL: boolean;
+}
+
+export function getProcessedCss({siteColors, siteTextPresets, styleParams}, options: Partial<IOptions> = {isRTL: false}) {
   const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
 
-  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams);
+  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
   const customSyntaxHelper = new CustomSyntaxHelper();
   customSyntaxHelper.setVars(injectedData.cssVars);

@@ -2,6 +2,7 @@ import {TinyColor} from '@ctrl/tinycolor';
 import {ITPAParams} from './generateTPAParams';
 import {isJsonLike, parseJson} from './utils/utils';
 import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
+import {directionMap, IS_RTL_PARAM} from './constants';
 
 const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
@@ -99,5 +100,9 @@ export const defaultCssPlugins = {
   fallback: (...args) => {
     const argsWithoutTPAParams = args.slice(0, -1);
     return argsWithoutTPAParams.filter(Boolean)[0];
+  },
+  direction: (value, tpaParams: ITPAParams) => {
+    const direction = tpaParams.booleans[IS_RTL_PARAM] ? 'rtl' : 'ltr';
+    return directionMap[value][direction];
   }
 };
