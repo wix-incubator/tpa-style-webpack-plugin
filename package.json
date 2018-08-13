@@ -4,7 +4,7 @@
   "description": "A Webpack plugin that extract wix tpa styles into separate file that injects it as inline style at runtime.",
   "main": "src/index.js",
   "scripts": {
-    "generate-runtime": "rollup -c",
+    "build": "tsc",
     "test": "jest"
   },
   "keywords": [
