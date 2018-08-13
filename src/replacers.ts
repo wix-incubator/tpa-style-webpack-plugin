@@ -43,3 +43,14 @@ export function directionReplacer(decl: Declaration): Declaration {
 
   return decl;
 }
+
+const underlineFontHackRegex = /font\((--.*)\)/;
+
+export function underlineFontHackSupport(decl: Declaration): Declaration {
+  let matches;
+  if (decl.prop === 'font' && (matches = decl.value.match(underlineFontHackRegex))) {
+    decl.after(`text-decoration: "underline(${matches[1]})"`);
+  }
+
+  return decl;
+}

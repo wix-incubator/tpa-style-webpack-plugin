@@ -1,4 +1,4 @@
-import {directionReplacer} from './replacers';
+import * as replacers from './replacers';
 import * as postcss from 'postcss';
 import {Declaration, ContainerBase} from 'postcss';
 
@@ -26,7 +26,8 @@ module.exports = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as
     css.walkDecls((decl: Declaration) => {
       let match;
 
-      decl = directionReplacer(decl);
+      Object.keys(replacers)
+        .forEach(replacerName => decl = replacers[replacerName](decl));
 
       if (isCssVar(decl.prop)) {
         cssVars[decl.prop] = decl.value;
