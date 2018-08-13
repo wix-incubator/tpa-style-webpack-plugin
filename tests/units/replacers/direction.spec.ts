@@ -4,7 +4,6 @@ import {Declaration} from 'postcss';
 describe('Replacer - direction', () => {
   let decl: Declaration;
 
-
   it('START', () => {
     decl = {prop: 'margin-START', value: '5px'} as Declaration;
 

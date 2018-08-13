@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const replacers_1 = require("./replacers");
+const replacers = require("./replacers");
 const postcss = require("postcss");
 function isCssVar(key) {
     return key.indexOf('--') === 0;
@@ -12,7 +12,8 @@ module.exports = postcss.plugin('postcss-wix-tpa-style', (opts = {}) => {
     return (css) => {
         css.walkDecls((decl) => {
             let match;
-            decl = replacers_1.directionReplacer(decl);
+            Object.keys(replacers)
+                .forEach(replacerName => decl = replacers[replacerName](decl));
             if (isCssVar(decl.prop)) {
                 cssVars[decl.prop] = decl.value;
             }
