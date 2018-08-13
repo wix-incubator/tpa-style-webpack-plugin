@@ -11,5 +11,5 @@ module.exports.pitch = function (remainingRequest, precedingRequest, data) {
   const templatePath = path.join(__dirname, './runtime/main.js');
 
   this.addDependency(templatePath);
-  callback(null, `module.exports = require('${templatePath}')`);
+  callback(null, `export * from '${templatePath}'`);
 };
