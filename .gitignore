@@ -15,5 +15,7 @@ node_modules/
 .idea/
 
 tests/output
-src/runtime/**/*.js
-src/runtime/**/*.map
+src/**/*.js
+src/**/*.map
+tests/units/**/*.js
+tests/units/**/*.map
