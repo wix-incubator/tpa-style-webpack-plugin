@@ -1,4 +1,4 @@
-import {CustomSyntaxHelper} from './CustomSyntaxHelper';
+import {CustomSyntaxHelper} from './customSyntaxHelper';
 import {generateTPAParams} from './generateTPAParams';
 import {processor} from './processor';
 import {defaultCssPlugins} from './defaultCssFunctions';
