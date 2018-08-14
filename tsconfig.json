@@ -4,8 +4,7 @@
     "module": "commonjs",
     "target": "es2015",
     "sourceMap": false,
-    "moduleResolution": "node",
-    "skipLibCheck": true
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules"
