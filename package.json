@@ -1,7 +1,7 @@
 {
-  "name": "extract-tpa-style-webpack-plugin",
+  "name": "tpa-style-webpack-plugin",
   "version": "0.0.1",
-  "description": "A Webpack plugin that extract wix tpa styles into separate file that injects it as inline style at runtime.",
+  "description": "A Webpack plugin that handles wix tpa styles, it separates static css file that injects dynamic style at runtime.",
   "main": "dist/src/index.js",
   "private": true,
   "scripts": {
@@ -12,7 +12,6 @@
     "Wix",
     "TPA",
     "style",
-    "extract",
     "Webpack",
     "plugin"
   ],
