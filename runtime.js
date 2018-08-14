@@ -1,3 +1,1 @@
-exports.getProcessedCss = function getProcessedCss(styleParams) {
-
-};
+export * from './dist/src/runtime/fake-main';
