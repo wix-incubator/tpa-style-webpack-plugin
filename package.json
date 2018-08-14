@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@ctrl/tinycolor": "^2.2.0",
+    "@types/node": "^10.7.0",
     "parse-css-font": "^3.0.2",
     "postcss": "^7.0.2",
     "postcss-extract-styles": "^1.2.0",
