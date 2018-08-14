@@ -1,15 +1,18 @@
-const RawSource = require('webpack-sources').RawSource;
-const ReplaceSource = require('webpack-sources').ReplaceSource;
-const path = require('path');
-const postcss = require('postcss');
-const extractStyles = require('postcss-extract-styles');
-const extractTPACustomSyntax = require('./postcss-plugin');
+import {RawSource, ReplaceSource} from 'webpack-sources';
+import * as path from 'path';
+import * as postcss from 'postcss';
+import * as extractStyles from 'postcss-extract-styles';
+import {extractTPACustomSyntax} from './postcss-plugin';
+import * as prefixer from 'postcss-prefix-selector';
+import {Result} from 'postcss';
+import {createHash} from 'crypto';
 
 const fileSuffix = '.tpa.js';
 const pluginName = 'extract-tpa-style';
 
 class ExtractTPAStylePlugin {
   private _options;
+  private readonly prefixSelector: string;
 
   constructor(options) {
     this._options = Object.assign({
@@ -18,6 +21,8 @@ class ExtractTPAStylePlugin {
         /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/
       ]
     }, options);
+    const hash = createHash('md5').update(new Date().getTime().toString()).digest('hex');
+    this.prefixSelector = `__${hash.substr(0, 6)}__`;
   }
 
   extract(compilation, chunks) {
@@ -29,28 +34,19 @@ class ExtractTPAStylePlugin {
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile => postcss([extractStyles(this._options)])
             .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
-            .then((result) => {
+            .then((result: Result & { extracted: string }) => {
               compilation.assets[cssFile] = new RawSource(result.css);
 
               return new Promise((resolve) => {
-                postcss([extractTPACustomSyntax({
-                  onFinish: ({cssVars, customSyntaxStrs, css}) => {
-                    // const extractedFilename = cssFile.replace('.css', fileSuffix);
-                    // const newChunk = new Chunk(extractedFilename);
-                    // newChunk.files = [extractedFilename];
-                    // newChunk.ids = [];
-                    // compilation.chunks.push(newChunk);
-                    //
-                    // const generatedRuntime = generateRuntime({
-                    //   css: result.extracted,
-                    //   filename: cssFile,
-                    //   cssVars,
-                    //   customSyntaxStrs
-                    // });
-                    // compilation.assets[extractedFilename] = new OriginalSource(generatedRuntime);
-                    resolve({chunk, cssVars, customSyntaxStrs, css});
-                  }
-                })])
+                postcss([
+                  prefixer({
+                    prefix: this.prefixSelector
+                  }),
+                  extractTPACustomSyntax({
+                    onFinish: ({cssVars, customSyntaxStrs, css}) => {
+                      resolve({chunk, cssVars, customSyntaxStrs, css});
+                    }
+                  })])
                   .process(result.extracted, {from: undefined}).css;
               });
             }))
@@ -103,7 +99,8 @@ class ExtractTPAStylePlugin {
         }
 
         result.loaders.push({
-          loader: path.join(__dirname, 'runtime-loader.js')
+          loader: path.join(__dirname, 'runtime-loader.js'),
+          options: JSON.stringify({prefixSelector: this.prefixSelector})
         });
 
         callback(null, result);
