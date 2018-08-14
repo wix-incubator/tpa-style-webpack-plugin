@@ -20,22 +20,29 @@ export interface IInjectedData {
 
 export interface IOptions {
   isRTL: boolean;
+  prefixSelector: string;
 }
 
-export function getProcessedCss({siteColors, siteTextPresets, styleParams}, options: Partial<IOptions> = {isRTL: false}) {
-  const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
+const defaultOptions = {isRTL: false};
 
-  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
+export function loader(loaderOptions) {
+  return ({siteColors, siteTextPresets, styleParams}, options: Partial<IOptions>) => {
+    options = {...defaultOptions, ...options};
+    const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
+    const prefixedCss = injectedData.css.replace(new RegExp(loaderOptions.prefixSelector, 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
 
-  const customSyntaxHelper = new CustomSyntaxHelper();
-  customSyntaxHelper.setVars(injectedData.cssVars);
-  customSyntaxHelper.setCustomSyntax(injectedData.customSyntaxStrs);
+    const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-  return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
-    const newValue = processor({
-      part, customSyntaxHelper, tpaParams, cacheMap: {}
-    }, {plugins, shouldUseCssVars: false});
+    const customSyntaxHelper = new CustomSyntaxHelper();
+    customSyntaxHelper.setVars(injectedData.cssVars);
+    customSyntaxHelper.setCustomSyntax(injectedData.customSyntaxStrs);
 
-    return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
-  }, injectedData.css);
+    return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
+      const newValue = processor({
+        part, customSyntaxHelper, tpaParams, cacheMap: {}
+      }, {plugins, shouldUseCssVars: false});
+
+      return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
+    }, prefixedCss);
+  };
 }

@@ -18,7 +18,7 @@ export interface IOptionResult {
   css: string;
 }
 
-module.exports = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as IOptions) => {
+export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as IOptions) => {
   const cssVars = {};
   const customSyntaxStrs = [];
 
