@@ -1,23 +1,15 @@
 import {CustomSyntaxHelper} from './customSyntaxHelper';
 import {ITPAParams} from './generateTPAParams';
 import {isCssVar, isNumber} from './utils/utils';
-import {hash} from './utils/hash';
 
 export function processor({
   part,
   customSyntaxHelper,
-  tpaParams,
-  cacheMap
-}, {plugins, shouldUseCssVars}) {
+  tpaParams
+}, {plugins}) {
   if (plugins.isSupportedFunction(part)) {
     const evaluationFunc = executeFunction(part, plugins, customSyntaxHelper);
-    if (shouldUseCssVars) {
-      const partHash = `--${hash(part)}`;
-      cacheMap[partHash] = evaluationFunc;
-      return `var(${partHash})`;
-    } else {
-      return evaluationFunc(tpaParams);
-    }
+    return evaluationFunc(tpaParams);
   }
   return part;
 }

@@ -36,8 +36,10 @@ export function loader(loaderOptions): IGetProcessedCssFn {
 
     return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
       const newValue = processor({
-        part, customSyntaxHelper, tpaParams, cacheMap: {}
-      }, {plugins, shouldUseCssVars: false});
+        part,
+        customSyntaxHelper,
+        tpaParams
+      }, {plugins});
 
       return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
     }, prefixedCss);
