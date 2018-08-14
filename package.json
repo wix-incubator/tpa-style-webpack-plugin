@@ -5,7 +5,7 @@
   "main": "dist/lib/index.js",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && tsc -b",
+    "pretest": "rm -rf dist && tsc -b",
     "test": "jest"
   },
   "keywords": [
