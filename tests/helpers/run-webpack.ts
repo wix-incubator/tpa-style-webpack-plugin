@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTPAStylePlugin = require('../../dist/lib');
+const ExtractTPAStylePlugin = require('../../dist/lib/index');
 const merge = require('webpack-merge');
 
 const commonConfig = {
