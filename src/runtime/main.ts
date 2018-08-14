@@ -3,7 +3,7 @@ import {generateTPAParams} from './generateTPAParams';
 import {processor} from './processor';
 import {defaultCssPlugins} from './defaultCssFunctions';
 import {Plugins} from './plugins';
-import {IInjectedData, IStyles} from '../types';
+import {IInjectedData, IStyles} from './types';
 
 function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');

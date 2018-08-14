@@ -2,10 +2,10 @@
   "name": "tpa-style-webpack-plugin",
   "version": "0.0.1",
   "description": "A Webpack plugin that handles wix tpa styles, it separates static css file that injects dynamic style at runtime.",
-  "main": "dist/src/index.js",
+  "main": "dist/lib/index.js",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && tsc -b",
     "test": "jest"
   },
   "keywords": [
@@ -17,7 +17,6 @@
   ],
   "files": [
     "dist",
-    "!dist/tests",
     "*.js"
   ],
   "author": "Felix Mosheev",
@@ -51,6 +50,7 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
+    "testEnvironment": "node",
     "testResultsProcessor": "jest-teamcity-reporter",
     "testRegex": "(/tests/units/.*|(\\.|/)(test|spec))\\.tsx?$",
     "moduleFileExtensions": [

@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "dist/",
     "module": "commonjs",
     "target": "es2015",
-    "sourceMap": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sourceMap": false
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "references": [
+    {
+      "path": "./src/runtime/tsconfig.json"
+    },
+    {
+      "path": "./src/lib/tsconfig.json"
+    }
+  ],
+  "include": []
 }

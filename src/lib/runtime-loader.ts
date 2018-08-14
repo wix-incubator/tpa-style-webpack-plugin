@@ -8,7 +8,7 @@ module.exports.pitch = function () {
   const callback = this.async();
   const params = this.query.slice(1);
 
-  const templatePath = path.join(__dirname, './runtime/main.js');
+  const templatePath = path.join(__dirname, '../runtime/main.js');
 
   this.addDependency(templatePath);
   callback(null, `import {loader} from '${templatePath}';

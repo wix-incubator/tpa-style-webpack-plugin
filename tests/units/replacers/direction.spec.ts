@@ -1,5 +1,5 @@
-import {directionReplacer} from '../../../src/replacers';
 import {Declaration} from 'postcss';
+import {directionReplacer} from '../../../src/lib/replacers';
 
 describe('Replacer - direction', () => {
   let decl: Declaration;

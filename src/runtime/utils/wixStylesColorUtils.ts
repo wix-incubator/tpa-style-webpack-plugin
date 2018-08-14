@@ -1,5 +1,5 @@
 import {forEach} from './utils';
-import {ISiteColor, IStyleColor} from '../../types';
+import {ISiteColor, IStyleColor} from '../types';
 
 export const wixStylesColorUtils = {
   getFullColorStyles({colorStyles, siteColors}: { siteColors: ISiteColor[]; colorStyles: { [key: string]: IStyleColor } }) {

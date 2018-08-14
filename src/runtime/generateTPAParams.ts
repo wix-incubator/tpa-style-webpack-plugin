@@ -3,7 +3,7 @@ import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
 import {wixStylesColorUtils} from './utils/wixStylesColorUtils';
 import {IOptions} from './main';
 import {IS_RTL_PARAM} from './constants';
-import {ISiteColor, ISiteTextPreset, IStyleFont, IStyleParams} from '../types';
+import {ISiteColor, ISiteTextPreset, IStyleFont, IStyleParams} from './types';
 
 export interface ITPAParams {
   colors: { [index: string]: { value: string } };

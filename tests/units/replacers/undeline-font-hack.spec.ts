@@ -1,4 +1,4 @@
-import {underlineFontHackSupport} from '../../../src/replacers';
+import {underlineFontHackSupport} from '../../../src/lib/replacers';
 import {Declaration} from 'postcss';
 
 describe('Replacer - underlineFontHack', () => {

@@ -87,7 +87,7 @@ class TPAStylePlugin {
   }
 
   apply(compiler) {
-    const runtimePath = path.resolve(__dirname, './runtime/fake-main.js');
+    const runtimePath = path.resolve(__dirname, '../runtime/fake-main.js');
 
     compiler.hooks.normalModuleFactory.tap(pluginName, (nmf) => {
       nmf.hooks.afterResolve.tapAsync(pluginName, (result, callback) => {

@@ -1,6 +1,6 @@
 import {forEach, isNumber} from './utils';
 import parseCssFont from 'parse-css-font';
-import {ISiteTextPreset, IStyleFont} from '../../types';
+import {ISiteTextPreset, IStyleFont} from '../types';
 
 export const wixStylesFontUtils = {
   getFullFontStyles({fontStyles, siteTextPresets}: { fontStyles: { [s: string]: IStyleFont; }; siteTextPresets: ISiteTextPreset }) {
