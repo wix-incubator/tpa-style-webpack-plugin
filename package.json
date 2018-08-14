@@ -2,9 +2,9 @@
   "name": "extract-tpa-style-webpack-plugin",
   "version": "1.0.0",
   "description": "A Webpack plugin that extract wix tpa styles into separate file that injects it as inline style at runtime.",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "test": "jest"
   },
   "keywords": [
@@ -15,11 +15,14 @@
     "Webpack",
     "plugin"
   ],
+  "files": [
+    "dist",
+    "*.js"
+  ],
   "author": "Felix Mosheev",
   "license": "MIT",
   "dependencies": {
     "@ctrl/tinycolor": "^2.2.0",
-    "color": "^3.0.0",
     "parse-css-font": "^3.0.2",
     "postcss": "^7.0.2",
     "postcss-extract-styles": "^1.2.0",
@@ -29,19 +32,11 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-3": "^6.24.1",
     "css-loader": "^0.28.11",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^22.4.4",
     "mini-css-extract-plugin": "^0.4.1",
     "rimraf": "^2.6.2",
-    "rollup": "^0.62.0",
-    "rollup-plugin-babel": "^3.0.6",
-    "rollup-plugin-commonjs": "^9.1.3",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-typescript": "^0.8.1",
     "ts-jest": "^23.1.3",
     "typescript": "^3.0.1",
     "webpack-merge": "^4.1.3"
@@ -54,8 +49,6 @@
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js",
-      "jsx",
       "json",
       "node"
     ]
