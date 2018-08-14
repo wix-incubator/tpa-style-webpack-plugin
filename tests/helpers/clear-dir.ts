@@ -1,6 +1,6 @@
-const rimraf = require('rimraf');
+import * as rimraf from 'rimraf';
 
-module.exports = function clearDir(dir) {
+export function clearDir(dir) {
   return new Promise((resolve, reject) => {
     rimraf(dir, err => {
       if (err) {
@@ -10,4 +10,4 @@ module.exports = function clearDir(dir) {
       resolve();
     });
   });
-};
+}

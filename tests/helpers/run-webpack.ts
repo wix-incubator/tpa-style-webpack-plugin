@@ -1,34 +1,35 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTPAStylePlugin = require('../../src');
+const ExtractTPAStylePlugin = require('../../dist/src');
 const merge = require('webpack-merge');
 
 const commonConfig = {
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].bundle.js'
   },
   mode: 'development',
+  devtool: 'none',
   module: {
     rules: [{
       test: /\.css$/,
       use: [
         {
-        loader: MiniCssExtractPlugin.loader
-      },
+          loader: MiniCssExtractPlugin.loader
+        },
         {
-          loader: 'css-loader',
+          loader: 'css-loader'
         }]
     }]
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: '[name].styles.css' }),
+    new MiniCssExtractPlugin({filename: '[name].styles.css'}),
     new HtmlWebpackPlugin(),
     new ExtractTPAStylePlugin()
   ]
 };
 
-module.exports = async function runWebpack(config) {
+export async function runWebpack(config) {
   config = merge(config, commonConfig);
 
   return new Promise((resolve, reject) => {
@@ -46,4 +47,4 @@ module.exports = async function runWebpack(config) {
       resolve(files);
     });
   });
-};
+}
