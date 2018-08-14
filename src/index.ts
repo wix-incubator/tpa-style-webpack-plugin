@@ -8,9 +8,9 @@ import {Result} from 'postcss';
 import {createHash} from 'crypto';
 
 const fileSuffix = '.tpa.js';
-const pluginName = 'extract-tpa-style';
+const pluginName = 'tpa-style';
 
-class ExtractTPAStylePlugin {
+class TPAStylePlugin {
   private _options;
   private readonly prefixSelector: string;
 
@@ -137,4 +137,4 @@ class ExtractTPAStylePlugin {
   }
 }
 
-module.exports = ExtractTPAStylePlugin;
+module.exports = TPAStylePlugin;
