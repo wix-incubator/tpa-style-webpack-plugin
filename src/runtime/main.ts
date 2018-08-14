@@ -3,6 +3,7 @@ import {generateTPAParams} from './generateTPAParams';
 import {processor} from './processor';
 import {defaultCssPlugins} from './defaultCssFunctions';
 import {Plugins} from './plugins';
+import {IInjectedData, IStyles} from '../types';
 
 function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -12,21 +13,17 @@ const plugins = new Plugins();
 Object.keys(defaultCssPlugins)
   .forEach((funcName) => plugins.addCssFunction(funcName, defaultCssPlugins[funcName]));
 
-export interface IInjectedData {
-  css: string;
-  customSyntaxStrs: string[];
-  cssVars: { [key: string]: string };
-}
-
 export interface IOptions {
   isRTL: boolean;
   prefixSelector: string;
 }
 
+export type IGetProcessedCssFn = (styles: IStyles, options: Partial<IOptions>) => string;
+
 const defaultOptions = {isRTL: false};
 
-export function loader(loaderOptions) {
-  return ({siteColors, siteTextPresets, styleParams}, options: Partial<IOptions>) => {
+export function loader(loaderOptions): IGetProcessedCssFn {
+  return ({siteColors, siteTextPresets, styleParams}: IStyles, options: Partial<IOptions>) => {
     options = {...defaultOptions, ...options};
     const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
     const prefixedCss = injectedData.css.replace(new RegExp(loaderOptions.prefixSelector, 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');

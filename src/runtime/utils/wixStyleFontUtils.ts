@@ -1,8 +1,9 @@
 import {forEach, isNumber} from './utils';
 import parseCssFont from 'parse-css-font';
+import {ISiteTextPreset, IStyleFont} from '../../types';
 
 export const wixStylesFontUtils = {
-  getFullFontStyles({fontStyles, siteTextPresets}) {
+  getFullFontStyles({fontStyles, siteTextPresets}: { fontStyles: { [s: string]: IStyleFont; }; siteTextPresets: ISiteTextPreset }) {
     let ret = {} as any;
 
     // Fix color styles due to '.' to '-' conversion
@@ -12,11 +13,13 @@ export const wixStylesFontUtils = {
     const parsedSiteTextPresets = {};
     forEach(siteTextPresets, (preset: any, key: string) => {
       const presetValue = preset.value.replace(/^font\s*:\s*/, '');
-      parsedSiteTextPresets[key] = {...parseCssFont(presetValue),
+      parsedSiteTextPresets[key] = {
+        ...parseCssFont(presetValue),
 
         preset: key,
         editorKey: preset.editorKey,
-        ...(preset.displayName ? {displayName: preset.displayName} : {})};
+        ...(preset.displayName ? {displayName: preset.displayName} : {})
+      };
     });
 
     const parsedFontStyles = {};

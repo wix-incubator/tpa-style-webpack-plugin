@@ -3,6 +3,7 @@ import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
 import {wixStylesColorUtils} from './utils/wixStylesColorUtils';
 import {IOptions} from './main';
 import {IS_RTL_PARAM} from './constants';
+import {ISiteColor, ISiteTextPreset, IStyleFont, IStyleParams} from '../types';
 
 export interface ITPAParams {
   colors: { [index: string]: { value: string } };
@@ -12,9 +13,9 @@ export interface ITPAParams {
   strings: Object;
 }
 
-export function generateTPAParams(siteColors, siteTextPresets, styleParams, options: Partial<IOptions>): ITPAParams {
+export function generateTPAParams(siteColors: ISiteColor[], siteTextPresets: ISiteTextPreset, styleParams: IStyleParams, options: Partial<IOptions>): ITPAParams {
   const colorStyles = styleParams.colors;
-  const fontStyles = pickBy(styleParams.fonts, wixStylesFontUtils.isValidFontParam);
+  const fontStyles = pickBy<IStyleFont>(styleParams.fonts, wixStylesFontUtils.isValidFontParam);
 
   const numbers = styleParams.numbers || {};
   const colors = wixStylesColorUtils.getFullColorStyles({colorStyles, siteColors}) || {};
