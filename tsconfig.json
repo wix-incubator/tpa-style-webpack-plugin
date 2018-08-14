@@ -4,7 +4,10 @@
     "module": "commonjs",
     "target": "es2015",
     "sourceMap": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": [
+      "node"
+    ]
   },
   "exclude": [
     "node_modules"
