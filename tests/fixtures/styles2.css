@@ -16,3 +16,15 @@
 
 :root {--cart_textFontStyle:"font(Body-M)"; --cartButton_textColor:"color(color-1)";}
 .foo6 {font:"font(--cart_textFontStyle)"; color:"color(--cartButton_textColor)";}
+
+.font-test {font: "font(Body-M)";}
+
+.font-test2 {--some-font: "font(Body-M)"; font: "font(--some-font)";}
+
+.font-test3::after {content: " ";}
+
+.font-test4 {--var: "color(color-2)"; color:"join(opacity(color(color-1), 0.5), 1, opacity(--var, 0.5), 1)";}
+
+.foo7 {rule1: "opacity(--lala, 0.5)"; --lala: "color(color-9)";}
+
+.foo8 {rule: bar;rule3: baz; rule4: "color(color-1)"; rule5: "color(color(color(color-2)))";}
