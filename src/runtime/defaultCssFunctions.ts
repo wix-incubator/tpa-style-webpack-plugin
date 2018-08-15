@@ -86,7 +86,7 @@ export const defaultCssPlugins = {
     return value;
   },
   darken: (colorVal, darkenValue) => {
-    return new TinyColor(colorVal).darken(darkenValue * 100).toRgbString();
+    return new TinyColor(colorVal).brighten(-1 * darkenValue * 100).toRgbString();
   },
   number: (value) => {
     return +value;
