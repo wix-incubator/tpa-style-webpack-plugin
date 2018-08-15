@@ -66,3 +66,5 @@
 .fallback-colors {color: "fallback(color(--none-exist), color(color-1))"}
 
 .first-none-falsy {--first_none_falsy: "color(red)"; color: "fallback(color(--first_none_falsy), color(color-1))"}
+
+.fallback-multiple-vals {color: "fallback(--multi_val1, --multi_val2, color(color-1))";}
