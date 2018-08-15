@@ -64,7 +64,10 @@ describe('defaultCssPlugins', () => {
 
   describe('darken', () => {
     it('should add darken', () => {
-      expect(defaultCssPlugins.darken('rgb(255,255,255)', 0.5)).toBe('rgb(128, 128, 128)');
+      expect(defaultCssPlugins.darken('rgb(255,255,255)', 0.5)).toBe('rgb(127, 127, 127)');
+    });
+    it('should add darken', () => {
+      expect(defaultCssPlugins.darken('rgb(255,0,0)', 0.5)).toBe('rgb(127, 0, 0)');
     });
   });
 });
