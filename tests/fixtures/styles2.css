@@ -3,19 +3,19 @@
   color: red;
 }
 
-.foo {color: "color(--my_var)";}
+.colors-from-settings {color: "color(--color_from_settings)";}
 
-.foo {font: "font(--my_var2)";}
+.fonts-from-settings {font: "font(--fontFromSettings)";}
 
-.foo {width: "string(--my_var3)";}
+.font-string-hack {width: "string(--stringHack)";}
 
-.foo2 {--my_var4: "string(0px)"; width: "string(--my_var4)";}
+.string-default-value {--stringDefaultValue: "string(0px)"; width: "string(--stringDefaultValue)";}
 
-:root {--my_var3: "color(color-4)";}
-.foo5 {color: "color(--my_var5)";}
+:root {--default_vals: "color(color-4)";}
+.default-values {color: "color(--default_vals)";}
 
 :root {--cart_textFontStyle:"font(Body-M)"; --cartButton_textColor:"color(color-1)";}
-.foo6 {font:"font(--cart_textFontStyle)"; color:"color(--cartButton_textColor)";}
+.no-semicolon {font:"font(--cart_textFontStyle)"; color:"color(--cartButton_textColor)";}
 
 .font-test {font: "font(Body-M)";}
 
@@ -25,27 +25,27 @@
 
 .font-test4 {--var: "color(color-2)"; color:"join(opacity(color(color-1), 0.5), 1, opacity(--var, 0.5), 1)";}
 
-.foo7 {rule1: "opacity(--lala, 0.5)"; --lala: "color(color-9)";}
+.opacity-default-value {rule1: "opacity(--lala, 0.5)"; --lala: "color(color-9)";}
 
-.foo8 {rule: bar;rule3: baz; rule4: "color(color-1)"; rule5: "color(color(color(color-2)))";}
+.color-transformation {rule: bar;rule3: baz; rule4: "color(color-1)"; rule5: "color(color(color(color-2)))";}
 
-.foo9 {rule1: "darken(color(color-9), 0.5)";}
+.darken-transformation {rule1: "darken(color(color-9), 0.5)";}
 
-.foo10 {rule1: "withoutOpacity(opacity(color(color-9), 0.1))";}
+.without-opacity {rule1: "withoutOpacity(opacity(color(color-9), 0.1))";}
 
-.foo11 {rule1: "opacity(--foo, 0.5)";}
+.opacity-with-var {rule1: "opacity(--opacityWithVar, 0.5)";}
 
-.foo12 {rule1: "join(--foo, 1, color(color-10), 1)";}
+.join-colors {rule1: "join(--joinColor, 1, color(color-10), 1)";}
 
-.foo13 {width: calc(100% - "number(--foo)");}
+.numbers {width: calc(100% - "number(--numberVar)");}
 
-.foo14 {border: "unit(--foo, px)" solid "color(--bar)";}
+.unit {border: "unit(--unit_var, px)" solid "color(--unit_color_var)";}
 
-.foo15 {border: "unit(--foo, px)" solid "color(--bar)";}
+.unit-with-value-zero {border: "unit(--unitZero, px)" solid "color(--unit_zero_color)";}
 
-.foo16 {padding: 10px 11px 12px 13px; margin-right: 20px; color: blue;}
+.not-modify-static-params {padding: 10px 11px 12px 13px; margin-right: 20px; color: blue;}
 
-.foo17 {--bar: var(42); --baz: var(21); padding: --baz;}
+.not-modify-regular-css-vars {--bar: var(42); --baz: var(21); padding: --baz;}
 
 .datepicker__day--highlighted:hover{background-color: "color(color-1)";}
 
@@ -59,8 +59,8 @@
 
 .double-var-reference {--var1:"number(42)"; --var2:"number(--var1)"; rule4:"number(--var2)";}
 
-.undefined-variables {--yfyfdydfy:"font(--wwertyuio)"}
+.undefined-variables {--yfyfdydfy:"font(--undefinedVar)"}
 
-.underlined { font: "font(--fontVar)" }
+.underlined { font: "font(--underlineVar)" }
 
-.fallback-colors {color: "fallback(color(--my_var3fhfh), color(color-1))"}
+.fallback-colors {color: "fallback(color(--none-exist), color(color-1))"}
