@@ -1,7 +1,7 @@
 import {CustomSyntaxHelper} from './customSyntaxHelper';
 import {generateTPAParams} from './generateTPAParams';
 import {processor} from './processor';
-import {cssPlugins} from './cssFunctions';
+import {cssFunctions} from './cssFunctions';
 import {Plugins} from './plugins';
 import {IInjectedData, IStyles} from './types';
 
@@ -10,8 +10,8 @@ function escapeRegExp(str) {
 }
 
 const plugins = new Plugins();
-Object.keys(cssPlugins)
-  .forEach((funcName) => plugins.addCssFunction(funcName, cssPlugins[funcName]));
+Object.keys(cssFunctions)
+  .forEach((funcName) => plugins.addCssFunction(funcName, cssFunctions[funcName]));
 
 export interface IOptions {
   isRTL: boolean;
