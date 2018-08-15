@@ -16,7 +16,6 @@ Object.keys(defaultCssPlugins)
 export interface IOptions {
   isRTL: boolean;
   prefixSelector: string;
-  additionalStyle: string;
 }
 
 export type IGetProcessedCssFn = (styles: IStyles, options: Partial<IOptions>) => string;
@@ -28,9 +27,6 @@ export function loader(loaderOptions): IGetProcessedCssFn {
     options = {...defaultOptions, ...options};
     const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
     const prefixedCss = injectedData.css.replace(new RegExp(loaderOptions.prefixSelector, 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
-    // const totalCSS = prefixedCss + '\n' + (options.additionalStyle ? unescape(`${options.additionalStyle}`) : '');
-    // console.log('prefixedCss', prefixedCss);
-    // console.log('totalCSS', totalCSS);
 
     const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 

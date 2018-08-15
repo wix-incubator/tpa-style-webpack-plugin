@@ -28,3 +28,39 @@
 .foo7 {rule1: "opacity(--lala, 0.5)"; --lala: "color(color-9)";}
 
 .foo8 {rule: bar;rule3: baz; rule4: "color(color-1)"; rule5: "color(color(color(color-2)))";}
+
+.foo9 {rule1: "darken(color(color-9), 0.5)";}
+
+.foo10 {rule1: "withoutOpacity(opacity(color(color-9), 0.1))";}
+
+.foo11 {rule1: "opacity(--foo, 0.5)";}
+
+.foo12 {rule1: "join(--foo, 1, color(color-10), 1)";}
+
+.foo13 {width: calc(100% - "number(--foo)");}
+
+.foo14 {border: "unit(--foo, px)" solid "color(--bar)";}
+
+.foo15 {border: "unit(--foo, px)" solid "color(--bar)";}
+
+.foo16 {padding: 10px 11px 12px 13px; margin-right: 20px; color: blue;}
+
+.foo17 {--bar: var(42); --baz: var(21); padding: --baz;}
+
+.datepicker__day--highlighted:hover{background-color: "color(color-1)";}
+
+.no-space-after-colon {rule: bar;rule3:baz;rule4: "color(color-9)";rule5: "color(color(color-9))"}
+
+.font-theme-override {font: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"}
+
+.font-override-with-var-from-settings {--bodyText: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"; font: "font(--bodyText)"}
+
+.font-override-with-var {--bodyText2: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"; font: "font(--bodyText2)"}
+
+.double-var-reference {--var1:"number(42)"; --var2:"number(--var1)"; rule4:"number(--var2)";}
+
+.undefined-variables {--yfyfdydfy:"font(--wwertyuio)"}
+
+.underlined { font: "font(--fontVar)" }
+
+.fallback-colors {color: "fallback(color(--my_var3fhfh), color(color-1))"}
