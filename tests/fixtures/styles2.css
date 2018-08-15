@@ -2,3 +2,7 @@
   border-size: "unit(--borderWidth, px)";
   color: red;
 }
+
+.foo {
+  color: "color(--my_var)";
+}

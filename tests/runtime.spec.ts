@@ -2,6 +2,9 @@ import * as path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
 import {IGetProcessedCssFn} from '../src/runtime/main';
+import {siteColors} from './fixtures/siteColors';
+import {siteTextPresets} from './fixtures/siteTextPresets';
+import {styleParams} from './fixtures/styleParams';
 
 describe.only('runtime', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime');
@@ -25,5 +28,7 @@ describe.only('runtime', () => {
   });
 
   it('should append style tag', () => {
+    const newStyleParams = clonedWith({colors: {my_var: {value: 'red'}}});
+    console.log(getProcessedCss({styleParams, siteColors, siteTextPresets}, {}));
   });
 });

@@ -7,7 +7,7 @@ export interface IInjectedData {
 export interface IStyles {
   siteColors: ISiteColor[];
   siteTextPresets: ISiteTextPreset;
-  styleParams: any;
+  styleParams: IStyleParams;
 }
 
 export interface IStyleParams {
