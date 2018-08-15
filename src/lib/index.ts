@@ -99,7 +99,7 @@ class TPAStylePlugin {
         }
 
         result.loaders.push({
-          loader: path.join(__dirname, 'runtime-loader.js'),
+          loader: path.join(__dirname, 'runtimeLoader.js'),
           options: JSON.stringify({prefixSelector: this.prefixSelector})
         });
 

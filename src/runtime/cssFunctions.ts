@@ -12,7 +12,7 @@ export const cssFunctions = {
     color1 = new TinyColor(color1).toRgb();
     color2 = new TinyColor(color2).toRgb();
 
-    //todo: use strength
+    //  todo: use strength
     //let color1strength = args[1];
     //let color2strength = args[3];
     const r = ((color1.r / 255 + color2.r / 255) * 255);
