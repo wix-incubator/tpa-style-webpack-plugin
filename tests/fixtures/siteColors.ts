@@ -1,4 +1,10 @@
-export const siteColors = [{
+import { ISiteColor } from '../../src/runtime/types';
+
+export const getSiteColor = (colorsRef: string, siteColors: ISiteColor[]) => {
+  return siteColors.filter(ele => ele.reference === colorsRef)[0].value;
+}
+
+export const siteColors: ISiteColor[] = [{
   name: 'color_1', value: '#FFFFFF', reference: 'color-1'
 }, {
   name: 'color_2', value: '#000000', reference: 'black/white'
