@@ -1,1 +1,1 @@
-export * from './dist/runtime/fake-main';
+export * from './dist/runtime/fakeMain';

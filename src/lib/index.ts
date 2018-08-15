@@ -7,7 +7,6 @@ import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
 
-const fileSuffix = '.tpa.js';
 const pluginName = 'tpa-style';
 
 class TPAStylePlugin {
@@ -87,7 +86,7 @@ class TPAStylePlugin {
   }
 
   apply(compiler) {
-    const runtimePath = path.resolve(__dirname, '../runtime/fake-main.js');
+    const runtimePath = path.resolve(__dirname, '../runtime/fakeMain.js');
 
     compiler.hooks.normalModuleFactory.tap(pluginName, (nmf) => {
       nmf.hooks.afterResolve.tapAsync(pluginName, (result, callback) => {
@@ -108,25 +107,6 @@ class TPAStylePlugin {
     });
 
     compiler.hooks.compilation.tap(pluginName, (compilation) => {
-      compilation.hooks.htmlWebpackPluginAlterAssetTags.tapAsync(pluginName, (htmlPluginData, callback) => {
-        const publicPath = (compiler.options.output.publicPath || '');
-
-        Object.keys(compilation.assets)
-          .filter((filename) => filename.endsWith(fileSuffix))
-          .forEach((filename) => {
-            htmlPluginData.head.push({
-              tagName: 'script',
-              closeTag: true,
-              attributes: {
-                type: 'text/javascript',
-                src: path.join(publicPath, filename)
-              }
-            });
-          });
-
-        callback(null, htmlPluginData);
-      });
-
       compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
           .then((extractResults) => this.replaceSource(compilation, extractResults))
