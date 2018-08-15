@@ -2,7 +2,7 @@ import {RawSource, ReplaceSource} from 'webpack-sources';
 import * as path from 'path';
 import * as postcss from 'postcss';
 import * as extractStyles from 'postcss-extract-styles';
-import {extractTPACustomSyntax} from './postcss-plugin';
+import {extractTPACustomSyntax} from './postcssPlugin';
 import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';

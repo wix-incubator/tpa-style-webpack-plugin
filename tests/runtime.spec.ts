@@ -286,7 +286,7 @@ describe('runtime', () => {
         value: 'font:normal normal normal 17px/1.4em raleway,sans-serif;',
         weight: 'normal'
       }
-    })
+    });
 
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
     const expectedCss = `.font-theme-override {font: italic normal bold 10px/2em raleway,sans-serif}`;
@@ -388,6 +388,17 @@ describe('runtime', () => {
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = `.fallback-colors {color: ${getSiteColor('color-1', siteColors)}}`;
+    expect(css).toContain(expectedCss);
+  });
+
+  it('should return first none falsy value', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      numbers: {},
+      colors: {},
+      fonts: {}
+    });
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = `.first-none-falsy {--first_none_falsy: rgb(255, 0, 0); color: rgb(255, 0, 0)}`;
     expect(css).toContain(expectedCss);
   });
 });

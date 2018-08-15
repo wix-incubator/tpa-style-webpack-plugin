@@ -64,3 +64,5 @@
 .underlined { font: "font(--underlineVar)" }
 
 .fallback-colors {color: "fallback(color(--none-exist), color(color-1))"}
+
+.first-none-falsy {--first_none_falsy: "color(red)"; color: "fallback(color(--first_none_falsy), color(color-1))"}

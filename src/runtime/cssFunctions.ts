@@ -6,7 +6,7 @@ import {directionMap, IS_RTL_PARAM} from './constants';
 
 const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
-export const defaultCssPlugins = {
+export const cssPlugins = {
   join: (color1, strength1, color2, strength2) => {
 
     color1 = new TinyColor(color1).toRgb();
