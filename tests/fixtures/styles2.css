@@ -3,6 +3,16 @@
   color: red;
 }
 
-.foo {
-  color: "color(--my_var)";
-}
+.foo {color: "color(--my_var)";}
+
+.foo {font: "font(--my_var2)";}
+
+.foo {width: "string(--my_var3)";}
+
+.foo2 {--my_var4: "string(0px)"; width: "string(--my_var4)";}
+
+:root {--my_var3: "color(color-4)";}
+.foo5 {color: "color(--my_var5)";}
+
+:root {--cart_textFontStyle:"font(Body-M)"; --cartButton_textColor:"color(color-1)";}
+.foo6 {font:"font(--cart_textFontStyle)"; color:"color(--cartButton_textColor)";}

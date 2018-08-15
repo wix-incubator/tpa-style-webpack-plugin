@@ -1,4 +1,6 @@
-export const styleParams = {
+import { IStyleParams } from '../../src/runtime/types';
+
+export const styleParams: IStyleParams = {
   "colors": {
     "gallery_priceColor": {
       "themeName": "color-5",

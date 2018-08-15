@@ -1,4 +1,6 @@
-export const siteTextPresets = {
+import { ISiteTextPreset } from '../../src/runtime/types';
+
+export const siteTextPresets: ISiteTextPreset = {
   'Title': {
     editorKey: 'font_0',
     lineHeight: '1.4em',

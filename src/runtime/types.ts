@@ -26,7 +26,9 @@ export interface IStyleColor {
 export interface IStyleFont {
   cssFontFamily?: string;
   family?: string;
-  fontStyleParam: boolean;
+  index?: number;
+  fontStyleParam?: boolean;
+  fontParam?: boolean;
   preset?: string;
   size?: number;
   style?: {
