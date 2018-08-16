@@ -18,7 +18,7 @@ $ npm install --save-dev tpa-style-webpack-plugin
 Add the plugin to your webpack config.
 ```js
 // webpack.config.js
-const ExtractTPAStyles = require('tpa-style-webpack-plugin');
+const TpaStyleWebpackPlugin = require('tpa-style-webpack-plugin');
 
 module.exports = {
   module: {
@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({filename: '[name].[chunkhash].css'}),
-    new ExtractTPAStyles()
+    new TpaStyleWebpackPlugin()
   ]
 };
 ```
