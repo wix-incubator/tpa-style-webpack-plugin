@@ -11,7 +11,7 @@ export function parseJson(strValue: string): { theme: string; size?: string; lin
     .split(',')
     .reduce((json, current) => {
       const [key, value] = current.split(':');
-      json[key.trim()] = value.trim().slice(1, -1);
+      json[key.trim()] = value.trim().replace(/^["|'](.*)["|']$/, '$1');
       return json;
     }, {}) as any;
 }

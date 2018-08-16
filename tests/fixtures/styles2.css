@@ -53,7 +53,7 @@
 
 .font-theme-override {font: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"}
 
-.font-override-with-var-from-settings {--bodyText: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"; font: "font(--bodyText)"}
+.font-override-with-var-from-settings {--bodyText: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: bold, style:'italic'})"; font: "font(--bodyText)"}
 
 .font-override-with-var {--bodyText2: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"; font: "font(--bodyText2)"}
 
