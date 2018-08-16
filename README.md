@@ -18,7 +18,7 @@ $ npm install --save-dev tpa-style-webpack-plugin
 Add the plugin to your webpack config.
 ```js
 // webpack.config.js
-const ExtractTPAStyles = require('extract-tpa-style-webpack-plugin');
+const ExtractTPAStyles = require('tpa-style-webpack-plugin');
 
 module.exports = {
   module: {
@@ -33,8 +33,8 @@ module.exports = {
 
 import [`getProcessedCss`](https://github.com/wix-incubator/tpa-style-webpack-plugin/blob/master/src/runtime/main.ts#L21) functions from plugins runtime in your production code.
 ```js
-import {getProcessedCss} from 'extract-tpa-style-webpack-plugin/runtime';
-import {addStyles} from 'extract-tpa-style-webpack-plugin/addStyles';
+import {getProcessedCss} from 'tpa-style-webpack-plugin/runtime';
+import {addStyles} from 'tpa-style-webpack-plugin/addStyles';
 
 const dynamicCss = getProcessedCss({styleParams, siteColors, siteTextPresets}, {isRTL: false, prefixSelector: '.style-id'});
 addStyles(dynamicCss, 'tag-id');
