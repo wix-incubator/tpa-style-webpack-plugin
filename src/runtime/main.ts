@@ -18,7 +18,7 @@ export interface IOptions {
   prefixSelector: string;
 }
 
-export type IGetProcessedCssFn = (styles: IStyles, options: Partial<IOptions>) => string;
+export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
 
 const defaultOptions = {isRTL: false};
 

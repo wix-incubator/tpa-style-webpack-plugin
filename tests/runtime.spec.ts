@@ -412,4 +412,53 @@ describe('runtime', () => {
     const expectedCss = `.fallback-multiple-vals {color: ${getSiteColor('color-1', siteColors)};}`;
     expect(css).toContain(expectedCss);
   });
+
+  describe('Options', () => {
+    describe('isRTL', () => {
+      it('should support LTR', () => {
+        const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
+        expect(css).toContain(`.rtl-support {
+  padding-left: 9px;
+  float: left;
+  padding-right: 9px;
+  left: 10px;
+  right: 10px;
+  direction: ltr;
+  margin: -5px;
+  margin: 5px;
+  transform: rotate(0deg);
+  transform: rotate(180deg);
+}`);
+      });
+
+      it('should support RTL', () => {
+        const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {isRTL: true});
+        expect(css).toContain(`.rtl-support {
+  padding-right: 9px;
+  float: right;
+  padding-left: 9px;
+  right: 10px;
+  left: 10px;
+  direction: rtl;
+  margin: 5px;
+  margin: -5px;
+  transform: rotate(180deg);
+  transform: rotate(0deg);
+}`);
+      });
+    });
+
+    describe('prefix', () => {
+      it('should not have prefix for selectors if none given', () => {
+        const css = getProcessedCss({styleParams, siteColors, siteTextPresets});
+        expect(css).toMatch(/}\s*.rtl-support {/);
+      });
+
+      it('should have prefix for selectors if given', () => {
+        const prefixSelector = '#style-id';
+        const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {prefixSelector});
+        expect(css).toContain(`${prefixSelector} .rtl-support`);
+      });
+    });
+  });
 });
