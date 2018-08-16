@@ -1,2 +1,3 @@
-import './second-entry';
 import './styles.css';
+
+export {getProcessedCss} from '../../runtime';

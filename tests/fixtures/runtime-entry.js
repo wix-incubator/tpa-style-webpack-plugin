@@ -1,4 +1,4 @@
 import './styles.css';
-import './second-entry';
+import './styles2.css';
 
 export {getProcessedCss} from '../../runtime';
