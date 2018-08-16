@@ -1,0 +1,1 @@
+export {getProcessedCss} from '../../runtime';

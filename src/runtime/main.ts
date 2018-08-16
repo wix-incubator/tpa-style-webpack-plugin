@@ -26,6 +26,11 @@ export function loader(loaderOptions): IGetProcessedCssFn {
   return ({siteColors, siteTextPresets, styleParams}: IStyles, options: Partial<IOptions>) => {
     options = {...defaultOptions, ...options};
     const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
+
+    if (!injectedData.css) {
+      return ''
+    }
+
     const prefixedCss = injectedData.css.replace(new RegExp(loaderOptions.prefixSelector, 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
 
     const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
