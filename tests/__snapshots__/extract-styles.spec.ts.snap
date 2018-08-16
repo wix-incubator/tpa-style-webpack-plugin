@@ -1,0 +1,176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
+"
+
+ :root {
+  --bgColor: #FFC7FF;
+}
+ body {
+  font: normal normal normal 20px/1.4em futura-lt-w01-book,sans-serif;
+  background: #FFC7FF;
+}
+ .tpa-first:hover {
+  color: ;
+}
+ .tpa-second {
+  font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;
+}
+ .only-tpa {
+  color: #F3F3F3;
+}
+@media (min-width: 300px) and (max-width: 730px) {
+   .tpa-first:hover {
+    color: #F3F3F3;
+  }
+
+   .tpa-second {
+    font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;
+  }
+
+   .only-tpa {
+    color: rgb(255, 255, 255);
+  }
+}
+@keyframes identifier {
+  0% {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+@media (min-width: 300px) and (max-width: 730px) {
+   .tpa-first:hover {
+    width: 100%;
+  }
+}
+ .multi-usage {
+  border: 2px solid #F3F3F3;
+}
+ .rtl-support {
+  padding-left: 9px;
+  float: left;
+  padding-right: 9px;
+  left: 10px;
+  right: 10px;
+  direction: ltr;
+  margin: -5px;
+  margin: 5px;
+  transform: rotate(0deg);
+  transform: rotate(180deg);
+}
+ .second-styles {
+  border-size: 2px;
+}
+ .colors-from-settings {color: ;}
+ .fonts-from-settings {font: undefined;text-decoration: ;}
+ .font-string-hack {width: undefined;}
+ .string-default-value {--stringDefaultValue: 0px; width: 0px;}
+ :root {--default_vals: #717070;}
+ .default-values {color: #717070;}
+ :root {--cart_textFontStyle:normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif; --cartButton_textColor:#FFFFFF;}
+ .no-semicolon {font:normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;text-decoration: ; color:#FFFFFF;}
+ .font-test {font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;}
+ .font-test2 {--some-font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif; font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;text-decoration: ;}
+ .font-test4 {--var: #F3F3F3; color:rgba(255, 255, 255, 0.5);}
+ .opacity-default-value {rule1: rgba(255, 0, 0, 0.5); --lala: #FF0000;}
+ .color-transformation { rule4: #FFFFFF; rule5: #F3F3F3;}
+ .darken-transformation {rule1: rgb(127, 0, 0);}
+ .without-opacity {rule1: rgb(255, 0, 0);}
+ .opacity-with-var {rule1: rgba(0, 0, 0, 0.5);}
+ .join-colors {rule1: rgb(0, 255, 0);}
+ .numbers {width: calc(100% - NaN);}
+ .unit {border: undefinedpx solid ;}
+ .unit-with-value-zero {border: undefinedpx solid ;}
+ .datepicker__day--highlighted:hover{background-color: #FFFFFF;}
+ .no-space-after-colon {rule4: #FF0000;rule5: #FF0000}
+ .font-theme-override {font: italic normal bold 10px/2em futura-lt-w01-book,sans-serif}
+ .font-override-with-var-from-settings {--bodyText: italic normal bold 10px/2em futura-lt-w01-book,sans-serif; font: italic normal bold 10px/2em futura-lt-w01-book,sans-serif;text-decoration: }
+ .font-override-with-var {--bodyText2: italic normal bold 10px/2em futura-lt-w01-book,sans-serif; font: italic normal bold 10px/2em futura-lt-w01-book,sans-serif;text-decoration: }
+ .double-var-reference {--var1:42; --var2:42; rule4:42;}
+ .undefined-variables {--yfyfdydfy:undefined}
+ .underlined { font: undefined;text-decoration:  }
+ .fallback-colors {color: #FFFFFF}
+ .first-none-falsy {--first_none_falsy: rgb(255, 0, 0); color: rgb(255, 0, 0)}
+ .fallback-multiple-vals {color: #FFFFFF;}"
+`;
+
+exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `
+"@charset 'UTF-8';
+
+/* line 2, app/common.scss */
+
+.tpa-first:hover {
+  margin-left: 10px;
+}
+
+.tpa-second {
+  border: 1px solid #000;
+}
+
+.no-tpa {
+  border: 1px solid #000;
+}
+
+@media (min-width: 300px) and (max-width: 730px) {
+  .tpa-first:hover {
+    /*height: 100%;*/
+    margin-left: 10px;
+    padding: 5px 2px 5px 2px;
+  }
+
+  .tpa-second {
+    border: 1px solid #000;
+  }
+
+  .no-tpa {
+    border: 1px solid #000;
+  }
+}
+
+@keyframes identifier {
+  100% {
+    color: #000;
+  }
+}
+
+@font-face {
+  font-family: \\"glyphicons\\";
+  font-weight: \\"normal\\";
+  font-style: \\"normal\\";
+}
+
+.in-the-middle {
+  width: 100%;
+}
+
+@media (min-width: 300px) and (max-width: 730px) {
+  /* comment */
+}
+
+@media (min-width: 300px) and (max-width: 730px) {
+  /* comment */
+  .tpa-first {
+    width: 100%;
+  }
+}
+
+.rtl-support {
+  color: #000;
+  background-color: rgba(255, 0, 0, .2);
+}
+
+.second-styles {
+  color: red;
+}
+
+.font-test3::after {content: \\" \\";}
+
+.color-transformation {rule: bar;rule3: baz;}
+
+.not-modify-static-params {padding: 10px 11px 12px 13px; margin-right: 20px; color: blue;}
+
+.not-modify-regular-css-vars {--bar: var(42); --baz: var(21); padding: --baz;}
+
+.no-space-after-colon {rule: bar;rule3:baz}
+
+"
+`;
