@@ -38,4 +38,14 @@ describe('Extract Styles', () => {
   it('should contain only TPA styles', () => {
     expect(getProcessedCss({styleParams, siteColors, siteTextPresets})).toMatchSnapshot('dynamic-css');
   });
+
+  it('should separate the static and dynamic parts of declarations', () => {
+    expect(cssFile).toContain('.no-space-after-colon {rule: bar;rule3:baz}');
+    expect(getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('.no-space-after-colon {rule4: #FF0000;rule5: #FF0000}');
+  });
+
+  it('should not have static CSS in Bundle file', () => {
+    expect(cssFile).toContain('.not-modify-static-params');
+    expect(getProcessedCss({styleParams, siteTextPresets, siteColors})).not.toContain('.not-modify-static-params');
+  });
 });

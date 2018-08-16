@@ -45,8 +45,14 @@ describe('multiple-entries', () => {
     });
   });
 
-  it('should have the source file name', () => {
+  it('cssFile1 should have body while cssFile2 not', () => {
     expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('body {');
     expect(tpaRuntime2.getProcessedCss({styleParams, siteTextPresets, siteColors})).not.toContain('body {');
+  });
+
+  it('should not leak variables from different entries', () => {
+    expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).not.toContain('--first_none_falsy');
+    expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('.first-none-falsy2 {color: }');
+    expect(tpaRuntime2.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('--first_none_falsy: rgb(255, 0, 0)');
   });
 });

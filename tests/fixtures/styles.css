@@ -87,6 +87,8 @@ body {
   border: "unit(--borderWidth, px)" solid "color(color-2)";
 }
 
+.first-none-falsy2 {color: "color(--first_none_falsy)"}
+
 .rtl-support {
   padding-START: 9px;
   float: START;

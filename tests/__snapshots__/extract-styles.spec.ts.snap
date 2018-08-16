@@ -45,6 +45,7 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .multi-usage {
   border: 2px solid #F3F3F3;
 }
+ .first-none-falsy2 {color: rgb(255, 0, 0)}
  .rtl-support {
   padding-left: 9px;
   float: left;
