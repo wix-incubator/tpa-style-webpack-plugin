@@ -24,7 +24,6 @@
   "homepage": "https://github.com/wix-incubator/tpa-style-webpack-plugin",
   "dependencies": {
     "@ctrl/tinycolor": "^2.2.0",
-    "@types/node": "^10.7.0",
     "parse-css-font": "^3.0.2",
     "postcss": "^7.0.2",
     "postcss-extract-styles": "^1.2.0",
@@ -34,7 +33,8 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
-    "css-loader": "^0.28.11",
+    "@types/node": "^10.7.1",
+    "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.5.0",
     "jest-teamcity-reporter": "^0.9.0",
