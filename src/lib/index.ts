@@ -25,7 +25,36 @@ class TPAStylePlugin {
     this.compilationHash = `__${hash.substr(0, 6)}__`;
   }
 
-  extract(compilation, chunks) {
+  apply(compiler) {
+    this.replaceRuntimeModule(compiler);
+
+    compiler.hooks.compilation.tap(pluginName, (compilation) => {
+      compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
+        this.extract(compilation, chunks)
+          .then((extractResults) => this.replaceSource(compilation, extractResults))
+          .then(() => callback())
+          .catch(callback);
+      });
+    });
+  }
+
+  private replaceRuntimeModule(compiler) {
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/tpa-style-webpack-plugin\/runtime\.js$/, (resource) => {
+      console.log('xxxxxx    ', resource.request);
+      resource.request = './dist/runtime/main.js';
+      resource.userRequest = resource.userRequest.replace('runtime.js', 'dist/runtime/main.js');
+      resource.rawRequest = resource.rawRequest.replace('runtime.js', 'dist/runtime/main.js');
+      resource.resource = resource.resource.replace('runtime.js', 'dist/runtime/main.js');
+
+      resource.loaders.push({
+        loader: path.join(__dirname, 'runtimeLoader.js'),
+        options: JSON.stringify({compilationHash: this.compilationHash})
+      });
+    });
+    nmrp.apply(compiler);
+  }
+
+  private extract(compilation, chunks) {
     const promises = [];
 
     chunks.forEach((chunk) => {
@@ -56,7 +85,7 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
-  replaceSource(compilation, extractResults) {
+  private replaceSource(compilation, extractResults) {
     extractResults.filter(({chunk}) => chunk.canBeInitial())
       .forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
         chunk.files.filter(fileName => fileName.endsWith('.js'))
@@ -84,34 +113,6 @@ class TPAStylePlugin {
             }
           });
       });
-  }
-
-  apply(compiler) {
-    this.replaceRuntimeModule(compiler);
-
-    compiler.hooks.compilation.tap(pluginName, (compilation) => {
-      compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
-        this.extract(compilation, chunks)
-          .then((extractResults) => this.replaceSource(compilation, extractResults))
-          .then(() => callback())
-          .catch(callback);
-      });
-    });
-  }
-
-  private replaceRuntimeModule(compiler) {
-    const nmrp = new webpack.NormalModuleReplacementPlugin(/tpa\-style\-webpack\-plugin\/runtime\.js$/, (resource) => {
-      resource.request = './dist/runtime/main.js';
-      resource.userRequest = resource.userRequest.replace('runtime.js', 'dist/runtime/main.js');
-      resource.rawRequest = resource.rawRequest.replace('runtime.js', 'dist/runtime/main.js');
-      resource.resource = resource.resource.replace('runtime.js', 'dist/runtime/main.js');
-
-      resource.loaders.push({
-        loader: path.join(__dirname, 'runtimeLoader.js'),
-        options: JSON.stringify({compilationHash: this.compilationHash})
-      });
-    });
-    nmrp.apply(compiler);
   }
 }
 
