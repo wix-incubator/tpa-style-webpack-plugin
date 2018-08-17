@@ -39,10 +39,13 @@ class TPAStylePlugin {
   }
 
   private replaceRuntimeModule(compiler) {
-    console.log('xxxxx', __dirname);
-    const nmrp = new webpack.NormalModuleReplacementPlugin(/tpa-style-webpack-plugin\/runtime\.js$/, (resource) => {
+    const runtimePath = path.resolve(__dirname, '../../runtime.js');
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, (resource) => {
+      if (resource.resource !== runtimePath) {
+        return;
+      }
+
       const dirname = path.dirname(resource.resource);
-      console.log('dirname xxxxxx', dirname);
       resource.request = './dist/runtime/main.js';
       resource.resource = path.join(dirname, 'dist/runtime/main.js');
 
