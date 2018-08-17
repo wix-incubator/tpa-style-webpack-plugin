@@ -1,16 +1,6 @@
-import * as path from 'path';
-
-module.exports = function () {
-};
-module.exports.pitch = function () {
+module.exports = function (content) {
   this.cacheable && this.cacheable();
-
-  const callback = this.async();
-  const params = this.query.slice(1);
-
-  const templatePath = path.join(__dirname, '../runtime/main.js');
-
-  this.addDependency(templatePath);
-  callback(null, `import {loader} from '${templatePath}';
-  export const getProcessedCss = loader(${params});`);
+  const params = JSON.parse(this.query.slice(1));
+  content = content.replace(/__COMPILATION_HASH__/g, params.compilationHash);
+  return content;
 };

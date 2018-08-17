@@ -6,12 +6,13 @@ import {extractTPACustomSyntax} from './postcssPlugin';
 import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
+import * as webpack from 'webpack';
 
-const pluginName = 'tpa-style';
+const pluginName = 'tpa-style-webpack-plugin';
 
 class TPAStylePlugin {
   private _options;
-  private readonly prefixSelector: string;
+  private readonly compilationHash: string;
 
   constructor(options) {
     this._options = Object.assign({
@@ -21,7 +22,7 @@ class TPAStylePlugin {
       ]
     }, options);
     const hash = createHash('md5').update(new Date().getTime().toString()).digest('hex');
-    this.prefixSelector = `__${hash.substr(0, 6)}__`;
+    this.compilationHash = `__${hash.substr(0, 6)}__`;
   }
 
   extract(compilation, chunks) {
@@ -39,7 +40,7 @@ class TPAStylePlugin {
               return new Promise((resolve) => {
                 postcss([
                   prefixer({
-                    prefix: this.prefixSelector
+                    prefix: this.compilationHash
                   }),
                   extractTPACustomSyntax({
                     onFinish: ({cssVars, customSyntaxStrs, css}) => {
@@ -61,7 +62,7 @@ class TPAStylePlugin {
         chunk.files.filter(fileName => fileName.endsWith('.js'))
           .forEach(file => {
             const sourceCode = compilation.assets[file].source();
-            const placeHolder = '\'__INJECTED_DATA_PLACEHOLDER__\'';
+            const placeHolder = `'${this.compilationHash}INJECTED_DATA_PLACEHOLDER'`;
             const placeHolderPos = sourceCode.indexOf(placeHolder);
 
             if (placeHolderPos > -1) {
@@ -86,25 +87,7 @@ class TPAStylePlugin {
   }
 
   apply(compiler) {
-    const runtimePath = path.resolve(__dirname, '../runtime/fakeMain.js');
-
-    compiler.hooks.normalModuleFactory.tap(pluginName, (nmf) => {
-      nmf.hooks.afterResolve.tapAsync(pluginName, (result, callback) => {
-        const resource = path.resolve(compiler.context, result.resource);
-
-        if (resource !== runtimePath) {
-          callback(null, result);
-          return;
-        }
-
-        result.loaders.push({
-          loader: path.join(__dirname, 'runtimeLoader.js'),
-          options: JSON.stringify({prefixSelector: this.prefixSelector})
-        });
-
-        callback(null, result);
-      });
-    });
+    this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(pluginName, (compilation) => {
       compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
@@ -114,6 +97,21 @@ class TPAStylePlugin {
           .catch(callback);
       });
     });
+  }
+
+  private replaceRuntimeModule(compiler) {
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/tpa\-style\-webpack\-plugin\/runtime\.js$/, (resource) => {
+      resource.request = './dist/runtime/main.js';
+      resource.userRequest = resource.userRequest.replace('runtime.js', 'dist/runtime/main.js');
+      resource.rawRequest = resource.rawRequest.replace('runtime.js', 'dist/runtime/main.js');
+      resource.resource = resource.resource.replace('runtime.js', 'dist/runtime/main.js');
+
+      resource.loaders.push({
+        loader: path.join(__dirname, 'runtimeLoader.js'),
+        options: JSON.stringify({compilationHash: this.compilationHash})
+      });
+    });
+    nmrp.apply(compiler);
   }
 }
 

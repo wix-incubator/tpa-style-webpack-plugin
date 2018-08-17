@@ -22,31 +22,29 @@ export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) 
 
 const defaultOptions = {isRTL: false};
 
-export function loader(loaderOptions): IGetProcessedCssFn {
-  return ({siteColors, siteTextPresets, styleParams}: IStyles, options: Partial<IOptions>) => {
-    options = {...defaultOptions, ...options};
-    const injectedData: IInjectedData = '__INJECTED_DATA_PLACEHOLDER__' as any;
+export function getProcessedCss({siteColors, siteTextPresets, styleParams}: IStyles, options: Partial<IOptions>): string {
+  options = {...defaultOptions, ...options};
+  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-    if (!injectedData.css) {
-      return ''
-    }
+  if (!injectedData.css) {
+    return '';
+  }
 
-    const prefixedCss = injectedData.css.replace(new RegExp(loaderOptions.prefixSelector, 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
+  const prefixedCss = injectedData.css.replace(new RegExp('__COMPILATION_HASH__', 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
 
-    const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
+  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-    const customSyntaxHelper = new CustomSyntaxHelper();
-    customSyntaxHelper.setVars(injectedData.cssVars);
-    customSyntaxHelper.setCustomSyntax(injectedData.customSyntaxStrs);
+  const customSyntaxHelper = new CustomSyntaxHelper();
+  customSyntaxHelper.setVars(injectedData.cssVars);
+  customSyntaxHelper.setCustomSyntax(injectedData.customSyntaxStrs);
 
-    return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
-      const newValue = processor({
-        part,
-        customSyntaxHelper,
-        tpaParams
-      }, {plugins});
+  return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
+    const newValue = processor({
+      part,
+      customSyntaxHelper,
+      tpaParams
+    }, {plugins});
 
-      return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
-    }, prefixedCss);
-  };
+    return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
+  }, prefixedCss);
 }
