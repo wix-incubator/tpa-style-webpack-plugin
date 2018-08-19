@@ -1,7 +1,5 @@
 import {cssFunctions} from '../../src/runtime/cssFunctions';
-import {siteTextPresets} from '../fixtures/siteTextPresets';
 import {IS_RTL_PARAM} from '../../src/runtime/constants';
-import {ITPAParams} from '../../src/runtime/generateTPAParams';
 
 describe('cssFunctions', () => {
   describe('join', () => {

@@ -6,11 +6,13 @@ import {siteColors, getSiteColor} from './fixtures/siteColors';
 import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
 import {clonedWith} from './helpers/cloned-with';
+import {readFile} from './helpers/readfile';
 
 describe('runtime', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime');
   const entryName = 'app';
-  let getProcessedCss: IGetProcessedCssFn;
+  let getProcessedCss: IGetProcessedCssFn,
+    runtimeBundleStr: string;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
@@ -25,6 +27,7 @@ describe('runtime', () => {
     });
 
     const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));
+    runtimeBundleStr = await readFile(path.join(outputDirPath, `${entryName}.bundle.js`), 'utf8');
     getProcessedCss = realFunc;
   });
 
@@ -459,6 +462,20 @@ describe('runtime', () => {
         const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {prefixSelector});
         expect(css).toContain(`${prefixSelector} .rtl-support`);
       });
+    });
+  });
+
+  describe('bundle inspection', () => {
+    it('should not contain multiple custom syntax parts of the same part', () => {
+      const count = (runtimeBundleStr.match(/color\(color\-18\)/g) || []).length;
+      // 2 in the css + 2 in the extracted metadata
+      expect(count).toEqual(2 + 1);
+    });
+
+    it('should replace all the instances of the same part', () => {
+      const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.multiple-parts-of-the-same-part {color: ${getSiteColor('color-18', siteColors)}; background-color: ${getSiteColor('color-18', siteColors)}};`;
+      expect(css).toContain(expectedCss);
     });
   });
 });

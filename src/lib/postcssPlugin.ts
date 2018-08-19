@@ -18,6 +18,13 @@ export interface IOptionResult {
   css: string;
 }
 
+function collectCustomSyntaxFrom(value: string, customSyntaxStrs): void {
+  let match;
+  if (match = value.match(customSyntaxRegex)) {
+    customSyntaxStrs.push(...match);
+  }
+}
+
 export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as IOptions) => {
   const cssVars = {};
   const customSyntaxStrs = [];
@@ -33,17 +40,14 @@ export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (o
         cssVars[decl.prop] = decl.value;
       }
 
-      if (match = decl.prop.match(customSyntaxRegex)) {
-        customSyntaxStrs.push(...match);
-      }
-
-      if (match = decl.value.match(customSyntaxRegex)) {
-        customSyntaxStrs.push(...match);
-      }
+      collectCustomSyntaxFrom(decl.prop, customSyntaxStrs);
+      collectCustomSyntaxFrom(decl.value, customSyntaxStrs);
     });
 
     if (typeof opts.onFinish === 'function') {
-      opts.onFinish({cssVars, customSyntaxStrs, css: css.toString()});
+      const uniqueCustomSyntaxStrs = customSyntaxStrs.filter((value, index, self) => self.indexOf(value) === index);
+
+      opts.onFinish({cssVars, customSyntaxStrs: uniqueCustomSyntaxStrs, css: css.toString()});
     }
   };
 });

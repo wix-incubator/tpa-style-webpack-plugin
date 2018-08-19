@@ -91,7 +91,8 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .underlined { font: undefined;text-decoration:  }
  .fallback-colors {color: #FFFFFF}
  .first-none-falsy {--first_none_falsy: rgb(255, 0, 0); color: rgb(255, 0, 0)}
- .fallback-multiple-vals {color: #FFFFFF;}"
+ .fallback-multiple-vals {color: #FFFFFF;}
+ .multiple-parts-of-the-same-part {color: #3AB3CF; background-color: #3AB3CF};"
 `;
 
 exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `
