@@ -1,6 +1,5 @@
-import {CustomSyntaxHelper} from './customSyntaxHelper';
 import {generateTPAParams} from './generateTPAParams';
-import {processor} from './processor';
+import {getProcessor} from './processor';
 import {cssFunctions} from './cssFunctions';
 import {Plugins} from './plugins';
 import {IInjectedData, IStyles} from './types';
@@ -34,16 +33,10 @@ export function getProcessedCss({siteColors, siteTextPresets, styleParams}: ISty
 
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-  const customSyntaxHelper = new CustomSyntaxHelper();
-  customSyntaxHelper.setVars(injectedData.cssVars);
-  customSyntaxHelper.setCustomSyntax(injectedData.customSyntaxStrs);
+  const processor = getProcessor({cssVars: injectedData.cssVars, plugins});
 
-  return customSyntaxHelper.customSyntaxStrs.reduce((processedContent, part) => {
-    const newValue = processor({
-      part,
-      customSyntaxHelper,
-      tpaParams
-    }, {plugins});
+  return injectedData.customSyntaxStrs.reduce((processedContent, part) => {
+    const newValue = processor.process({part, tpaParams});
 
     return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
   }, prefixedCss);
