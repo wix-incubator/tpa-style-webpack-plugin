@@ -88,7 +88,38 @@ class TPAStylePlugin {
   }
 
   private replaceSource(compilation, extractResults) {
-    extractResults = extractResults.filter(({chunk}) => chunk.canBeInitial())
+    const entryMergedChunks = this.getEntryMergedChunks(extractResults);
+
+    entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
+      chunk.files.filter(fileName => fileName.endsWith('.js'))
+        .forEach(file => {
+          const sourceCode = compilation.assets[file].source();
+          const placeHolder = `'${this.compilationHash}INJECTED_DATA_PLACEHOLDER'`;
+          const placeHolderPos = sourceCode.indexOf(placeHolder);
+
+          if (placeHolderPos > -1) {
+            const newSource = new ReplaceSource(
+              compilation.assets[file],
+              file
+            );
+
+            newSource.replace(
+              placeHolderPos,
+              placeHolderPos + placeHolder.length - 1,
+              JSON.stringify({
+                cssVars,
+                customSyntaxStrs,
+                css
+              })
+            );
+            compilation.assets[file] = newSource;
+          }
+        });
+    });
+  }
+
+  private getEntryMergedChunks(extractResults) {
+    const entryMergedChunks = extractResults.filter(({chunk}) => chunk.canBeInitial())
       .reduce((chunkMap, currentResult) => {
         const currentChunk = currentResult.chunk;
         if (chunkMap.hasOwnProperty(currentChunk.id)) {
@@ -99,34 +130,8 @@ class TPAStylePlugin {
         return chunkMap;
       }, {});
 
-      Object.keys(extractResults)
-        .map(key => extractResults[key])
-        .forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
-        chunk.files.filter(fileName => fileName.endsWith('.js'))
-          .forEach(file => {
-            const sourceCode = compilation.assets[file].source();
-            const placeHolder = `'${this.compilationHash}INJECTED_DATA_PLACEHOLDER'`;
-            const placeHolderPos = sourceCode.indexOf(placeHolder);
-
-            if (placeHolderPos > -1) {
-              const newSource = new ReplaceSource(
-                compilation.assets[file],
-                file
-              );
-
-              newSource.replace(
-                placeHolderPos,
-                placeHolderPos + placeHolder.length - 1,
-                JSON.stringify({
-                  cssVars,
-                  customSyntaxStrs,
-                  css
-                })
-              );
-              compilation.assets[file] = newSource;
-            }
-          });
-      });
+    return Object.keys(entryMergedChunks)
+      .map(key => entryMergedChunks[key]);
   }
 
   private mergeExtractResults(extractResult1, extractResult2) {
