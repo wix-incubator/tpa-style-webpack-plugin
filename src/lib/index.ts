@@ -8,9 +8,8 @@ import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
 
-const pluginName = 'tpa-style-webpack-plugin';
-
 class TPAStylePlugin {
+  public static pluginName = 'tpa-style-webpack-plugin';
   private _options;
   private readonly compilationHash: string;
 
@@ -28,8 +27,8 @@ class TPAStylePlugin {
   apply(compiler) {
     this.replaceRuntimeModule(compiler);
 
-    compiler.hooks.compilation.tap(pluginName, (compilation) => {
-      compilation.hooks.optimizeChunkAssets.tapAsync(pluginName, (chunks, callback) => {
+    compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, (compilation) => {
+      compilation.hooks.optimizeChunkAssets.tapAsync(TPAStylePlugin.pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
           .then((extractResults) => this.replaceSource(compilation, extractResults))
           .then(() => callback())
@@ -89,8 +88,20 @@ class TPAStylePlugin {
   }
 
   private replaceSource(compilation, extractResults) {
-    extractResults.filter(({chunk}) => chunk.canBeInitial())
-      .forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
+    extractResults = extractResults.filter(({chunk}) => chunk.canBeInitial())
+      .reduce((chunkMap, currentResult) => {
+        const currentChunk = currentResult.chunk;
+        if (chunkMap.hasOwnProperty(currentChunk.id)) {
+          chunkMap[currentChunk.id] = this.mergeExtractResults(chunkMap[currentChunk.id], currentResult);
+        } else {
+          chunkMap[currentChunk.id] = currentResult;
+        }
+        return chunkMap;
+      }, {});
+
+      Object.keys(extractResults)
+        .map(key => extractResults[key])
+        .forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
         chunk.files.filter(fileName => fileName.endsWith('.js'))
           .forEach(file => {
             const sourceCode = compilation.assets[file].source();
@@ -116,6 +127,16 @@ class TPAStylePlugin {
             }
           });
       });
+  }
+
+  private mergeExtractResults(extractResult1, extractResult2) {
+    const newResult = {...extractResult1};
+
+    newResult.cssVars = {...newResult.cssVars, ...extractResult2.cssVars};
+    newResult.customSyntaxStrs = newResult.customSyntaxStrs.concat(extractResult2.customSyntaxStrs);
+    newResult.css += `\n${extractResult2.css}`;
+
+    return newResult;
   }
 }
 
