@@ -9,7 +9,7 @@ function isCssVar(key) {
 const customSyntaxRegex = /"\w+\([^"]*\)"/g;
 
 export interface IOptions {
-  onFinish: (result: IOptionResult) => void;
+  onFinish(result: IOptionResult): void;
 }
 
 export interface IOptionResult {
@@ -31,7 +31,6 @@ export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (o
 
   return (css: ContainerBase) => {
     css.walkDecls((decl: Declaration) => {
-      let match;
 
       Object.keys(replacers)
         .forEach(replacerName => decl = replacers[replacerName](decl));

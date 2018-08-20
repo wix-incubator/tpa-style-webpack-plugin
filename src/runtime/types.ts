@@ -13,8 +13,8 @@ export interface IStyles {
 export interface IStyleParams {
   numbers: { [key: string]: number };
   booleans: { [key: string]: boolean };
-  colors?: { [key: string]: IStyleColor };
-  fonts?: { [s: string]: IStyleFont; };
+  colors: { [key: string]: IStyleColor };
+  fonts: { [s: string]: IStyleFont };
   googleFontsCssUrl: string;
 }
 

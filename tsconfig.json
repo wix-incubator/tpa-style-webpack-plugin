@@ -13,5 +13,7 @@
       "path": "./src/lib/tsconfig.json"
     }
   ],
-  "include": []
+  "include": [
+    "./src/**/*.ts"
+  ]
 }

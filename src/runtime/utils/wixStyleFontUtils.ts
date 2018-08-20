@@ -3,7 +3,7 @@ import parseCssFont from 'parse-css-font';
 import {ISiteTextPreset, IStyleFont} from '../types';
 
 export const wixStylesFontUtils = {
-  getFullFontStyles({fontStyles, siteTextPresets}: { fontStyles: { [s: string]: IStyleFont; }; siteTextPresets: ISiteTextPreset }) {
+  getFullFontStyles({fontStyles, siteTextPresets}: { fontStyles: { [s: string]: IStyleFont }; siteTextPresets: ISiteTextPreset }) {
     let ret = {} as any;
 
     // Fix color styles due to '.' to '-' conversion

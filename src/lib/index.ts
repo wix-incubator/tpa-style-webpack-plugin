@@ -10,16 +10,15 @@ import * as webpack from 'webpack';
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
-  private _options;
+  private readonly _options;
   private readonly compilationHash: string;
 
   constructor(options) {
-    this._options = Object.assign({
+    this._options = {
       pattern: [
         /"\w+\([^"]*\)"/,
         /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/
-      ]
-    }, options);
+      ], ...options};
     const hash = createHash('md5').update(new Date().getTime().toString()).digest('hex');
     this.compilationHash = `__${hash.substr(0, 6)}__`;
   }
