@@ -18,18 +18,20 @@ class TPAStylePlugin {
       pattern: [
         /"\w+\([^"]*\)"/,
         /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/
-      ], ...options};
+      ], ...options
+    };
     const hash = createHash('md5').update(new Date().getTime().toString()).digest('hex');
     this.compilationHash = `__${hash.substr(0, 6)}__`;
   }
 
   apply(compiler) {
+    const shouldEscapeContent = compiler.options.devtool === 'cheap-eval-source-map';
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, (compilation) => {
       compilation.hooks.optimizeChunkAssets.tapAsync(TPAStylePlugin.pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
-          .then((extractResults) => this.replaceSource(compilation, extractResults))
+          .then((extractResults) => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
           .catch(callback);
       });
@@ -86,7 +88,7 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
-  private replaceSource(compilation, extractResults) {
+  private replaceSource(compilation, extractResults, shouldEscapeContent) {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
     entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
@@ -102,14 +104,18 @@ class TPAStylePlugin {
               file
             );
 
+            const content = JSON.stringify({
+              cssVars,
+              customSyntaxStrs,
+              css
+            });
+
+            const escapedContent = JSON.stringify(content);
+
             newSource.replace(
               placeHolderPos,
               placeHolderPos + placeHolder.length - 1,
-              JSON.stringify({
-                cssVars,
-                customSyntaxStrs,
-                css
-              })
+              shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
             );
             compilation.assets[file] = newSource;
           }

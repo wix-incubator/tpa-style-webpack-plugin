@@ -30,7 +30,7 @@ const commonConfig = {
 };
 
 export async function runWebpack(config) {
-  config = merge(config, commonConfig);
+  config = merge(commonConfig, config);
 
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {
