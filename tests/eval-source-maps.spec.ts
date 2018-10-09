@@ -8,10 +8,10 @@ import {clearDir} from './helpers/clear-dir';
 
 describe('Eval source maps', () => {
   const outputDirPath = path.resolve(__dirname, './output/eval-source-maps');
-  const entryName = 'app';
   let getProcessedCss: IGetProcessedCssFn;
 
-  beforeAll(async () => {
+  it('should support cheap-eval-source-map', async () => {
+    const entryName = 'cheap-eval-source-map';
     await clearDir(outputDirPath);
     await runWebpack({
       output: {
@@ -23,9 +23,30 @@ describe('Eval source maps', () => {
         [entryName]: './tests/fixtures/runtime-entry.js'
       }
     });
+
+    try {
+      const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));
+      getProcessedCss = realFunc;
+      expect(() => getProcessedCss({styleParams, siteColors, siteTextPresets})).not.toThrow();
+    } catch (e) {
+      throw new Error('it should be parsed correctly');
+    }
   });
 
-  it('should support string eval', () => {
+  it('should support cheap-module-eval-source-map', async () => {
+    const entryName = 'cheap-module-eval-source-map';
+    await clearDir(outputDirPath);
+    await runWebpack({
+      output: {
+        path: path.resolve(outputDirPath),
+        libraryTarget: 'commonjs'
+      },
+      devtool: 'cheap-module-eval-source-map',
+      entry: {
+        [entryName]: './tests/fixtures/runtime-entry.js'
+      }
+    });
+
     try {
       const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));
       getProcessedCss = realFunc;

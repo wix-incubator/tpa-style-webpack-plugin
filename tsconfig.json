@@ -4,7 +4,7 @@
     "target": "es2015",
     "moduleResolution": "node",
     "sourceMap": false,
-    "lib": ["es2015"]
+    "lib": ["es2015", "es2017"]
   },
   "references": [
     {

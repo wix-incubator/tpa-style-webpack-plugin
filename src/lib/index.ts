@@ -25,7 +25,7 @@ class TPAStylePlugin {
   }
 
   apply(compiler) {
-    const shouldEscapeContent = compiler.options.devtool === 'cheap-eval-source-map';
+    const shouldEscapeContent = ['cheap-module-eval-source-map', 'cheap-eval-source-map'].includes(compiler.options.devtool);
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, (compilation) => {
