@@ -184,6 +184,18 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('lighten transformation', () => {
+    const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = '.lighten {rule1: rgb(77, 255, 77);}';
+    expect(css).toContain(expectedCss);
+  });
+
+  it('whiten transformation', () => {
+    const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = '.whiten {rule1: rgb(140, 106, 178);}';
+    expect(css).toContain(expectedCss);
+  });
+
   it('without opacity', () => {
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
     const expectedCss = '.without-opacity {rule1: rgb(255, 0, 0);}';
