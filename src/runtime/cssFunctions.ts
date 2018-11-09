@@ -86,6 +86,12 @@ export const cssFunctions = {
   darken: (colorVal, darkenValue) => {
     return new TinyColor(colorVal).brighten(-1 * darkenValue * 100).toRgbString();
   },
+  lighten: (colorVal, lightenVal) => {
+    return new TinyColor(colorVal).lighten( lightenVal * 100).toRgbString();
+  },
+  whiten: (colorVal, whitenVal) => {
+    return new TinyColor(colorVal).tint(whitenVal * 100).toRgbString();
+  },
   number: (value) => {
     return +value;
   },

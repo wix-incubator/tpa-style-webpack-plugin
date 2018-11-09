@@ -72,6 +72,18 @@ describe('cssFunctions', () => {
     });
   });
 
+  describe('lighten', () => {
+    it('should add lighten', () => {
+      expect(cssFunctions.lighten('#00FF00', 0.15)).toBe('rgb(77, 255, 77)');
+    });
+  });
+
+  describe('whiten', () => {
+    it('should add whiten', () => {
+      expect(cssFunctions.whiten('#663898', 0.25)).toBe('rgb(140, 106, 178)');
+    });
+  });
+
   describe('font', () => {
     it('should support font as an object', () => {
       const font = {
