@@ -105,7 +105,7 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
       }
       ```
 
-  - If you use percentages and dynamic values together inside of `calc`, you need to have multiple units to [opt out of `calc` minification](https://github.com/MoOx/reduce-css-calc/pull/9/files#diff-168726dbe96b3ce427e7fedce31bb0bcR54):
+  - If you use percentages and dynamic values together inside of `calc`, you need to have mixed units in order to [opt out of `calc` minification](https://github.com/MoOx/reduce-css-calc/pull/9/files#diff-168726dbe96b3ce427e7fedce31bb0bcR54):
 
     ```css
       .my-selector {
