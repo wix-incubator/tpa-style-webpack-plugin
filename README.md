@@ -93,12 +93,12 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
 - If you use [cssnano](https://cssnano.co/) to minify CSS, be aware of the following limitations:
   - Don't mix static and dynamic values inside of `border` shorthand declaration ([see the issue](https://github.com/cssnano/cssnano/issues/402)):
 
-    - ```css
+    ```css
       .my-selector {
           /* DON'T */
-      	border: "unit(--var-from-settings, px)" solid "color(color-1)"; /* `cssnano` will remove the dynamic values, and it will become "border: solid;" */
+          border: "unit(--var-from-settings, px)" solid "color(color-1)"; /* `cssnano` will remove the dynamic values, and it will become "border: solid;" */
       
-      	/* DO */
+          /* DO */
           border-width: "unit(--var-from-settings, px)";
           border-style: solid;
           border-color: "color(color-1)"
@@ -107,7 +107,7 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
 
   - If you use percentages and dynamic values together inside of `calc`, you need to have multiple units to [opt out of `calc` minification](https://github.com/MoOx/reduce-css-calc/pull/9/files#diff-168726dbe96b3ce427e7fedce31bb0bcR54):
 
-    - ```css
+    ```css
       .my-selector {
           /* DON'T */
           width: calc(100% / "number(4)"); /* `reduce-css-calc` (used by `cssnano`) will transform it to "calc(1 / 4)" */
