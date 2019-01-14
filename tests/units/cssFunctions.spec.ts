@@ -126,11 +126,27 @@ describe('cssFunctions', () => {
     it('should return given font', () => {
       expect(cssFunctions.font(`unknown-font`, {fonts: {}} as any)).toBe(`unknown-font`);
     });
+
+    it('should escape html entities', () => {
+      const font = {
+        size: '<10>',
+        lineHeight: '<1.4>',
+        style: '<italic>',
+        family: ['<script></script>font-name'],
+        weight: '<bold>',
+        variant: '<variant>'
+      };
+      expect(cssFunctions.font(font, {} as any)).toBe('&lt;italic&gt; &lt;variant&gt; &lt;bold&gt; &lt;10&gt;/&lt;1.4&gt; &lt;script&gt;&lt;/script&gt;font-name');
+    });
   });
 
   describe('string', () => {
     it('should support string', () => {
       expect(cssFunctions.string('str')).toBe(`str`);
+    });
+
+    it('should escape html entities', () => {
+      expect(cssFunctions.string('<str>')).toBe(`&lt;str&gt;`);
     });
   });
 
@@ -147,6 +163,10 @@ describe('cssFunctions', () => {
   describe('unit', () => {
     it('should add unit', () => {
       expect(cssFunctions.unit(10, 'px')).toBe(`10px`);
+    });
+
+    it('should escape html entities', () => {
+      expect(cssFunctions.unit('<10>', 'px')).toBe(`&lt;10&gt;px`);
     });
   });
 

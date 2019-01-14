@@ -32,3 +32,7 @@ export function pickBy<T>(obj: Object, predicate: (value: any) => boolean): { [s
     return result;
   }, {});
 }
+
+export function escapeHtml(str: string): string {
+  return str && str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}

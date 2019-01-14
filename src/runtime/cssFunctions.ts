@@ -1,6 +1,6 @@
 import {TinyColor} from '@ctrl/tinycolor';
 import {ITPAParams} from './generateTPAParams';
-import {isJsonLike, parseJson} from './utils/utils';
+import {escapeHtml, isJsonLike, parseJson} from './utils/utils';
 import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
 import {directionMap, IS_RTL_PARAM} from './constants';
 
@@ -40,7 +40,7 @@ export const cssFunctions = {
       return '';
     }
   },
-  font: (font, tpaParams: ITPAParams) => {
+  font: (font, tpaParams: ITPAParams): string => {
     let fontValue;
     if (typeof font === 'object') {
       fontValue = font;
@@ -60,7 +60,7 @@ export const cssFunctions = {
     } else if (tpaParams.fonts[font]) {
       fontValue = tpaParams.fonts[font];
     } else {
-      return font;
+      return escapeHtml(font);
     }
 
     let fontCssValue = wixStylesFontUtils.toFontCssValue(fontValue);
@@ -69,10 +69,10 @@ export const cssFunctions = {
       fontCssValue = fontCssValue.split(';')[0];
     }
 
-    return fontCssValue;
+    return escapeHtml(fontCssValue);
 
   },
-  opacity: (color, opacity) => {
+  opacity: (color, opacity: number): string => {
     const oldColor = new TinyColor(color);
     const newOpacity = oldColor.toRgb().a * opacity;
     return oldColor.setAlpha(newOpacity).toRgbString();
@@ -80,32 +80,32 @@ export const cssFunctions = {
   withoutOpacity: (color) => {
     return new TinyColor(color).setAlpha(1).toRgbString();
   },
-  string: (value) => {
-    return value;
+  string: (value: string): string => {
+    return escapeHtml(value);
   },
-  darken: (colorVal, darkenValue) => {
+  darken: (colorVal, darkenValue: number): string => {
     return new TinyColor(colorVal).brighten(-1 * darkenValue * 100).toRgbString();
   },
-  lighten: (colorVal, lightenVal) => {
-    return new TinyColor(colorVal).lighten( lightenVal * 100).toRgbString();
+  lighten: (colorVal, lightenVal: number): string => {
+    return new TinyColor(colorVal).lighten(lightenVal * 100).toRgbString();
   },
-  whiten: (colorVal, whitenVal) => {
+  whiten: (colorVal, whitenVal: number): string => {
     return new TinyColor(colorVal).tint(whitenVal * 100).toRgbString();
   },
-  number: (value) => {
+  number: (value: number | string): number => {
     return +value;
   },
-  underline: (font) => {
+  underline: (font): string => {
     return font && font.underline ? 'underline' : '';
   },
-  unit: (value, unit) => {
-    return `${value}${unit}`;
+  unit: (value: number | string, unit: string): string => {
+    return escapeHtml(`${value}${unit}`);
   },
   fallback: (...args) => {
     const argsWithoutTPAParams = args.slice(0, -1);
     return argsWithoutTPAParams.filter(Boolean)[0];
   },
-  direction: (value, tpaParams: ITPAParams) => {
+  direction: (value: string, tpaParams: ITPAParams): string => {
     const direction = tpaParams.booleans[IS_RTL_PARAM] ? 'rtl' : 'ltr';
     return directionMap[value][direction];
   }
