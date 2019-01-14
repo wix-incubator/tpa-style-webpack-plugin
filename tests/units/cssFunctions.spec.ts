@@ -124,7 +124,7 @@ describe('cssFunctions', () => {
     });
 
     it('should return given font', () => {
-      expect(cssFunctions.font(`unknown-font`, {fonts: {}} as any)).toBe(`unknown-font`);
+      expect(cssFunctions.font(`unknown-font<xss>`, {fonts: {}} as any)).toBe(`unknown-font&lt;xss&gt;`);
     });
 
     it('should escape html entities', () => {
