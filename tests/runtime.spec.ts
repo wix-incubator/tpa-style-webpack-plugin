@@ -166,6 +166,12 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('should calculate nested functions with multiple functions params', () => {
+    const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = '.nested-functions-with-multiple-functions-params {--var: #F3F3F3; color: rgba(255, 255, 255, 0.5)}';
+    expect(css).toContain(expectedCss);
+  });
+
   it('opacity with default value', () => {
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
     const expectedCss = '.opacity-default-value {rule1: rgba(255, 0, 0, 0.5); --lala: #FF0000;}';
@@ -486,7 +492,7 @@ describe('runtime', () => {
 
     it('should replace all the instances of the same part', () => {
       const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
-      const expectedCss = `.multiple-parts-of-the-same-part {color: ${getSiteColor('color-18', siteColors)}; background-color: ${getSiteColor('color-18', siteColors)}};`;
+      const expectedCss = `.multiple-parts-of-the-same-part {color: ${getSiteColor('color-18', siteColors)}; background-color: ${getSiteColor('color-18', siteColors)}}`;
       expect(css).toContain(expectedCss);
     });
   });

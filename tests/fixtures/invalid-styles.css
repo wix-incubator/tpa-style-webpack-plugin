@@ -1,0 +1,5 @@
+.invalid-styles {
+  color: "opacity(color(color-1, 0.5)";
+  color: "fallback(font({theme: 'Body-M'), font(Body-M))";
+  color: "join(darken(opacity(color(color-1, 1)), 1, color(color-1), 1)";
+}
