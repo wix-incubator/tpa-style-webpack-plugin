@@ -13,14 +13,14 @@ export interface IOptions {
 }
 
 export interface IOptionResult {
-  cssVars: { [key: string]: string };
+  cssVars: {[key: string]: string};
   customSyntaxStrs: string[];
   css: string;
 }
 
 function collectCustomSyntaxFrom(value: string, customSyntaxStrs): void {
   let match;
-  if (match = value.match(customSyntaxRegex)) {
+  if ((match = value.match(customSyntaxRegex))) {
     customSyntaxStrs.push(...match);
   }
 }
@@ -31,9 +31,7 @@ export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (o
 
   return (css: ContainerBase) => {
     css.walkDecls((decl: Declaration) => {
-
-      Object.keys(replacers)
-        .forEach(replacerName => decl = replacers[replacerName](decl));
+      Object.keys(replacers).forEach(replacerName => (decl = replacers[replacerName](decl)));
 
       if (isCssVar(decl.prop)) {
         cssVars[decl.prop] = decl.value;
@@ -50,4 +48,3 @@ export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (o
     }
   };
 });
-

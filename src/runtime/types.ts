@@ -1,7 +1,7 @@
 export interface IInjectedData {
   css: string;
   customSyntaxStrs: string[];
-  cssVars: { [key: string]: string };
+  cssVars: {[key: string]: string};
 }
 
 export interface IStyles {
@@ -11,10 +11,10 @@ export interface IStyles {
 }
 
 export interface IStyleParams {
-  numbers: { [key: string]: number };
-  booleans: { [key: string]: boolean };
-  colors: { [key: string]: IStyleColor };
-  fonts: { [s: string]: IStyleFont };
+  numbers: {[key: string]: number};
+  booleans: {[key: string]: boolean};
+  colors: {[key: string]: IStyleColor};
+  fonts: {[s: string]: IStyleFont};
   googleFontsCssUrl: string;
 }
 
@@ -54,9 +54,9 @@ export interface ISiteTextPreset {
   'Heading-L'?: ITextPreset;
   'Heading-M'?: ITextPreset;
   'Heading-S'?: ITextPreset;
-  'Menu'?: ITextPreset;
+  Menu?: ITextPreset;
   'Page-title'?: ITextPreset;
-  'Title'?: ITextPreset;
+  Title?: ITextPreset;
 }
 
 export interface ITextPreset {

@@ -1,15 +1,14 @@
 import {ITPAParams} from './generateTPAParams';
 import {isCssVar, isNumber} from './utils/utils';
 
-
 export function getProcessor({cssVars, plugins}) {
-
   function executeFunction(value) {
     const functionSignature = plugins.getFunctionSignature(value);
 
     if (functionSignature) {
-      return plugins.cssFunctions[functionSignature.funcName](...functionSignature.args
-        .map((arg) => executeFunction(arg.trim())));
+      return plugins.cssFunctions[functionSignature.funcName](
+        ...functionSignature.args.map(arg => executeFunction(arg.trim()))
+      );
     } else {
       return getVarOrPrimitiveValue(value);
     }
@@ -48,10 +47,7 @@ export function getProcessor({cssVars, plugins}) {
     };
   }
 
-  function process({
-    part,
-    tpaParams
-  }) {
+  function process({part, tpaParams}) {
     if (plugins.isSupportedFunction(part)) {
       const evaluationFunc = executeFunction(part);
       return evaluationFunc(tpaParams);
@@ -60,6 +56,6 @@ export function getProcessor({cssVars, plugins}) {
   }
 
   return {
-    process
+    process,
   };
 }

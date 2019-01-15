@@ -6,14 +6,19 @@ import {IS_RTL_PARAM} from './constants';
 import {ISiteColor, ISiteTextPreset, IStyleFont, IStyleParams} from './types';
 
 export interface ITPAParams {
-  colors: { [index: string]: { value: string } };
-  numbers: { [index: string]: number };
-  booleans: { [index: string]: boolean };
+  colors: {[index: string]: {value: string}};
+  numbers: {[index: string]: number};
+  booleans: {[index: string]: boolean};
   fonts: Object;
   strings: Object;
 }
 
-export function generateTPAParams(siteColors: ISiteColor[], siteTextPresets: ISiteTextPreset, styleParams: IStyleParams, options: Partial<IOptions>): ITPAParams {
+export function generateTPAParams(
+  siteColors: ISiteColor[],
+  siteTextPresets: ISiteTextPreset,
+  styleParams: IStyleParams,
+  options: Partial<IOptions>
+): ITPAParams {
   const colorStyles = styleParams.colors;
   const fontStyles = pickBy<IStyleFont>(styleParams.fonts, wixStylesFontUtils.isValidFontParam);
 

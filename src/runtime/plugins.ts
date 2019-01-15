@@ -4,7 +4,7 @@ import {parenthesisAreBalanced} from './utils/utils';
 const paramsRegex = /,(?![^(]*(?:\)|}))/g;
 
 export class Plugins {
-  public cssFunctions: { [index: string]: Function };
+  public cssFunctions: {[index: string]: Function};
   public declarationReplacers: Function[];
 
   private regex: RegExp;
@@ -32,12 +32,12 @@ export class Plugins {
     return this.regex.test(str);
   }
 
-  public getFunctionSignature(str: string): { funcName: string; args: string[] } {
+  public getFunctionSignature(str: string): {funcName: string; args: string[]} {
     const groups = this.regex.exec(str);
     if (groups) {
       return {
         funcName: groups[1],
-        args: this.extractArguments(groups[2])
+        args: this.extractArguments(groups[2]),
       };
     }
 
@@ -45,9 +45,8 @@ export class Plugins {
   }
 
   private extractArguments(argsString: string): string[] {
-    const result = argsString.split(paramsRegex)
-      .reduce((acc, currentPart: string) => {
-
+    const result = argsString.split(paramsRegex).reduce(
+      (acc, currentPart: string) => {
         acc.tmpParts = acc.tmpParts.concat(currentPart);
         const tmpStr = acc.tmpParts.join(',');
 
@@ -57,7 +56,9 @@ export class Plugins {
         }
 
         return acc;
-      }, {args: [], tmpParts: []});
+      },
+      {args: [], tmpParts: []}
+    );
 
     if (result.tmpParts.length > 0) {
       throw new Error(`'${argsString}' contains unbalanced parenthesis.`);

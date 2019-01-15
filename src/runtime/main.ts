@@ -9,8 +9,7 @@ function escapeRegExp(str) {
 }
 
 const plugins = new Plugins();
-Object.keys(cssFunctions)
-  .forEach((funcName) => plugins.addCssFunction(funcName, cssFunctions[funcName]));
+Object.keys(cssFunctions).forEach(funcName => plugins.addCssFunction(funcName, cssFunctions[funcName]));
 
 export interface IOptions {
   isRTL: boolean;
@@ -21,7 +20,10 @@ export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) 
 
 const defaultOptions = {isRTL: false};
 
-export function getProcessedCss({siteColors, siteTextPresets, styleParams}: IStyles, options: Partial<IOptions>): string {
+export function getProcessedCss(
+  {siteColors, siteTextPresets, styleParams}: IStyles,
+  options: Partial<IOptions>
+): string {
   options = {...defaultOptions, ...options};
   const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
@@ -29,7 +31,10 @@ export function getProcessedCss({siteColors, siteTextPresets, styleParams}: ISty
     return '';
   }
 
-  const prefixedCss = injectedData.css.replace(new RegExp('__COMPILATION_HASH__', 'g'), options.prefixSelector ? `${options.prefixSelector}` : '');
+  const prefixedCss = injectedData.css.replace(
+    new RegExp('__COMPILATION_HASH__', 'g'),
+    options.prefixSelector ? `${options.prefixSelector}` : ''
+  );
 
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 

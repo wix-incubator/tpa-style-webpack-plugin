@@ -4,7 +4,7 @@
   "description": "A Webpack plugin that handles wix tpa styles, it separates static css file that injects dynamic style at runtime.",
   "main": "dist/lib/index.js",
   "scripts": {
-    "lint": "tslint -t stylish -p .",
+    "lint": "tslint -t stylish -p . --fix",
     "pretest": "rm -rf dist && npm run lint && tsc -b",
     "test": "jest"
   },
@@ -40,6 +40,7 @@
     "jest": "^23.6.0",
     "jest-teamcity-reporter": "^0.9.0",
     "mini-css-extract-plugin": "^0.4.3",
+    "prettier": "^1.15.3",
     "rimraf": "^2.6.2",
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",

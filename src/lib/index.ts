@@ -15,23 +15,25 @@ class TPAStylePlugin {
 
   constructor(options) {
     this._options = {
-      pattern: [
-        /"\w+\([^"]*\)"/,
-        /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/
-      ], ...options
+      pattern: [/"\w+\([^"]*\)"/, /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/],
+      ...options,
     };
-    const hash = createHash('md5').update(new Date().getTime().toString()).digest('hex');
+    const hash = createHash('md5')
+      .update(new Date().getTime().toString())
+      .digest('hex');
     this.compilationHash = `__${hash.substr(0, 6)}__`;
   }
 
   apply(compiler) {
-    const shouldEscapeContent = ['cheap-module-eval-source-map', 'cheap-eval-source-map'].includes(compiler.options.devtool);
+    const shouldEscapeContent = ['cheap-module-eval-source-map', 'cheap-eval-source-map'].includes(
+      compiler.options.devtool
+    );
     this.replaceRuntimeModule(compiler);
 
-    compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, (compilation) => {
+    compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
       compilation.hooks.optimizeChunkAssets.tapAsync(TPAStylePlugin.pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
-          .then((extractResults) => this.replaceSource(compilation, extractResults, shouldEscapeContent))
+          .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
           .catch(callback);
       });
@@ -40,7 +42,7 @@ class TPAStylePlugin {
 
   private replaceRuntimeModule(compiler) {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
-    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, (resource) => {
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
       if (resource.resource !== runtimePath) {
         return;
       }
@@ -51,7 +53,7 @@ class TPAStylePlugin {
 
       resource.loaders.push({
         loader: path.join(__dirname, 'runtimeLoader.js'),
-        options: JSON.stringify({compilationHash: this.compilationHash})
+        options: JSON.stringify({compilationHash: this.compilationHash}),
       });
     });
     nmrp.apply(compiler);
@@ -60,28 +62,30 @@ class TPAStylePlugin {
   private extract(compilation, chunks) {
     const promises = [];
 
-    chunks.forEach((chunk) => {
+    chunks.forEach(chunk => {
       promises.push(
         ...chunk.files
           .filter(fileName => fileName.endsWith('.css'))
-          .map(cssFile => postcss([extractStyles(this._options)])
-            .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
-            .then((result: Result & { extracted: string }) => {
-              compilation.assets[cssFile] = new RawSource(result.css);
+          .map(cssFile =>
+            postcss([extractStyles(this._options)])
+              .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
+              .then((result: Result & {extracted: string}) => {
+                compilation.assets[cssFile] = new RawSource(result.css);
 
-              return new Promise((resolve) => {
-                postcss([
-                  prefixer({
-                    prefix: this.compilationHash
-                  }),
-                  extractTPACustomSyntax({
-                    onFinish: ({cssVars, customSyntaxStrs, css}) => {
-                      resolve({chunk, cssVars, customSyntaxStrs, css});
-                    }
-                  })])
-                  .process(result.extracted, {from: undefined}).css;
-              });
-            }))
+                return new Promise(resolve => {
+                  postcss([
+                    prefixer({
+                      prefix: this.compilationHash,
+                    }),
+                    extractTPACustomSyntax({
+                      onFinish: ({cssVars, customSyntaxStrs, css}) => {
+                        resolve({chunk, cssVars, customSyntaxStrs, css});
+                      },
+                    }),
+                  ]).process(result.extracted, {from: undefined}).css;
+                });
+              })
+          )
       );
     });
 
@@ -92,22 +96,20 @@ class TPAStylePlugin {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
     entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
-      chunk.files.filter(fileName => fileName.endsWith('.js'))
+      chunk.files
+        .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
           const sourceCode = compilation.assets[file].source();
           const placeHolder = `'${this.compilationHash}INJECTED_DATA_PLACEHOLDER'`;
           const placeHolderPos = sourceCode.indexOf(placeHolder);
 
           if (placeHolderPos > -1) {
-            const newSource = new ReplaceSource(
-              compilation.assets[file],
-              file
-            );
+            const newSource = new ReplaceSource(compilation.assets[file], file);
 
             const content = JSON.stringify({
               cssVars,
               customSyntaxStrs,
-              css
+              css,
             });
 
             const escapedContent = JSON.stringify(content);
@@ -124,7 +126,8 @@ class TPAStylePlugin {
   }
 
   private getEntryMergedChunks(extractResults) {
-    const entryMergedChunks = extractResults.filter(({chunk}) => chunk.canBeInitial())
+    const entryMergedChunks = extractResults
+      .filter(({chunk}) => chunk.canBeInitial())
       .reduce((chunkMap, currentResult) => {
         const currentChunk = currentResult.chunk;
         if (chunkMap.hasOwnProperty(currentChunk.id)) {
@@ -135,8 +138,7 @@ class TPAStylePlugin {
         return chunkMap;
       }, {});
 
-    return Object.keys(entryMergedChunks)
-      .map(key => entryMergedChunks[key]);
+    return Object.keys(entryMergedChunks).map(key => entryMergedChunks[key]);
   }
 
   private mergeExtractResults(extractResult1, extractResult2) {

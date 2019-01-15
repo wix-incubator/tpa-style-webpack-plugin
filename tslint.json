@@ -6,7 +6,7 @@
     "no-duplicate-imports": false,
     "no-unused-expression-chai": false,
     "no-conditional-assignment": false,
-    "prettier": false,
+    "prettier": true,
     "restrict-plus-operands": false,
     "no-else-after-return": false,
     "no-unnecessary-else": false

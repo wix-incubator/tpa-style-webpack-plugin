@@ -3,12 +3,18 @@ import parseCssFont from 'parse-css-font';
 import {ISiteTextPreset, IStyleFont} from '../types';
 
 export const wixStylesFontUtils = {
-  getFullFontStyles({fontStyles, siteTextPresets}: { fontStyles: { [s: string]: IStyleFont }; siteTextPresets: ISiteTextPreset }) {
+  getFullFontStyles({
+    fontStyles,
+    siteTextPresets,
+  }: {
+    fontStyles: {[s: string]: IStyleFont};
+    siteTextPresets: ISiteTextPreset;
+  }) {
     let ret = {} as any;
 
     // Fix color styles due to '.' to '-' conversion
     const fixedFontStyles = {};
-    forEach(fontStyles, (v, k: string) => fixedFontStyles[k.replace(/\./g, '-')] = v);
+    forEach(fontStyles, (v, k: string) => (fixedFontStyles[k.replace(/\./g, '-')] = v));
 
     const parsedSiteTextPresets = {};
     forEach(siteTextPresets, (preset: any, key: string) => {
@@ -18,15 +24,15 @@ export const wixStylesFontUtils = {
 
         preset: key,
         editorKey: preset.editorKey,
-        ...(preset.displayName ? {displayName: preset.displayName} : {})
+        ...(preset.displayName ? {displayName: preset.displayName} : {}),
       };
     });
 
     const parsedFontStyles = {};
-    forEach(fixedFontStyles, (value, key) => parsedFontStyles[key] = parseWixStylesFont(value));
+    forEach(fixedFontStyles, (value, key) => (parsedFontStyles[key] = parseWixStylesFont(value)));
 
     // Basic template colors
-    forEach(parsedSiteTextPresets, (preset, key) => ret[key] = parsedFontStyles[key] || preset);
+    forEach(parsedSiteTextPresets, (preset, key) => (ret[key] = parsedFontStyles[key] || preset));
 
     // LIGHT/MEDIUM/STRONG
     ret.LIGHT = parseCssFont('12px HelveticaNeueW01-45Ligh');
@@ -38,7 +44,7 @@ export const wixStylesFontUtils = {
     forEach(ret, (font, key) => {
       ret[key] = {...font, supports: {uppercase: true}};
 
-      if (['snellroundhandw', 'niconne'].some((fontName) => font.family.indexOf(fontName) > -1)) {
+      if (['snellroundhandw', 'niconne'].some(fontName => font.family.indexOf(fontName) > -1)) {
         ret[key].supports.uppercase = false;
       }
 
@@ -64,7 +70,7 @@ export const wixStylesFontUtils = {
   },
   isValidFontParam(fontParam) {
     return fontParam.family !== undefined;
-  }
+  },
 };
 
 function parseWixStylesFont(font) {
