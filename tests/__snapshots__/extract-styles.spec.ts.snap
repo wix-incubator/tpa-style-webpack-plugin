@@ -58,6 +58,9 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
   transform: rotate(0deg);
   transform: rotate(180deg);
 }
+ .font-var-fallback {
+  font: undefined;text-decoration: ;
+}
  .second-styles {
   border-size: 2px;
 }
