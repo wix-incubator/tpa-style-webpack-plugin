@@ -105,5 +105,6 @@ body {
 }
 
 .font-var-fallback {
+  --productPage_descriptionFontStyle: "font(Body-M)";
   font: "fallback(font(--productPage_descriptionFontStyle))";
 }

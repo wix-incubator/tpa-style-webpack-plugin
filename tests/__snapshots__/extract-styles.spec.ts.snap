@@ -59,7 +59,8 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
   transform: rotate(180deg);
 }
  .font-var-fallback {
-  font: undefined;text-decoration: ;
+  --productPage_descriptionFontStyle: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;
+  font: normal normal normal 16px/1.4em futura-lt-w01-book,sans-serif;text-decoration: ;
 }
  .second-styles {
   border-size: 2px;
