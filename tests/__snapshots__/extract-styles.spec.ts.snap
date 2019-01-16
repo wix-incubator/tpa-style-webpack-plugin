@@ -92,10 +92,9 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .fallback-colors {color: #FFFFFF}
  .first-none-falsy {--first_none_falsy: rgb(255, 0, 0); color: rgb(255, 0, 0)}
  .fallback-multiple-vals {color: #FFFFFF;}
- .multiple-parts-of-the-same-part {color: #3AB3CF; background-color: #3AB3CF}
+ .multiple-parts-of-the-same-part {color: #3AB3CF; background-color: #3AB3CF};
  .whiten {rule1: rgb(140, 106, 178);}
- .lighten {rule1: rgb(77, 255, 77);}
- .nested-functions-with-multiple-functions-params {--var: #F3F3F3; color: rgba(255, 255, 255, 0.5)}"
+ .lighten {rule1: rgb(77, 255, 77);}"
 `;
 
 exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `
