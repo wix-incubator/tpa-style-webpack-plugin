@@ -14,6 +14,7 @@ Object.keys(cssFunctions).forEach(funcName => plugins.addCssFunction(funcName, c
 export interface IOptions {
   isRTL: boolean;
   prefixSelector: string;
+  isPermissive: boolean;
 }
 
 export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
@@ -39,10 +40,19 @@ export function getProcessedCss(
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
   const processor = getProcessor({cssVars: injectedData.cssVars, plugins});
+  const {isPermissive} = options;
 
   return injectedData.customSyntaxStrs.reduce((processedContent, part) => {
-    const newValue = processor.process({part, tpaParams});
-
+    let newValue;
+    try {
+      newValue = processor.process({part, tpaParams});
+    } catch (e) {
+      if (isPermissive) {
+        newValue = '';
+      } else {
+        throw(e);
+      }
+    }
     return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
   }, prefixedCss);
 }
