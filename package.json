@@ -26,27 +26,27 @@
   "dependencies": {
     "@ctrl/tinycolor": "^2.2.1",
     "parse-css-font": "^3.0.2",
-    "postcss": "^7.0.5",
+    "postcss": "^7.0.13",
     "postcss-extract-styles": "^1.2.0",
     "postcss-prefix-selector": "^1.6.0",
-    "webpack": "^4.20.2",
+    "webpack": "^4.28.4",
     "webpack-sources": "^1.3.0"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.3",
-    "@types/node": "^10.11.4",
-    "css-loader": "^1.0.0",
+    "@types/jest": "^23.3.13",
+    "@types/node": "^10.12.18",
+    "css-loader": "^1.0.1",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^23.6.0",
     "jest-teamcity-reporter": "^0.9.0",
-    "mini-css-extract-plugin": "^0.4.3",
+    "mini-css-extract-plugin": "^0.4.5",
     "prettier": "^1.15.3",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
-    "tslint-config-yoshi-base": "^3.12.0",
-    "typescript": "^3.1.1",
-    "webpack-merge": "^4.1.3"
+    "rimraf": "^2.6.3",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.1",
+    "tslint-config-yoshi-base": "^3.22.5",
+    "typescript": "^3.2.4",
+    "webpack-merge": "^4.2.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
