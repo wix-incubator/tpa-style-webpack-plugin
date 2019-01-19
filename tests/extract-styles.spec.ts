@@ -1,4 +1,4 @@
-import * as path from 'path'
+import * as path from 'path';
 import {IGetProcessedCssFn} from '../src/runtime/main';
 import {styleParams} from './fixtures/styleParams';
 import {siteColors} from './fixtures/siteColors';
@@ -10,20 +10,18 @@ import {readFile} from './helpers/readfile';
 describe('Extract Styles', () => {
   const outputDirPath = path.resolve(__dirname, './output/extract-styles');
   const entryName = 'app';
-  let stats,
-    cssFile,
-    getProcessedCss: IGetProcessedCssFn;
+  let stats, cssFile, getProcessedCss: IGetProcessedCssFn;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
     stats = await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js'
-      }
+        [entryName]: './tests/fixtures/runtime-entry.js',
+      },
     });
 
     cssFile = await readFile(path.join(outputDirPath, `${entryName}.styles.css`), 'utf8');
@@ -41,7 +39,9 @@ describe('Extract Styles', () => {
 
   it('should separate the static and dynamic parts of declarations', () => {
     expect(cssFile).toContain('.no-space-after-colon {rule: bar;rule3:baz}');
-    expect(getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('.no-space-after-colon {rule4: #FF0000;rule5: #FF0000}');
+    expect(getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain(
+      '.no-space-after-colon {rule4: #FF0000;rule5: #FF0000}'
+    );
   });
 
   it('should not have static CSS in Bundle file', () => {

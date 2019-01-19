@@ -21,7 +21,7 @@ export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) 
 
 const defaultOptions = {
   isRTL: false,
-  strictMode: true
+  strictMode: true,
 };
 
 export function getProcessedCss(
@@ -51,7 +51,7 @@ export function getProcessedCss(
       newValue = processor.process({part, tpaParams});
     } catch (e) {
       if (strictMode) {
-        throw(e);
+        throw e;
       } else {
         newValue = '';
       }

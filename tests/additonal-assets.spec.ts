@@ -18,18 +18,18 @@ describe('additional assets (stylable int)', () => {
     await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js'
+        [entryName]: './tests/fixtures/runtime-entry.js',
       },
       plugins: [
         new AddAssetsPlugin({
           filename: 'additional-style.css',
           src: `
-          .index--root { background-color: "color(color-19)"; }`
-        })
-      ]
+          .index--root { background-color: "color(color-19)"; }`,
+        }),
+      ],
     });
 
     const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));
@@ -41,7 +41,7 @@ describe('additional assets (stylable int)', () => {
     expect(css).toContain(`.index--root { background-color: ${getSiteColor('color-19', siteColors)}; }`);
   });
 
-  it('should extract from the additional asset', async() => {
+  it('should extract from the additional asset', async () => {
     const cssFile = await readFile(path.join(outputDirPath, `additional-style.css`), 'utf8');
     expect(cssFile).not.toContain(`.index--root`);
   });

@@ -28,8 +28,7 @@ describe('cssFunctions', () => {
     });
 
     it('should return color from tpaParams', () => {
-      expect(cssFunctions.color('color-1', {colors: {['color-1']: 'rgb(255, 0, 0)'}} as any))
-        .toBe('rgb(255, 0, 0)');
+      expect(cssFunctions.color('color-1', {colors: {['color-1']: 'rgb(255, 0, 0)'}} as any)).toBe('rgb(255, 0, 0)');
     });
 
     it('should return hex color', () => {
@@ -92,7 +91,7 @@ describe('cssFunctions', () => {
         style: 'italic',
         family: ['family', 'family2;'],
         weight: 'bold',
-        variant: 'variant'
+        variant: 'variant',
       };
       expect(cssFunctions.font(font, {} as any)).toBe('italic variant bold 10/1.4 family,family2');
     });
@@ -104,10 +103,11 @@ describe('cssFunctions', () => {
         style: 'italic',
         family: ['family', 'family2;'],
         weight: 'bold',
-        variant: 'variant'
+        variant: 'variant',
       };
-      expect(cssFunctions.font('Body-M', {fonts: {['Body-M']: font}} as any))
-        .toBe('italic variant bold 10/1.4 family,family2');
+      expect(cssFunctions.font('Body-M', {fonts: {['Body-M']: font}} as any)).toBe(
+        'italic variant bold 10/1.4 family,family2'
+      );
     });
 
     it('should support override tpa text preset', () => {
@@ -117,10 +117,13 @@ describe('cssFunctions', () => {
         style: 'italic',
         family: ['family', 'family2;'],
         weight: 'bold',
-        variant: 'variant'
+        variant: 'variant',
       };
-      expect(cssFunctions.font(`{theme: 'Body-M', size: '20px', style:'normal', lineHeight: '1em'}`, {fonts: {['Body-M']: font}} as any))
-        .toBe('normal variant bold 20px/1em family,family2');
+      expect(
+        cssFunctions.font(`{theme: 'Body-M', size: '20px', style:'normal', lineHeight: '1em'}`, {
+          fonts: {['Body-M']: font},
+        } as any)
+      ).toBe('normal variant bold 20px/1em family,family2');
     });
 
     it('should return given font', () => {
@@ -134,9 +137,11 @@ describe('cssFunctions', () => {
         style: '<italic>',
         family: ['<script></script>font-name'],
         weight: '<bold>',
-        variant: '<variant>'
+        variant: '<variant>',
       };
-      expect(cssFunctions.font(font, {} as any)).toBe('&lt;italic&gt; &lt;variant&gt; &lt;bold&gt; &lt;10&gt;/&lt;1.4&gt; &lt;script&gt;&lt;/script&gt;font-name');
+      expect(cssFunctions.font(font, {} as any)).toBe(
+        '&lt;italic&gt; &lt;variant&gt; &lt;bold&gt; &lt;10&gt;/&lt;1.4&gt; &lt;script&gt;&lt;/script&gt;font-name'
+      );
     });
   });
 
@@ -188,20 +193,21 @@ describe('cssFunctions', () => {
 
   describe('direction', () => {
     const directionMap = {
-      'START': {ltr: 'left', rtl: 'right'},
-      'END': {ltr: 'right', rtl: 'left'},
-      'STARTSIGN': {ltr: '-', rtl: ''},
-      'ENDSIGN': {ltr: '', rtl: '-'},
+      START: {ltr: 'left', rtl: 'right'},
+      END: {ltr: 'right', rtl: 'left'},
+      STARTSIGN: {ltr: '-', rtl: ''},
+      ENDSIGN: {ltr: '', rtl: '-'},
       'DEG-START': {ltr: '0', rtl: '180'},
       'DEG-END': {ltr: '180', rtl: '0'},
-      'DIR': {ltr: 'ltr', rtl: 'rtl'}
+      DIR: {ltr: 'ltr', rtl: 'rtl'},
     };
 
-    [false, true].forEach((isRtl) => {
-      Object.keys(directionMap).forEach((directionKey) => {
+    [false, true].forEach(isRtl => {
+      Object.keys(directionMap).forEach(directionKey => {
         it(`should support ${directionKey}`, () => {
-          expect(cssFunctions.direction(directionKey, {booleans: {[IS_RTL_PARAM]: isRtl}} as any))
-            .toBe(directionMap[directionKey][isRtl ? 'rtl' : 'ltr'])
+          expect(cssFunctions.direction(directionKey, {booleans: {[IS_RTL_PARAM]: isRtl}} as any)).toBe(
+            directionMap[directionKey][isRtl ? 'rtl' : 'ltr']
+          );
         });
       });
     });

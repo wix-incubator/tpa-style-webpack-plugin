@@ -17,11 +17,11 @@ describe('runtime without css', () => {
     await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-no-css-entry.js'
-      }
+        [entryName]: './tests/fixtures/runtime-no-css-entry.js',
+      },
     });
 
     const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));

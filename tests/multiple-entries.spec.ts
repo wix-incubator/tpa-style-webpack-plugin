@@ -13,21 +13,21 @@ describe('multiple-entries', () => {
   const entryName2 = 'app2';
   let stats,
     cssFile1,
-    tpaRuntime1: { getProcessedCss: IGetProcessedCssFn },
+    tpaRuntime1: {getProcessedCss: IGetProcessedCssFn},
     cssFile2,
-    tpaRuntime2: { getProcessedCss: IGetProcessedCssFn };
+    tpaRuntime2: {getProcessedCss: IGetProcessedCssFn};
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
     stats = await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       entry: {
         [entryName1]: './tests/fixtures/first-entry.js',
-        [entryName2]: './tests/fixtures/second-entry.js'
-      }
+        [entryName2]: './tests/fixtures/second-entry.js',
+      },
     });
 
     cssFile1 = await readFile(path.join(outputDirPath, `${entryName1}.styles.css`), 'utf8');
@@ -37,7 +37,7 @@ describe('multiple-entries', () => {
   });
 
   it('should generate 2 css files without tpa styles', () => {
-    [cssFile1, cssFile2].forEach((file) => {
+    [cssFile1, cssFile2].forEach(file => {
       expect(file).not.toContain('.only-tpa');
       expect(file).not.toContain('START');
       expect(file).not.toContain('END');
@@ -52,7 +52,11 @@ describe('multiple-entries', () => {
 
   it('should not leak variables from different entries', () => {
     expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).not.toContain('--first_none_falsy');
-    expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('.first-none-falsy2 {color: }');
-    expect(tpaRuntime2.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain('--first_none_falsy: rgb(255, 0, 0)');
+    expect(tpaRuntime1.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain(
+      '.first-none-falsy2 {color: }'
+    );
+    expect(tpaRuntime2.getProcessedCss({styleParams, siteTextPresets, siteColors})).toContain(
+      '--first_none_falsy: rgb(255, 0, 0)'
+    );
   });
 });

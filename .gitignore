@@ -17,5 +17,5 @@ dist/
 tests/output
 src/**/*.js
 src/**/*.map
-tests/units/**/*.js
-tests/units/**/*.map
+tests/**/*.js
+tests/**/*.map

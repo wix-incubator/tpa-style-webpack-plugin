@@ -14,16 +14,16 @@ describe('runtime size', () => {
     return runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       performance: {
         maxEntrypointSize: 25 * 1024,
-        hints: 'error'
+        hints: 'error',
       },
       mode: 'production',
       entry: {
-        [entryName]: './runtime.js'
-      }
+        [entryName]: './runtime.js',
+      },
     });
   });
 });

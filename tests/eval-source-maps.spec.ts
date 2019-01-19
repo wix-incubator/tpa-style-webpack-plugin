@@ -16,12 +16,12 @@ describe('Eval source maps', () => {
     await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       devtool: 'cheap-eval-source-map',
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js'
-      }
+        [entryName]: './tests/fixtures/runtime-entry.js',
+      },
     });
 
     try {
@@ -39,12 +39,12 @@ describe('Eval source maps', () => {
     await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       devtool: 'cheap-module-eval-source-map',
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js'
-      }
+        [entryName]: './tests/fixtures/runtime-entry.js',
+      },
     });
 
     try {

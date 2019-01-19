@@ -11,19 +11,18 @@ import {readFile} from './helpers/readfile';
 describe('runtime', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime');
   const entryName = 'app';
-  let getProcessedCss: IGetProcessedCssFn,
-    runtimeBundleStr: string;
+  let getProcessedCss: IGetProcessedCssFn, runtimeBundleStr: string;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
     await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
-        libraryTarget: 'commonjs'
+        libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js'
-      }
+        [entryName]: './tests/fixtures/runtime-entry.js',
+      },
     });
 
     const {getProcessedCss: realFunc} = require(path.join(outputDirPath, `${entryName}.bundle.js`));
@@ -51,13 +50,14 @@ describe('runtime', () => {
           style: {
             bold: false,
             italic: false,
-            underline: false
-          }
-        }
-      }
+            underline: false,
+          },
+        },
+      },
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
-    const expectedCss = '.fonts-from-settings {font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: ;}';
+    const expectedCss =
+      '.fonts-from-settings {font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: ;}';
     expect(css).toContain(expectedCss);
   });
 
@@ -66,9 +66,9 @@ describe('runtime', () => {
       fonts: {
         stringHack: {
           value: '100px',
-          fontStyleParam: false
-        }
-      }
+          fontStyleParam: false,
+        },
+      },
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = '.font-string-hack {width: 100px;}';
@@ -79,7 +79,7 @@ describe('runtime', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
       colors: {},
-      fonts: {}
+      fonts: {},
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = '.string-default-value {--stringDefaultValue: 0px; width: 0px;}';
@@ -90,9 +90,9 @@ describe('runtime', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
       colors: {
-        default_vals: {value: 'rgba(128,110,66,0.6193647540983607)'}
+        default_vals: {value: 'rgba(128,110,66,0.6193647540983607)'},
       },
-      fonts: {}
+      fonts: {},
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = ':root {--default_vals: #717070;}';
@@ -104,8 +104,8 @@ describe('runtime', () => {
   it('should work with declarations with no semicolon at the end', () => {
     const newStyleParams = clonedWith(styleParams, {
       colors: {
-        my_var2: {value: 'rgba(128,110,66,0.6193647540983607)'}
-      }
+        my_var2: {value: 'rgba(128,110,66,0.6193647540983607)'},
+      },
     });
     const newSiteTextPresets = clonedWith(siteTextPresets, {
       'Body-M': {
@@ -115,12 +115,14 @@ describe('runtime', () => {
         size: '17px',
         style: 'normal',
         value: 'font:normal normal normal 17px/1.4em raleway,sans-serif;',
-        weight: 'normal'
-      }
+        weight: 'normal',
+      },
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
-    const expectedCss = ':root {--cart_textFontStyle:normal normal normal 17px/1.4em raleway,sans-serif; --cartButton_textColor:#FFFFFF;}';
-    const expectedCss2 = '.no-semicolon {font:normal normal normal 17px/1.4em raleway,sans-serif;text-decoration: ; color:#FFFFFF;}';
+    const expectedCss =
+      ':root {--cart_textFontStyle:normal normal normal 17px/1.4em raleway,sans-serif; --cartButton_textColor:#FFFFFF;}';
+    const expectedCss2 =
+      '.no-semicolon {font:normal normal normal 17px/1.4em raleway,sans-serif;text-decoration: ; color:#FFFFFF;}';
     expect(css).toContain(expectedCss);
     expect(css).toContain(expectedCss2);
   });
@@ -134,8 +136,8 @@ describe('runtime', () => {
         size: '16px',
         style: 'normal',
         value: 'font:normal small-caps normal 12px/1.2em play,sans-serif;',
-        weight: 'normal'
-      }
+        weight: 'normal',
+      },
     });
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
     const expectedCss = '.font-test {font: normal normal normal 12px/1.2em play,sans-serif;}';
@@ -151,12 +153,14 @@ describe('runtime', () => {
         lineHeight: '1.4em',
         size: '16px',
         style: 'normal',
-        value: 'font:normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif',
-        weight: 'normal'
-      }
+        value:
+          'font:normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif',
+        weight: 'normal',
+      },
     });
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
-    const expectedCss = '.font-test2 {--some-font: normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif; font: normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif;text-decoration: ;}';
+    const expectedCss =
+      '.font-test2 {--some-font: normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif; font: normal normal normal 16px/1.4em din-next-w01-light,din-next-w02-light,din-next-w10-light,sans-serif;text-decoration: ;}';
     expect(css).toContain(expectedCss);
   });
 
@@ -205,8 +209,8 @@ describe('runtime', () => {
   it('composed opacity with custom var', () => {
     const newStyleParams = clonedWith(styleParams, {
       colors: {
-        opacityWithVar: {value: '#FFFF00'}
-      }
+        opacityWithVar: {value: '#FFFF00'},
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -217,8 +221,8 @@ describe('runtime', () => {
   it('join colors', () => {
     const newStyleParams = clonedWith(styleParams, {
       colors: {
-        joinColor: {value: '#FF0000'}
-      }
+        joinColor: {value: '#FF0000'},
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -229,8 +233,8 @@ describe('runtime', () => {
   it('should support number', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {
-        numberVar: 42
-      }
+        numberVar: 42,
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -241,11 +245,11 @@ describe('runtime', () => {
   it('should support unit', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {
-        unit_var: 42
+        unit_var: 42,
       },
       colors: {
-        unit_color_var: {value: '#FF0000'}
-      }
+        unit_color_var: {value: '#FF0000'},
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -256,11 +260,11 @@ describe('runtime', () => {
   it('should support unit with value 0', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {
-        unitZero: 0
+        unitZero: 0,
       },
       colors: {
-        unit_zero_color: {value: '#FF0000'}
-      }
+        unit_zero_color: {value: '#FF0000'},
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -280,13 +284,19 @@ describe('runtime', () => {
 
   it('should work with pseudo selectors', () => {
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
-    const expectedCss = `.datepicker__day--highlighted:hover{background-color: ${getSiteColor('color-1', siteColors)};}`;
+    const expectedCss = `.datepicker__day--highlighted:hover{background-color: ${getSiteColor(
+      'color-1',
+      siteColors
+    )};}`;
     expect(css).toContain(expectedCss);
   });
 
   it('should detect declarations with no space after the :', () => {
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
-    const expectedCss = `.no-space-after-colon {rule4: ${getSiteColor('color-9', siteColors)};rule5: ${getSiteColor('color-9', siteColors)}}`;
+    const expectedCss = `.no-space-after-colon {rule4: ${getSiteColor('color-9', siteColors)};rule5: ${getSiteColor(
+      'color-9',
+      siteColors
+    )}}`;
     expect(css).toContain(expectedCss);
   });
 
@@ -299,8 +309,8 @@ describe('runtime', () => {
         size: '17px',
         style: 'normal',
         value: 'font:normal normal normal 17px/1.4em raleway,sans-serif;',
-        weight: 'normal'
-      }
+        weight: 'normal',
+      },
     });
 
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
@@ -321,10 +331,10 @@ describe('runtime', () => {
           style: {
             bold: false,
             italic: false,
-            underline: false
-          }
-        }
-      }
+            underline: false,
+          },
+        },
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -345,10 +355,10 @@ describe('runtime', () => {
           style: {
             bold: false,
             italic: false,
-            underline: false
-          }
-        }
-      }
+            underline: false,
+          },
+        },
+      },
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -358,7 +368,7 @@ describe('runtime', () => {
 
   it('should support double var reference', () => {
     const newStyleParams = clonedWith(styleParams, {
-      numbers: {var1: 1}
+      numbers: {var1: 1},
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
@@ -385,10 +395,10 @@ describe('runtime', () => {
           style: {
             bold: false,
             italic: false,
-            underline: true
-          }
-        }
-      }
+            underline: true,
+          },
+        },
+      },
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = `.underlined { font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: underline }`;
@@ -399,7 +409,7 @@ describe('runtime', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
       colors: {},
-      fonts: {}
+      fonts: {},
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = `.fallback-colors {color: ${getSiteColor('color-1', siteColors)}}`;
@@ -410,7 +420,7 @@ describe('runtime', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
       colors: {},
-      fonts: {}
+      fonts: {},
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = `.first-none-falsy {--first_none_falsy: rgb(255, 0, 0); color: rgb(255, 0, 0)}`;
@@ -421,7 +431,7 @@ describe('runtime', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
       colors: {},
-      fonts: {}
+      fonts: {},
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss = `.fallback-multiple-vals {color: ${getSiteColor('color-1', siteColors)};}`;
@@ -486,7 +496,10 @@ describe('runtime', () => {
 
     it('should replace all the instances of the same part', () => {
       const css = getProcessedCss({styleParams, siteColors, siteTextPresets}, {});
-      const expectedCss = `.multiple-parts-of-the-same-part {color: ${getSiteColor('color-18', siteColors)}; background-color: ${getSiteColor('color-18', siteColors)}};`;
+      const expectedCss = `.multiple-parts-of-the-same-part {color: ${getSiteColor(
+        'color-18',
+        siteColors
+      )}; background-color: ${getSiteColor('color-18', siteColors)}};`;
       expect(css).toContain(expectedCss);
     });
   });
