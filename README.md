@@ -121,12 +121,12 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
     ```css
     .my-selector {
       /* DON'T */
-      border: 'unit(--var-from-settings, px)' solid 'color(color-1)'; /* `cssnano` will remove the dynamic values, and it will become "border: solid;" */
+      border: "unit(--var-from-settings, px)" solid "color(color-1)"; /* `cssnano` will remove the dynamic values, and it will become "border: solid;" */
 
       /* DO */
-      border-width: 'unit(--var-from-settings, px)';
+      border-width: "unit(--var-from-settings, px)";
       border-style: solid;
-      border-color: 'color(color-1)';
+      border-color: "color(color-1)";
     }
     ```
 
@@ -135,10 +135,10 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
     ```css
     .my-selector {
       /* DON'T */
-      width: calc(100% / 'number(4)'); /* `reduce-css-calc` (used by `cssnano`) will transform it to "calc(1 / 4)" */
+      width: calc(100% / "number(4)"); /* `reduce-css-calc` (used by `cssnano`) will transform it to "calc(1 / 4)" */
 
       /* DO */
-      width: calc(100% / 'number(4)' + 0px); /* notice 0px here */
+      width: calc(100% / "number(4)" + 0px); /* notice 0px here */
     }
     ```
 
