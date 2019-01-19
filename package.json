@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "tslint -t stylish -p . --fix",
     "prettier-md": "npx prettier --parser=markdown --write README.md",
-    "pretest": "rm -rf dist && npm run lint && npm run prettier-md && tsc -b",
+    "pretest": "npm run cleanup && npm run lint && npm run prettier-md && npm run build",
+    "cleanup": "rm -rf dist",
+    "build": "tsc -b",
     "test": "jest"
   },
   "keywords": [
