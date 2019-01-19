@@ -20,7 +20,7 @@ describe('Eval source maps', () => {
       },
       devtool: 'cheap-eval-source-map',
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js',
+        [entryName]: './tests/fixtures/runtime-entry.ts',
       },
     });
 
@@ -43,7 +43,7 @@ describe('Eval source maps', () => {
       },
       devtool: 'cheap-module-eval-source-map',
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js',
+        [entryName]: './tests/fixtures/runtime-entry.ts',
       },
     });
 

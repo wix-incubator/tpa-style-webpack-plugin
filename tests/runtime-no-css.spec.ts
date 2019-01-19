@@ -20,7 +20,7 @@ describe('runtime without css', () => {
         libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-no-css-entry.js',
+        [entryName]: './tests/fixtures/runtime-no-css-entry.ts',
       },
     });
 

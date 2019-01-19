@@ -25,8 +25,8 @@ describe('multiple-entries', () => {
         libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName1]: './tests/fixtures/first-entry.js',
-        [entryName2]: './tests/fixtures/second-entry.js',
+        [entryName1]: './tests/fixtures/first-entry.ts',
+        [entryName2]: './tests/fixtures/second-entry.ts',
       },
     });
 

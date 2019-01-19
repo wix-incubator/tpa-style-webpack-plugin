@@ -20,7 +20,7 @@ describe('Extract Styles', () => {
         libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js',
+        [entryName]: './tests/fixtures/runtime-entry.ts',
       },
     });
 

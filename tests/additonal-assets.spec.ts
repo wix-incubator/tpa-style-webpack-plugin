@@ -21,7 +21,7 @@ describe('additional assets (stylable int)', () => {
         libraryTarget: 'commonjs',
       },
       entry: {
-        [entryName]: './tests/fixtures/runtime-entry.js',
+        [entryName]: './tests/fixtures/runtime-entry.ts',
       },
       plugins: [
         new AddAssetsPlugin({

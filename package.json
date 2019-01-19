@@ -16,7 +16,8 @@
     "plugin"
   ],
   "files": [
-    "dist",
+    "dist/lib",
+    "dist/runtime",
     "*.js"
   ],
   "author": "Felix Mosheev",
