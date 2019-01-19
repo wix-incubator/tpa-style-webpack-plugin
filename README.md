@@ -26,6 +26,7 @@ $ npm install --save-dev tpa-style-webpack-plugin
 
 Add the plugin to your webpack config.
 
+<!-- prettier-ignore-start -->
 ```js
 // webpack.config.js
 const TpaStyleWebpackPlugin = require('tpa-style-webpack-plugin');
@@ -53,6 +54,7 @@ const dynamicCss = getProcessedCss(
 );
 addStyles(dynamicCss, 'tag-id');
 ```
+<!-- prettier-ignore-end -->
 
 #### `getProcessedCss` Options
 
