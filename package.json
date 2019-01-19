@@ -5,7 +5,8 @@
   "main": "dist/lib/index.js",
   "scripts": {
     "lint": "tslint -t stylish -p . --fix",
-    "pretest": "rm -rf dist && npm run lint && tsc -b",
+    "prettier-md": "npx prettier --parser=markdown --write README.md",
+    "pretest": "rm -rf dist && npm run lint && npm run prettier-md && tsc -b",
     "test": "jest"
   },
   "keywords": [
