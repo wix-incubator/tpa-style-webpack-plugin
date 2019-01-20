@@ -43,14 +43,13 @@ export function getProcessedCss(
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
   const processor = getProcessor({cssVars: injectedData.cssVars, plugins});
-  const {strictMode} = options;
 
   return injectedData.customSyntaxStrs.reduce((processedContent, part) => {
     let newValue;
     try {
       newValue = processor.process({part, tpaParams});
     } catch (e) {
-      if (strictMode) {
+      if (options.strictMode) {
         throw e;
       } else {
         newValue = '';
