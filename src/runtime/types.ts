@@ -1,3 +1,21 @@
+export interface IExtractedResult extends IInjectedData {
+  chunk: any;
+}
+
+export interface ICustomFunctionInvoke {
+  name: string;
+  args: ICustomFunctionArgs[];
+}
+
+export type ICustomFunctionArgs = number | string | boolean | object | ICustomFunctionInvoke;
+
+export interface IParsedResult {
+  chunk: any;
+  cssVars: {[key: string]: ICustomFunctionInvoke};
+  customSyntax: ICustomFunctionInvoke[];
+  css: string;
+}
+
 export interface IInjectedData {
   css: string;
   customSyntaxStrs: string[];

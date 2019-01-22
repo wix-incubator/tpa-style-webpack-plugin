@@ -7,6 +7,9 @@ import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
+import {IExtractedResult} from '../runtime/types';
+import {parseCustomSyntax} from './customSyntaxParser';
+import {mergeEntryChunks} from './chunkUtils';
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
@@ -33,6 +36,8 @@ class TPAStylePlugin {
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
       compilation.hooks.optimizeChunkAssets.tapAsync(TPAStylePlugin.pluginName, (chunks, callback) => {
         this.extract(compilation, chunks)
+          .then(mergeEntryChunks)
+          .then(parseCustomSyntax)
           .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
           .catch(callback);
@@ -59,7 +64,7 @@ class TPAStylePlugin {
     nmrp.apply(compiler);
   }
 
-  private extract(compilation, chunks) {
+  private extract(compilation, chunks): Promise<IExtractedResult[]> {
     const promises = [];
 
     chunks.forEach(chunk => {
@@ -93,9 +98,7 @@ class TPAStylePlugin {
   }
 
   private replaceSource(compilation, extractResults, shouldEscapeContent) {
-    const entryMergedChunks = this.getEntryMergedChunks(extractResults);
-
-    entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
+    extractResults.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
       chunk.files
         .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
@@ -123,32 +126,6 @@ class TPAStylePlugin {
           }
         });
     });
-  }
-
-  private getEntryMergedChunks(extractResults) {
-    const entryMergedChunks = extractResults
-      .filter(({chunk}) => chunk.canBeInitial())
-      .reduce((chunkMap, currentResult) => {
-        const currentChunk = currentResult.chunk;
-        if (chunkMap.hasOwnProperty(currentChunk.id)) {
-          chunkMap[currentChunk.id] = this.mergeExtractResults(chunkMap[currentChunk.id], currentResult);
-        } else {
-          chunkMap[currentChunk.id] = currentResult;
-        }
-        return chunkMap;
-      }, {});
-
-    return Object.keys(entryMergedChunks).map(key => entryMergedChunks[key]);
-  }
-
-  private mergeExtractResults(extractResult1, extractResult2) {
-    const newResult = {...extractResult1};
-
-    newResult.cssVars = {...newResult.cssVars, ...extractResult2.cssVars};
-    newResult.customSyntaxStrs = newResult.customSyntaxStrs.concat(extractResult2.customSyntaxStrs);
-    newResult.css += `\n${extractResult2.css}`;
-
-    return newResult;
   }
 }
 
