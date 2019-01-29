@@ -29,7 +29,7 @@
   "homepage": "https://github.com/wix-incubator/tpa-style-webpack-plugin",
   "dependencies": {
     "@ctrl/tinycolor": "^2.2.1",
-    "parse-css-font": "^3.0.2",
+    "parse-css-font": "^4.0.0 ",
     "postcss": "^7.0.13",
     "postcss-extract-styles": "^1.2.0",
     "postcss-prefix-selector": "^1.6.0",

@@ -140,7 +140,7 @@ describe('runtime', () => {
       },
     });
     const css = getProcessedCss({styleParams, siteColors, siteTextPresets: newSiteTextPresets}, {});
-    const expectedCss = '.font-test {font: normal normal normal 12px/1.2em play,sans-serif;}';
+    const expectedCss = '.font-test {font: normal small-caps normal 12px/1.2em play,sans-serif;}';
     expect(css).toContain(expectedCss);
   });
 
