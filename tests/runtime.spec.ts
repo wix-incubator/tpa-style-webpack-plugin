@@ -349,6 +349,30 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('should handle font without font-family', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      fonts: {
+        bodyText: {
+          family: '',
+          style: {
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+          size: 15,
+          preset: 'Custom',
+          fontStyleParam: true,
+          value: 'font:normal normal normal 15px/18px ;',
+        },
+      },
+    });
+
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss =
+      '.font-without-font-family {font: normal normal normal 15px/1.4em NONE_EXISTS_FONT;text-decoration: };';
+    expect(css).toContain(expectedCss);
+  });
+
   it('should support font override with var', () => {
     const newStyleParams = clonedWith(styleParams, {
       fonts: {

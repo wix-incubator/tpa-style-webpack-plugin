@@ -99,7 +99,8 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .multiple-parts-of-the-same-part {color: #3AB3CF; background-color: #3AB3CF}
  .whiten {rule1: rgb(140, 106, 178);}
  .lighten {rule1: rgb(77, 255, 77);}
- .nested-functions-with-multiple-functions-params {--var: #F3F3F3; color: rgba(255, 255, 255, 0.5)}"
+ .nested-functions-with-multiple-functions-params {--var: #F3F3F3; color: rgba(255, 255, 255, 0.5)}
+ .font-without-font-family {font: italic normal bold 10px/2em futura-lt-w01-book,sans-serif;text-decoration: };"
 `;
 
 exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `

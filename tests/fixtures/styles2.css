@@ -76,3 +76,5 @@
 .lighten {rule1: "lighten(color(color-10), 0.15)";}
 
 .nested-functions-with-multiple-functions-params {--var: "color(color-2)"; color: "fallback(join(opacity(color(color-1), 0.5), 1, opacity(--var, 0.5), 1), color(color-8))"}
+
+.font-without-font-family {font: "font(--bodyText)"};

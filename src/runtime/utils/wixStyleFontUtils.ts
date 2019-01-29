@@ -95,7 +95,7 @@ function parseWixStylesFont(font) {
 
   value += `${size}/${lineHeight} `;
 
-  value += font.cssFontFamily || font.family;
+  value += font.cssFontFamily || font.family || 'NONE_EXISTS_FONT';
   const fontObj: any = {...parseCssFont(value)};
   fontObj.underline = font.style && font.style.underline;
   return fontObj;
