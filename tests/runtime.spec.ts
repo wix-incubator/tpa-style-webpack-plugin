@@ -57,7 +57,7 @@ describe('runtime', () => {
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss =
-      '.fonts-from-settings {font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: ;}';
+      '.fonts-from-settings {font: normal normal normal 17px/1.4em "mr de haviland",cursive;text-decoration: ;}';
     expect(css).toContain(expectedCss);
   });
 
@@ -345,7 +345,7 @@ describe('runtime', () => {
     });
 
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
-    const expectedCss = `.font-override-with-var-from-settings {--bodyText: italic normal bold 10px/2em futura-lt-w01-book,sans-serif; font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: }`;
+    const expectedCss = `.font-override-with-var-from-settings {--bodyText: italic normal bold 10px/2em futura-lt-w01-book,sans-serif; font: normal normal normal 17px/1.4em "mr de haviland",cursive;text-decoration: }`;
     expect(css).toContain(expectedCss);
   });
 
@@ -370,6 +370,31 @@ describe('runtime', () => {
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
     const expectedCss =
       '.font-without-font-family {font: normal normal normal 15px/1.4em NONE_EXISTS_FONT;text-decoration: };';
+    expect(css).toContain(expectedCss);
+  });
+
+  it('should handle multiple font-family', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      fonts: {
+        bodyText: {
+          style: {
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+          family: 'arial black',
+          preset: 'Heading-L',
+          size: 60,
+          fontStyleParam: true,
+          value:
+            'font:normal normal normal 60px/1.4em "arial black",arial-w01-black,arial-w02-black,"arial-w10 black",sans-serif;',
+        },
+      },
+    });
+
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss =
+      '.font-with-multiple-font-family {font: normal normal normal 60px/1.4em "arial black",arial-w01-black,arial-w02-black,"arial-w10 black",sans-serif;text-decoration: };';
     expect(css).toContain(expectedCss);
   });
 
@@ -432,7 +457,7 @@ describe('runtime', () => {
       },
     });
     const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
-    const expectedCss = `.underlined { font: normal normal normal 17px/1.4em mr de haviland,cursive;text-decoration: underline }`;
+    const expectedCss = `.underlined { font: normal normal normal 17px/1.4em "mr de haviland",cursive;text-decoration: underline }`;
     expect(css).toContain(expectedCss);
   });
 

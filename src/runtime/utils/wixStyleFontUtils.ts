@@ -1,5 +1,5 @@
 import {forEach, isNumber, reduceObj} from './utils';
-import parseCssFont from 'parse-css-font';
+import parseCssFont, {IFont} from 'parse-css-font';
 import {ISiteTextPreset, IStyleFont} from '../types';
 
 export const wixStylesFontUtils = {
@@ -19,7 +19,7 @@ export const wixStylesFontUtils = {
     });
 
     const parsedSiteTextPresets = reduceObj(siteTextPresets, (acc, {key, value: preset}) => {
-      const presetValue = preset.value.replace(/^font\s*:\s*/, '');
+      const presetValue = cleanWixFontValue(preset.value);
       acc[key] = {
         ...parseCssFont(presetValue),
 
@@ -61,8 +61,9 @@ export const wixStylesFontUtils = {
   toFontCssValue(value) {
     const size = isNumber(value.size) ? value.size + 'px' : value.size;
     const lineHeight = isNumber(value.lineHeight) ? value.lineHeight + 'px' : value.lineHeight;
+    const family = value.family.map(val => (val.indexOf(' ') > -1 ? JSON.stringify(val) : val)).join(',');
 
-    return `${value.style} ${value.variant} ${value.weight} ${size}/${lineHeight} ${value.family.join(',')}`;
+    return `${value.style} ${value.variant} ${value.weight} ${size}/${lineHeight} ${family}`;
   },
   isStringHack(fontParam) {
     return fontParam.fontStyleParam === false;
@@ -72,11 +73,24 @@ export const wixStylesFontUtils = {
   },
 };
 
+function cleanWixFontValue(value: string): string {
+  return value.replace(/^font\s*:\s*/, '');
+}
+
 function parseWixStylesFont(font) {
+  let parsedValue: IFont;
+  try {
+    parsedValue = parseCssFont(cleanWixFontValue(font.value || '')) as IFont;
+  } catch (e) {
+    parsedValue = {
+      family: [],
+    };
+  }
+
   let value = '';
 
   if (font.style.italic) {
-    value = 'italic ';
+    value += 'italic ';
   }
 
   if (font.style.bold) {
@@ -95,7 +109,13 @@ function parseWixStylesFont(font) {
   value += `${size}/${lineHeight} `;
 
   value += font.cssFontFamily || font.family || 'NONE_EXISTS_FONT';
+
   const fontObj = {...parseCssFont(value)} as any;
+
+  if (parsedValue.family && parsedValue.family.length > fontObj.family.length) {
+    fontObj.family = parsedValue.family;
+  }
+
   fontObj.underline = font.style && font.style.underline;
   return fontObj;
 }
