@@ -1,4 +1,4 @@
-import {forEach, isNumber} from './utils';
+import {forEach, isNumber, reduceObj} from './utils';
 import parseCssFont from 'parse-css-font';
 import {ISiteTextPreset, IStyleFont} from '../types';
 
@@ -12,24 +12,23 @@ export const wixStylesFontUtils = {
   }) {
     let ret = {} as any;
 
-    // Fix color styles due to '.' to '-' conversion
-    const fixedFontStyles = {};
-    forEach(fontStyles, (v, k: string) => (fixedFontStyles[k.replace(/\./g, '-')] = v));
+    const parsedFontStyles = reduceObj(fontStyles, (acc, {key, value}) => {
+      // Fix color styles due to '.' to '-' conversion
+      acc[key.replace(/\./g, '-')] = parseWixStylesFont(value);
+      return acc;
+    });
 
-    const parsedSiteTextPresets = {};
-    forEach(siteTextPresets, (preset: any, key: string) => {
+    const parsedSiteTextPresets = reduceObj(siteTextPresets, (acc, {key, value: preset}) => {
       const presetValue = preset.value.replace(/^font\s*:\s*/, '');
-      parsedSiteTextPresets[key] = {
+      acc[key] = {
         ...parseCssFont(presetValue),
 
         preset: key,
         editorKey: preset.editorKey,
         ...(preset.displayName ? {displayName: preset.displayName} : {}),
       };
+      return acc;
     });
-
-    const parsedFontStyles = {};
-    forEach(fixedFontStyles, (value, key) => (parsedFontStyles[key] = parseWixStylesFont(value)));
 
     // Basic template colors
     forEach(parsedSiteTextPresets, (preset, key) => (ret[key] = parsedFontStyles[key] || preset));
@@ -96,7 +95,7 @@ function parseWixStylesFont(font) {
   value += `${size}/${lineHeight} `;
 
   value += font.cssFontFamily || font.family || 'NONE_EXISTS_FONT';
-  const fontObj: any = {...parseCssFont(value)};
+  const fontObj = {...parseCssFont(value)} as any;
   fontObj.underline = font.style && font.style.underline;
   return fontObj;
 }
