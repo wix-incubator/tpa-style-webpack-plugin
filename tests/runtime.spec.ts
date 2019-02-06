@@ -398,6 +398,54 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('should use value property font families if it has >= families compared to family', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      fonts: {
+        bodyText: {
+          style: {
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+          family: 'arial black',
+          preset: 'Heading-L',
+          size: 60,
+          fontStyleParam: true,
+          value: 'font:normal normal normal 60px/1.4em sans-serif;',
+        },
+      },
+    });
+
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss =
+      '.font-with-multiple-font-family {font: normal normal normal 60px/1.4em sans-serif;text-decoration: };';
+    expect(css).toContain(expectedCss);
+  });
+
+  it('should not use value property font families if it has less families compared to family', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      fonts: {
+        bodyText: {
+          style: {
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+          family: `'palatino linotype','serif'`,
+          preset: 'Heading-L',
+          size: 60,
+          fontStyleParam: true,
+          value: 'font:normal normal normal 60px/1.4em sans-serif;',
+        },
+      },
+    });
+
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss =
+      '.font-with-multiple-font-family {font: normal normal normal 60px/1.4em "palatino linotype",serif;text-decoration: };';
+    expect(css).toContain(expectedCss);
+  });
+
   it('should support font override with var', () => {
     const newStyleParams = clonedWith(styleParams, {
       fonts: {

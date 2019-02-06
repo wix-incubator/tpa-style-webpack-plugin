@@ -10,14 +10,14 @@ describe('runtime size', () => {
     await clearDir(outputDirPath);
   });
 
-  it('should throw when lib size exceeds 25kb', () => {
+  it('should throw when lib size exceeds 26kb', () => {
     return runWebpack({
       output: {
         path: path.resolve(outputDirPath),
         libraryTarget: 'commonjs',
       },
       performance: {
-        maxEntrypointSize: 25 * 1024,
+        maxEntrypointSize: 26 * 1024,
         hints: 'error',
       },
       mode: 'production',

@@ -74,7 +74,7 @@ export const wixStylesFontUtils = {
 };
 
 function cleanWixFontValue(value: string): string {
-  return value.replace(/^font\s*:\s*/, '');
+  return value.replace(/^font\s*:\s*/, '').replace(/\s;$/, '');
 }
 
 function parseWixStylesFont(font) {
@@ -111,8 +111,7 @@ function parseWixStylesFont(font) {
   value += font.cssFontFamily || font.family || 'NONE_EXISTS_FONT';
 
   const fontObj = {...parseCssFont(value)} as any;
-
-  if (parsedValue.family && parsedValue.family.length > fontObj.family.length) {
+  if (parsedValue.family && parsedValue.family.length >= fontObj.family.length) {
     fontObj.family = parsedValue.family;
   }
 
