@@ -20,9 +20,14 @@ export const wixStylesFontUtils = {
 
     const parsedSiteTextPresets = reduceObj(siteTextPresets, (acc, {key, value: preset}) => {
       const presetValue = cleanWixFontValue(preset.value);
+      let parsedCssFont;
+      try {
+        parsedCssFont = parseCssFont(presetValue);
+      } catch (e) {
+        parsedCssFont = parseCssFont(presetValue + ' ;');
+      }
       acc[key] = {
-        ...parseCssFont(presetValue),
-
+        ...parsedCssFont,
         preset: key,
         editorKey: preset.editorKey,
         ...(preset.displayName ? {displayName: preset.displayName} : {}),

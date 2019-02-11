@@ -34,6 +34,26 @@ describe('runtime invalid input', () => {
     );
   });
 
+  it('should not throw on invalid siteTextPresets', () => {
+    const invalidSiteTextPreset = {
+      ['Page-title']: {
+        editorKey: 'font_2',
+        fontFamily: '',
+        lineHeight: '1.4em',
+        size: '18px',
+        style: 'normal',
+        value: 'font:normal normal normal 18px/1.4em ;',
+        weight: 'normal',
+      },
+    };
+    expect(() =>
+      getProcessedCss(
+        {styleParams, siteColors, siteTextPresets: {...siteTextPresets, ...invalidSiteTextPreset}},
+        {strictMode: false}
+      )
+    ).not.toThrowError();
+  });
+
   it('should not throw when not in strict mode', () => {
     const newStyleParams = clonedWith(styleParams, {
       numbers: {},
