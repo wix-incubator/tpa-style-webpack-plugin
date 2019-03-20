@@ -61,6 +61,29 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('should infer a line height from value', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      fonts: {
+        fontFromSettings: {
+          value: `font:normal normal normal 17px/2em 'mr de haviland','cursive';`,
+          index: 93,
+          cssFontFamily: `'mr de haviland','cursive'`,
+          family: 'mr de haviland',
+          fontParam: true,
+          size: 0,
+          style: {
+            bold: false,
+            italic: false,
+            underline: false,
+          },
+        },
+      },
+    });
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = '.fonts-from-settings {font: normal normal normal 17px/2em';
+    expect(css).toContain(expectedCss);
+  });
+
   it('should support font string hack from settings', () => {
     const newStyleParams = clonedWith(styleParams, {
       fonts: {
