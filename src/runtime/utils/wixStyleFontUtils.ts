@@ -106,7 +106,7 @@ function parseWixStylesFont(font) {
   if (isNumber(size)) {
     size = `${size}px`;
   }
-  let lineHeight = font.lineHeight || 'normal';
+  let lineHeight = font.lineHeight || parsedValue.lineHeight || 'normal';
   if (isNumber(lineHeight)) {
     lineHeight = `${lineHeight}px`;
   }
