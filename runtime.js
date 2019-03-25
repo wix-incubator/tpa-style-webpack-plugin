@@ -1,7 +1,7 @@
 // The following code is compiled `export * from './dist/runtime/fakeMain';` in order to support commonjs
 
-const fakeMain = require('./dist/runtime/fakeMain');
-Object.keys(fakeMain).forEach(key => {
+var fakeMain = require('./dist/runtime/fakeMain');
+Object.keys(fakeMain).forEach(function(key) {
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function get() {
