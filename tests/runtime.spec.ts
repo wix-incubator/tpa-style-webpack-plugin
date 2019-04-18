@@ -565,6 +565,52 @@ describe('runtime', () => {
     expect(css).toContain(expectedCss);
   });
 
+  it('should support number 0 as true', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      numbers: {},
+      colors: {},
+      fonts: {},
+    });
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = `.number-zero-none-falsy {--zero_none_falsy: 0; width: 0px;}`;
+    expect(css).toContain(expectedCss);
+  });
+
+  it('should ignore undefined as true', () => {
+    const newStyleParams = clonedWith(styleParams, {
+      numbers: {},
+      colors: {},
+      fonts: {},
+    });
+    const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+    const expectedCss = `.undefined-falsy {width: 1px;}`;
+    expect(css).toContain(expectedCss);
+  });
+
+  describe('zeroAsTrue css function', () => {
+    it('should return 0', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {},
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.return-zero {border-width: 0;}`;
+      expect(css).toContain(expectedCss);
+    });
+
+    it('should return undefined', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {},
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.return-undefined {border-width: undefined;}`;
+      expect(css).toContain(expectedCss);
+    });
+  });
+
   describe('Options', () => {
     describe('isRTL', () => {
       it('should support LTR', () => {

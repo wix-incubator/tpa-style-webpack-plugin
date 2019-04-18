@@ -69,6 +69,14 @@
 
 .fallback-multiple-vals {color: "fallback(--multi_val1, --multi_val2, color(color-1))";}
 
+.number-zero-none-falsy {--zero_none_falsy: "zeroAsTrue(0)"; width: "unit(fallback(--zero_none_falsy, 1), px)";}
+
+.undefined-falsy {width: "unit(fallback(zeroAsTrue(--undefined_falsy), 1), px)";}
+
+.return-zero {border-width: "zeroAsTrue(0)";}
+
+.return-undefined {border-width: "zeroAsTrue(--undefined_val)";}
+
 .multiple-parts-of-the-same-part {color: "color(color-18)"; background-color: "color(color-18)"}
 
 .whiten {rule1: "whiten(#663898, 0.25)";}

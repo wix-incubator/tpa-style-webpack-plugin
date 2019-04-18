@@ -107,4 +107,7 @@ export const cssFunctions = {
     const direction = tpaParams.booleans[IS_RTL_PARAM] ? 'rtl' : 'ltr';
     return directionMap[value][direction];
   },
+  zeroAsTrue: zero => {
+    return typeof zero === 'number' ? `${zero}` : zero;
+  },
 };
