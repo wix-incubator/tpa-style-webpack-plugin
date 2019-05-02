@@ -611,6 +611,41 @@ describe('runtime', () => {
     });
   });
 
+  describe('calc css function', () => {
+    it('should return native calc function concatenated with the operator', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {var1: 1},
+        colors: {},
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.return-native-calc {padding: 0 calc(2px + 42px);}`;
+      expect(css).toContain(expectedCss);
+    });
+
+    it('should use return the first number if only one number was given', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {},
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.return-first-number-calc {padding: 2px;}`;
+      expect(css).toContain(expectedCss);
+    });
+
+    it('should support nested calc', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {},
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const expectedCss = `.return-nested-calc {--calcVar1:7; width: calc(2px + 7px + calc(9px - 8px));}`;
+      expect(css).toContain(expectedCss);
+    });
+  });
+
   describe('Options', () => {
     describe('isRTL', () => {
       it('should support LTR', () => {

@@ -77,6 +77,12 @@
 
 .return-undefined {border-width: "zeroAsTrue(--undefined_val)";}
 
+.return-native-calc {padding: 0 "calc(+, unit(2, px), unit(number(42), px))";}
+
+.return-first-number-calc {padding: "calc(+, unit(2, px))";}
+
+.return-nested-calc {--calcVar1:"number(7)"; width: "calc(+, unit(2, px), unit(number(--calcVar1), px), calc(-, 9px, 8px))";}
+
 .multiple-parts-of-the-same-part {color: "color(color-18)"; background-color: "color(color-18)"}
 
 .whiten {rule1: "whiten(#663898, 0.25)";}

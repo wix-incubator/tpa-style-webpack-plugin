@@ -100,6 +100,9 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .undefined-falsy {width: 1px;}
  .return-zero {border-width: 0;}
  .return-undefined {border-width: undefined;}
+ .return-native-calc {padding: 0 calc(2px + 42px);}
+ .return-first-number-calc {padding: 2px;}
+ .return-nested-calc {--calcVar1:7; width: calc(2px + 7px + calc(9px - 8px));}
  .multiple-parts-of-the-same-part {color: #3AB3CF; background-color: #3AB3CF}
  .whiten {rule1: rgb(140, 106, 178);}
  .lighten {rule1: rgb(77, 255, 77);}

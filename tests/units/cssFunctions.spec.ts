@@ -185,6 +185,32 @@ describe('cssFunctions', () => {
     });
   });
 
+  describe('zeroAsTrue', () => {
+    it('should support 0 as true', () => {
+      expect(cssFunctions.fallback(cssFunctions.zeroAsTrue(0), 'abs', {})).toBe(`0`);
+    });
+
+    it('should ignore undefined as true', () => {
+      expect(cssFunctions.fallback(cssFunctions.zeroAsTrue(undefined), 'abs', {})).toBe(`abs`);
+    });
+  });
+
+  describe('calc', () => {
+    it('should return native calc function with the numbers concatenated with the operator', () => {
+      expect(cssFunctions.calc('+', '2px', '1px', {})).toBe(`calc(2px + 1px)`);
+    });
+
+    it('should return the first number if only one number was given', () => {
+      expect(cssFunctions.calc('+', '2px', {})).toBe(`2px`);
+    });
+
+    it('should support nested calc', () => {
+      expect(cssFunctions.calc('+', '2px', '1px', cssFunctions.calc('-', '3px', '8px', {}), {})).toBe(
+        `calc(2px + 1px + calc(3px - 8px))`
+      );
+    });
+  });
+
   describe('fallback', () => {
     it('should return the first none falsy', () => {
       expect(cssFunctions.fallback(0, '', false, undefined, 'abs', {})).toBe('abs');
