@@ -611,7 +611,7 @@ describe('runtime', () => {
     });
   });
 
-  describe('calc css function', () => {
+  describe('calculate css function', () => {
     it('should return native calc function concatenated with the operator', () => {
       const newStyleParams = clonedWith(styleParams, {
         numbers: {var1: 1},

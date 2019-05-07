@@ -111,7 +111,7 @@ export const cssFunctions = {
     return typeof zero === 'number' ? `${zero}` : zero;
   },
   //a work around for https://github.com/thysultan/stylis.js/issues/116
-  calc: (operator, ...args) => {
+  calculate: (operator, ...args) => {
     const numbersWithoutTPAParams = args.slice(0, -1);
     if (numbersWithoutTPAParams.length > 1) {
       return `calc(${numbersWithoutTPAParams.join(` ${operator} `)})`;

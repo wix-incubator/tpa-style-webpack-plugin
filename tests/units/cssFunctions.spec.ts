@@ -195,17 +195,17 @@ describe('cssFunctions', () => {
     });
   });
 
-  describe('calc', () => {
+  describe('calculate', () => {
     it('should return native calc function with the numbers concatenated with the operator', () => {
-      expect(cssFunctions.calc('+', '2px', '1px', {})).toBe(`calc(2px + 1px)`);
+      expect(cssFunctions.calculate('+', '2px', '1px', {})).toBe(`calc(2px + 1px)`);
     });
 
     it('should return the first number if only one number was given', () => {
-      expect(cssFunctions.calc('+', '2px', {})).toBe(`2px`);
+      expect(cssFunctions.calculate('+', '2px', {})).toBe(`2px`);
     });
 
     it('should support nested calc', () => {
-      expect(cssFunctions.calc('+', '2px', '1px', cssFunctions.calc('-', '3px', '8px', {}), {})).toBe(
+      expect(cssFunctions.calculate('+', '2px', '1px', cssFunctions.calculate('-', '3px', '8px', {}), {})).toBe(
         `calc(2px + 1px + calc(3px - 8px))`
       );
     });
