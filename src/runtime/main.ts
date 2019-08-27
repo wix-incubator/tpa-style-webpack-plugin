@@ -58,3 +58,8 @@ export function getProcessedCss(
     return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
   }, prefixedCss);
 }
+
+export function getStaticCss() {
+  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
+  return injectedData.staticCss || '';
+}

@@ -42,6 +42,7 @@ module.exports = {
 };
 ```
 
+## getProcessedCss
 import [`getProcessedCss`](https://github.com/wix-incubator/tpa-style-webpack-plugin/blob/master/src/runtime/main.ts#L21) function from plugins runtime in your production code.
 
 ```js
@@ -113,6 +114,10 @@ addStyles(dynamicCss, 'tag-id');
 ```
 
 You can check out an [example project](https://github.com/felixmosh/extract-tpa-style-test).
+
+## getStaticCss
+
+Use it to inject the static css content to your .js bundle
 
 ### ⚠️ Caveats
 
