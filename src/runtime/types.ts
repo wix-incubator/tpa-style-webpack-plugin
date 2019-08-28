@@ -1,5 +1,6 @@
 export interface IInjectedData {
   css: string;
+  staticCss: string;
   customSyntaxStrs: string[];
   cssVars: {[key: string]: string};
 }

@@ -79,7 +79,7 @@ class TPAStylePlugin {
                     }),
                     extractTPACustomSyntax({
                       onFinish: ({cssVars, customSyntaxStrs, css}) => {
-                        resolve({chunk, cssVars, customSyntaxStrs, css});
+                        resolve({chunk, cssVars, customSyntaxStrs, css, staticCss: result.css});
                       },
                     }),
                   ]).process(result.extracted, {from: undefined}).css;
@@ -92,35 +92,55 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
+  private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
+    const placeHolder = `'${this.compilationHash}${placeholder}'`;
+    const placeHolderPos = sourceCode.indexOf(placeHolder);
+
+    if (placeHolderPos > -1) {
+      const content = JSON.stringify(params);
+      const escapedContent = JSON.stringify(content);
+
+      newSource.replace(
+        placeHolderPos,
+        placeHolderPos + placeHolder.length - 1,
+        shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+      );
+    }
+  }
+
   private replaceSource(compilation, extractResults, shouldEscapeContent) {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
-    entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css}) => {
+    entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css, staticCss}) => {
       chunk.files
         .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
           const sourceCode = compilation.assets[file].source();
-          const placeHolder = `'${this.compilationHash}INJECTED_DATA_PLACEHOLDER'`;
-          const placeHolderPos = sourceCode.indexOf(placeHolder);
+          const newSource = new ReplaceSource(compilation.assets[file], file);
 
-          if (placeHolderPos > -1) {
-            const newSource = new ReplaceSource(compilation.assets[file], file);
-
-            const content = JSON.stringify({
+          this.replaceByPlaceHolder({
+            sourceCode,
+            newSource,
+            shouldEscapeContent,
+            placeholder: 'INJECTED_DATA_PLACEHOLDER',
+            params: {
               cssVars,
               customSyntaxStrs,
               css,
-            });
+            },
+          });
 
-            const escapedContent = JSON.stringify(content);
+          this.replaceByPlaceHolder({
+            sourceCode,
+            newSource,
+            shouldEscapeContent,
+            placeholder: 'INJECTED_STATIC_DATA_PLACEHOLDER',
+            params: {
+              staticCss,
+            },
+          });
 
-            newSource.replace(
-              placeHolderPos,
-              placeHolderPos + placeHolder.length - 1,
-              shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
-            );
-            compilation.assets[file] = newSource;
-          }
+          compilation.assets[file] = newSource;
         });
     });
   }
