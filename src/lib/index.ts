@@ -92,7 +92,7 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
-  private replaceByPlaceHolder(sourceCode, newSource, shouldEscapeContent, placeholder, params) {
+  private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
@@ -118,14 +118,26 @@ class TPAStylePlugin {
           const sourceCode = compilation.assets[file].source();
           const newSource = new ReplaceSource(compilation.assets[file], file);
 
-          this.replaceByPlaceHolder(sourceCode, newSource, shouldEscapeContent, 'INJECTED_DATA_PLACEHOLDER', {
-            cssVars,
-            customSyntaxStrs,
-            css,
+          this.replaceByPlaceHolder({
+            sourceCode,
+            newSource,
+            shouldEscapeContent,
+            placeholder: 'INJECTED_DATA_PLACEHOLDER',
+            params: {
+              cssVars,
+              customSyntaxStrs,
+              css,
+            },
           });
 
-          this.replaceByPlaceHolder(sourceCode, newSource, shouldEscapeContent, 'INJECTED_STATIC_DATA_PLACEHOLDER', {
-            staticCss,
+          this.replaceByPlaceHolder({
+            sourceCode,
+            newSource,
+            shouldEscapeContent,
+            placeholder: 'INJECTED_STATIC_DATA_PLACEHOLDER',
+            params: {
+              staticCss,
+            },
           });
 
           compilation.assets[file] = newSource;
