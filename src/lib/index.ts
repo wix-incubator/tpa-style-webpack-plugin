@@ -167,6 +167,7 @@ class TPAStylePlugin {
     newResult.cssVars = {...newResult.cssVars, ...extractResult2.cssVars};
     newResult.customSyntaxStrs = newResult.customSyntaxStrs.concat(extractResult2.customSyntaxStrs);
     newResult.css += `\n${extractResult2.css}`;
+    newResult.staticCss += `\n${extractResult2.staticCss}`;
 
     return newResult;
   }
