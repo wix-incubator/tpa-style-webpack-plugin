@@ -1,7 +1,7 @@
 # tpa-style-webpack-plugin
 
 [![Build Status][ci-img]][ci] [![NPM version][npm-img]][npm] [![code style: prettier][prettier-img]][prettier]
-
+ 
 [prettier-img]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat
 [prettier]: https://github.com/prettier/prettier
 [ci-img]: https://travis-ci.org/wix-incubator/tpa-style-webpack-plugin.svg?branch=master
