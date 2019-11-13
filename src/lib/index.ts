@@ -1,4 +1,5 @@
 import {RawSource, ReplaceSource} from 'webpack-sources';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as postcss from 'postcss';
 import * as extractStyles from 'postcss-extract-styles';
@@ -43,7 +44,7 @@ class TPAStylePlugin {
   private replaceRuntimeModule(compiler) {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
     const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
-      if (resource.resource !== runtimePath) {
+      if (fs.realpathSync(resource.resource) !== runtimePath) {
         return;
       }
 
