@@ -32,8 +32,8 @@ const commonConfig = {
   ],
 };
 
-export async function runWebpack(config) {
-  config = merge(commonConfig, config);
+export async function runWebpack(originalConfig: any) {
+  const config = merge(commonConfig, originalConfig);
 
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {

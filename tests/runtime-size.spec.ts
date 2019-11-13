@@ -22,7 +22,7 @@ describe('runtime size', () => {
       },
       mode: 'production',
       entry: {
-        [entryName]: './runtime.js',
+        [entryName]: './runtime',
       },
     });
   });
