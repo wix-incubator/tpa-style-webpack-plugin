@@ -69,6 +69,7 @@ class TPAStylePlugin {
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile =>
             postcss([extractStyles(this._options)])
+              .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
               .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
               .then((result: Result & {extracted: string}) => {
                 compilation.assets[cssFile] = new RawSource(result.css);

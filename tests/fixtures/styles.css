@@ -4,6 +4,10 @@
   --bgColor: "color(color-11)";
 }
 
+html {
+  zoom: 1;
+}
+
 /* line 2, app/common.scss */
 body {
   font: "font({theme: 'Body-M', size:'20px'})";

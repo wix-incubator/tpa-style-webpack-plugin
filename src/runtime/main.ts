@@ -18,6 +18,7 @@ export interface IOptions {
 }
 
 export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
+export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
 
 const defaultOptions = {
   isRTL: false,
@@ -59,7 +60,8 @@ export function getProcessedCss(
   }, prefixedCss);
 }
 
-export function getStaticCss() {
+export const getStaticCss: IGetStaticCssFn = ({prefixSelector} = {prefixSelector: ''}) => {
   const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
-  return injectedData.staticCss || '';
-}
+  const prefixedCss = (injectedData.staticCss || '').replace(new RegExp('__COMPILATION_HASH__', 'g'), prefixSelector);
+  return prefixedCss;
+};
