@@ -120,6 +120,7 @@ You can check out an [example project](https://github.com/felixmosh/extract-tpa-
 Use it to inject the static css content to your .js bundle
 
 ## Comparison to [wix-style-processor](https://github.com/wix/wix-style-processor)
+
 This plugin was written in order to add support for **SSR** to Wix tpa dynamic styles as part of OOI project.
 
 It uses the same syntax as `wix-style-proccesor` but it works completely different, instead of searching the DOM for style tags with special syntax, it extracts the special syntax css, prepare all the data-structure that is needed at **build-time** and then exposes a function that given site params (colors, settings etc...) at **run-time** returns the `css` as a **string**.
@@ -129,29 +130,28 @@ You can use a [built in method](https://github.com/wix-incubator/tpa-style-webpa
 ### Usage example (React)
 
 ```javascript
-import * as React from 'react';
-import { getProcessedCss } from 'tpa-style-webpack-plugin/runtime';
+import * as React from "react";
+import {getProcessedCss} from "tpa-style-webpack-plugin/runtime";
 
 export const withStyles = (Component, options) => {
   return function WithStyles(props) {
-    const { isRTL, siteStyles, styleId } = props;
+    const {isRTL, siteStyles, styleId} = props;
 
     const dynamicCss = getProcessedCss(siteStyles, {
-      prefixSelector: styleId ? `.${styleId}` : '',
+      prefixSelector: styleId ? `.${styleId}` : "",
       isRTL: !!isRTL,
       strictMode: !!options.strictMode,
     });
 
     return (
       <div className={styleId}>
-        <style dangerouslySetInnerHTML={{ __html: dynamicCss }} />
+        <style dangerouslySetInnerHTML={{__html: dynamicCss}} />
         <Component {...props} />
       </div>
     );
   };
-}
+};
 ```
-
 
 ## ⚠️ Caveats
 

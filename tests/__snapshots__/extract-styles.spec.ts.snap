@@ -114,6 +114,10 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
 exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `
 "@charset 'UTF-8';
 
+html {
+  zoom: 1;
+}
+
 /* line 2, app/common.scss */
 
 .tpa-first:hover {
