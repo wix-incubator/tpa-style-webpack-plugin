@@ -30,8 +30,11 @@ describe('Extract Styles', () => {
   });
 
   it('should extract out TPA styles from regular css', () => {
-    const withoutCompilationHash = cssFile.replace(/__.+__\s/g, '');
-    expect(withoutCompilationHash).toMatchSnapshot('static-css');
+    expect(cssFile).toMatchSnapshot('static-css');
+  });
+
+  it('should should not have a compilation hash', () => {
+    expect(cssFile).not.toContain(/__.+__\s/g);
   });
 
   it('should contain only TPA styles', () => {

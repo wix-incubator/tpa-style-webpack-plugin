@@ -72,7 +72,9 @@ class TPAStylePlugin {
               .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
               .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
               .then((result: Result & {extracted: string}) => {
-                compilation.assets[cssFile] = new RawSource(result.css);
+                compilation.assets[cssFile] = new RawSource(
+                  result.css.replace(new RegExp(`${this.compilationHash} `, 'g'), '')
+                );
 
                 return new Promise(resolve => {
                   postcss([
