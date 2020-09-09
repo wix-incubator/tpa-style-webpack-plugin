@@ -126,6 +126,22 @@ describe('cssFunctions', () => {
       ).toBe('normal variant bold 20px/1em family,family2');
     });
 
+    it('should support font css definition', () => {
+      const font = {
+        size: '10',
+        lineHeight: '1.4',
+        style: 'italic',
+        family: ['family', 'family2;'],
+        weight: 'bold',
+        variant: 'variant',
+      };
+      expect(
+        cssFunctions.font(`font:normal variant bold 20px/1em family,family2;`, {
+          fonts: {['Body-M']: font},
+        } as any)
+      ).toBe('normal variant bold 20px/1em family,family2');
+    });
+
     it('should return given font', () => {
       expect(cssFunctions.font(`unknown-font<xss>`, {fonts: {}} as any)).toBe(`unknown-font&lt;xss&gt;`);
     });
