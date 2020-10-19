@@ -1,20 +1,15 @@
 declare var define;
 
-(function(global, factory) {
+(function(root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['exports'], factory);
-  } else if (typeof exports !== 'undefined') {
-    factory(exports);
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
   } else {
-    // tslint:disable-next-line
-    var mod = {
-      exports: {},
-    };
-    factory(mod.exports);
-    global.log = mod.exports;
+    root.getProcessedCssConfig = factory();
   }
-})(this, function(exports) {
-  'use strict';
-
-  exports.getProcessedCssConfig = 'INJECTED_DATA_PLACEHOLDER';
+})(this, function() {
+  return {
+    getProcessedCssConfig: 'INJECTED_DATA_PLACEHOLDER',
+  };
 });
