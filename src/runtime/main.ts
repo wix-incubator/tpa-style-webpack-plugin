@@ -17,7 +17,8 @@ export interface IOptions {
   strictMode: boolean;
 }
 
-export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
+export type IGetProcessedCssFn = typeof getProcessedCss;
+export type IGetProcessedCssWithConfigFn = typeof getProcessedCssWithConfig;
 export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
 
 export interface DynamicCssConfig {
@@ -32,7 +33,7 @@ const defaultOptions = {
   strictMode: true,
 };
 
-export function getProcessedCss(styles: IStyles, options: Partial<IOptions>): string {
+export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
   const dynamicCssConfig: DynamicCssConfig = {

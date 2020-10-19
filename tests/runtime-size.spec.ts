@@ -17,7 +17,7 @@ describe('runtime size', () => {
         libraryTarget: 'commonjs',
       },
       performance: {
-        maxEntrypointSize: 26 * 1024,
+        maxEntrypointSize: 27 * 1024,
         hints: 'error',
       },
       mode: 'production',
