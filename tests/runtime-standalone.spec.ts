@@ -6,7 +6,7 @@ import {siteColors} from './fixtures/siteColors';
 import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
 
-describe('runtime', () => {
+describe('runtime standalone', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime-standalone');
   const entryName = 'app';
   let getProcessedCss: IGetProcessedCssFn,
