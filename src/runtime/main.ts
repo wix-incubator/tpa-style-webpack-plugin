@@ -20,74 +20,50 @@ export interface IOptions {
 export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
 export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
 
-export type ProcessedCssConfig = {
+export interface DynamicCssConfig {
   cssVars: {[key: string]: string};
   customSyntaxStrs: string[];
   css: string;
   compilationHash: string;
-};
+}
 
 const defaultOptions = {
   isRTL: false,
   strictMode: true,
 };
 
-export function getProcessedCssWithConfig(
-  config: ProcessedCssConfig,
-  {siteColors, siteTextPresets, styleParams}: IStyles,
-  options: Partial<IOptions>
-): string {
-  options = {...defaultOptions, ...options};
+export function getProcessedCss(styles: IStyles, options: Partial<IOptions>): string {
+  const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  if (!config.css) {
-    return '';
-  }
+  const config: DynamicCssConfig = {
+    ...injectedData,
+    compilationHash: '__COMPILATION_HASH__',
+  };
 
-  const prefixedCss = config.css.replace(
-    new RegExp(config.compilationHash, 'g'),
-    options.prefixSelector ? `${options.prefixSelector}` : ''
-  );
-
-  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
-
-  const processor = getProcessor({cssVars: config.cssVars, plugins});
-
-  return config.customSyntaxStrs.reduce((processedContent, part) => {
-    let newValue;
-    try {
-      newValue = processor.process({part, tpaParams});
-    } catch (e) {
-      if (options.strictMode) {
-        throw e;
-      } else {
-        newValue = '';
-      }
-    }
-    return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
-  }, prefixedCss);
+  return getProcessedCssWithConfig(config, styles, options);
 }
 
-export function getProcessedCss(
+export function getProcessedCssWithConfig(
+  dynamicCssConfig: DynamicCssConfig,
   {siteColors, siteTextPresets, styleParams}: IStyles,
   options: Partial<IOptions>
 ): string {
   options = {...defaultOptions, ...options};
-  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  if (!injectedData.css) {
+  if (!dynamicCssConfig.css) {
     return '';
   }
 
-  const prefixedCss = injectedData.css.replace(
-    new RegExp('__COMPILATION_HASH__', 'g'),
+  const prefixedCss = dynamicCssConfig.css.replace(
+    new RegExp(dynamicCssConfig.compilationHash, 'g'),
     options.prefixSelector ? `${options.prefixSelector}` : ''
   );
 
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-  const processor = getProcessor({cssVars: injectedData.cssVars, plugins});
+  const processor = getProcessor({cssVars: dynamicCssConfig.cssVars, plugins});
 
-  return injectedData.customSyntaxStrs.reduce((processedContent, part) => {
+  return dynamicCssConfig.customSyntaxStrs.reduce((processedContent, part) => {
     let newValue;
     try {
       newValue = processor.process({part, tpaParams});
