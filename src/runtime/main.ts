@@ -20,10 +20,52 @@ export interface IOptions {
 export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
 export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
 
+export type ProcessedCssConfig = {
+  cssVars: {[key: string]: string};
+  customSyntaxStrs: string[];
+  css: string;
+  compilationHash: string;
+};
+
 const defaultOptions = {
   isRTL: false,
   strictMode: true,
 };
+
+export function getProcessedCssWithConfig(
+  config: ProcessedCssConfig,
+  {siteColors, siteTextPresets, styleParams}: IStyles,
+  options: Partial<IOptions>
+): string {
+  options = {...defaultOptions, ...options};
+
+  if (!config.css) {
+    return '';
+  }
+
+  const prefixedCss = config.css.replace(
+    new RegExp(config.compilationHash, 'g'),
+    options.prefixSelector ? `${options.prefixSelector}` : ''
+  );
+
+  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
+
+  const processor = getProcessor({cssVars: config.cssVars, plugins});
+
+  return config.customSyntaxStrs.reduce((processedContent, part) => {
+    let newValue;
+    try {
+      newValue = processor.process({part, tpaParams});
+    } catch (e) {
+      if (options.strictMode) {
+        throw e;
+      } else {
+        newValue = '';
+      }
+    }
+    return processedContent.replace(new RegExp(escapeRegExp(part), 'g'), newValue);
+  }, prefixedCss);
+}
 
 export function getProcessedCss(
   {siteColors, siteTextPresets, styleParams}: IStyles,

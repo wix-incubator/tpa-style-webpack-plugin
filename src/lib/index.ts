@@ -112,6 +112,16 @@ class TPAStylePlugin {
     }
   }
 
+  private replaceByTMPPlaceHolder({sourceCode, shouldEscapeContent, placeholder, params}) {
+    const content = JSON.stringify(params);
+    const escapedContent = JSON.stringify(content);
+
+    return sourceCode.replace(
+      `'${placeholder}'`,
+      shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+    );
+  }
+
   private replaceSource(compilation, extractResults, shouldEscapeContent) {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
@@ -143,6 +153,22 @@ class TPAStylePlugin {
               staticCss,
             },
           });
+
+          const tmpSourceCode = fs.readFileSync(path.join(__dirname, './getProcessedCssConfig.js')).toString();
+
+          compilation.assets[file + 'cssConfig.js'] = new RawSource(
+            this.replaceByTMPPlaceHolder({
+              sourceCode: tmpSourceCode,
+              shouldEscapeContent,
+              placeholder: 'INJECTED_DATA_PLACEHOLDER',
+              params: {
+                cssVars,
+                customSyntaxStrs,
+                css,
+                compilationHash: this.compilationHash,
+              },
+            })
+          );
 
           compilation.assets[file] = newSource;
         });
