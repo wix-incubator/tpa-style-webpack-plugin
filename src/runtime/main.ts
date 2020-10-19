@@ -35,12 +35,12 @@ const defaultOptions = {
 export function getProcessedCss(styles: IStyles, options: Partial<IOptions>): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  const config: DynamicCssConfig = {
+  const dynamicCssConfig: DynamicCssConfig = {
     ...injectedData,
     compilationHash: '__COMPILATION_HASH__',
   };
 
-  return getProcessedCssWithConfig(config, styles, options);
+  return getProcessedCssWithConfig(dynamicCssConfig, styles, options);
 }
 
 export function getProcessedCssWithConfig(
