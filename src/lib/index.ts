@@ -100,6 +100,7 @@ class TPAStylePlugin {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
+    let containsPlaceholder = false;
     if (placeHolderPos > -1) {
       const content = JSON.stringify(params);
       const escapedContent = JSON.stringify(content);
@@ -109,16 +110,29 @@ class TPAStylePlugin {
         placeHolderPos + placeHolder.length - 1,
         shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
       );
+
+      containsPlaceholder = true;
     }
+
+    return containsPlaceholder;
   }
 
-  private replaceByTMPPlaceHolder({sourceCode, shouldEscapeContent, placeholder, params}) {
+  private generateStandaloneDynamicConfigFilename(fileName: string) {
+    const parts = fileName.split('.');
+
+    return [...parts.slice(0, -1), 'getProcessedCssConfig', ...parts.slice(-1)].join('.');
+  }
+
+  private generateStandaloneDynamicConfig({shouldEscapeContent, params}) {
+    const sourceCode = fs.readFileSync(path.join(__dirname, './getProcessedCssConfig.js')).toString();
     const content = JSON.stringify(params);
     const escapedContent = JSON.stringify(content);
 
-    return sourceCode.replace(
-      `'${placeholder}'`,
-      shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+    return new RawSource(
+      sourceCode.replace(
+        `'INJECTED_DATA_PLACEHOLDER'`,
+        shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+      )
     );
   }
 
@@ -132,7 +146,7 @@ class TPAStylePlugin {
           const sourceCode = compilation.assets[file].source();
           const newSource = new ReplaceSource(compilation.assets[file], file);
 
-          this.replaceByPlaceHolder({
+          const containsDynamicCss = this.replaceByPlaceHolder({
             sourceCode,
             newSource,
             shouldEscapeContent,
@@ -154,21 +168,21 @@ class TPAStylePlugin {
             },
           });
 
-          const tmpSourceCode = fs.readFileSync(path.join(__dirname, './getProcessedCssConfig.js')).toString();
+          if (containsDynamicCss) {
+            const dynamicConfigFilename = this.generateStandaloneDynamicConfigFilename(file);
 
-          compilation.assets[file + 'cssConfig.js'] = new RawSource(
-            this.replaceByTMPPlaceHolder({
-              sourceCode: tmpSourceCode,
+            const params = {
+              cssVars,
+              customSyntaxStrs,
+              css,
+              compilationHash: this.compilationHash,
+            };
+
+            compilation.assets[dynamicConfigFilename] = this.generateStandaloneDynamicConfig({
               shouldEscapeContent,
-              placeholder: 'INJECTED_DATA_PLACEHOLDER',
-              params: {
-                cssVars,
-                customSyntaxStrs,
-                css,
-                compilationHash: this.compilationHash,
-              },
-            })
-          );
+              params,
+            });
+          }
 
           compilation.assets[file] = newSource;
         });
