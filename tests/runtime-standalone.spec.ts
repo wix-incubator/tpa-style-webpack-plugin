@@ -34,7 +34,7 @@ describe('runtime standalone', () => {
     });
 
     const runtime = require(path.join(outputDirPath, `${entryName}.bundle.js`));
-    const config = require(path.join(outputDirPath, `${entryName}.bundle.cssConfig.js`));
+    const config = require(path.join(outputDirPath, `${entryName}.cssConfig.bundle.js`));
     cssConfig = config.cssConfig;
 
     getProcessedCss = runtime.getProcessedCss;

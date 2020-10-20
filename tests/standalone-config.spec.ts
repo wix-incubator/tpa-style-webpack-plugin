@@ -22,7 +22,7 @@ describe('StandaloneConfig', () => {
         },
       });
 
-      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.cssConfig.js`);
+      cssConfigPath = path.join(outputDirPath, `${entryName}.cssConfig.bundle.js`);
     });
 
     it('should generate css config for bundles using css', () => {
@@ -46,7 +46,7 @@ describe('StandaloneConfig', () => {
         },
       });
 
-      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.processedCssConfig.js`);
+      cssConfigPath = path.join(outputDirPath, `${entryName}.cssConfig.bundle.js`);
     });
 
     it('should not generate css config for bundles not using css', () => {

@@ -8,6 +8,7 @@ import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
+import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename';
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
@@ -120,11 +121,6 @@ class TPAStylePlugin {
     }
   }
 
-  private generateStandaloneCssConfigFilename(fileName: string) {
-    const parts = fileName.split('.');
-    return [...parts.slice(0, -1), 'cssConfig', ...parts.slice(-1)].join('.');
-  }
-
   private generateStandaloneCssConfig({shouldEscapeContent, params}) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
 
@@ -165,7 +161,7 @@ class TPAStylePlugin {
             },
           });
 
-          const cssConfigFilename = this.generateStandaloneCssConfigFilename(file);
+          const cssConfigFilename = generateStandaloneCssConfigFilename(file);
 
           const params = {
             cssVars,
