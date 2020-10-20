@@ -96,19 +96,28 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
+  private getPlaceholderContent(params: object, shouldEscapeContent: boolean) {
+    const content = JSON.stringify(params);
+
+    if (!shouldEscapeContent) {
+      return content;
+    }
+
+    const escapedContent = JSON.stringify(content);
+
+    return escapedContent.substring(1, escapedContent.length - 1);
+  }
+
   private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
     let containsPlaceholder = false;
     if (placeHolderPos > -1) {
-      const content = JSON.stringify(params);
-      const escapedContent = JSON.stringify(content);
-
       newSource.replace(
         placeHolderPos,
         placeHolderPos + placeHolder.length - 1,
-        shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+        this.getPlaceholderContent(params, shouldEscapeContent)
       );
 
       containsPlaceholder = true;
@@ -125,14 +134,9 @@ class TPAStylePlugin {
 
   private generateStandaloneDynamicConfig({shouldEscapeContent, params}) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './getProcessedCssConfig.js')).toString();
-    const content = JSON.stringify(params);
-    const escapedContent = JSON.stringify(content);
 
     return new RawSource(
-      sourceCode.replace(
-        `'INJECTED_DATA_PLACEHOLDER'`,
-        shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
-      )
+      sourceCode.replace(`'INJECTED_DATA_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
     );
   }
 

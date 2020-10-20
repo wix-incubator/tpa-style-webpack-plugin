@@ -47,9 +47,9 @@ export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): s
 export function getProcessedCssWithConfig(
   dynamicCssConfig: DynamicCssConfig,
   {siteColors, siteTextPresets, styleParams}: IStyles,
-  options: Partial<IOptions>
+  options?: Partial<IOptions>
 ): string {
-  options = {...defaultOptions, ...options};
+  options = {...defaultOptions, ...(options || {})};
 
   if (!dynamicCssConfig.css) {
     return '';
