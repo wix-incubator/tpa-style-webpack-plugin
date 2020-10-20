@@ -128,11 +128,11 @@ class TPAStylePlugin {
   private generateStandaloneDynamicConfigFilename(fileName: string) {
     const parts = fileName.split('.');
 
-    return [...parts.slice(0, -1), 'getProcessedCssConfig', ...parts.slice(-1)].join('.');
+    return [...parts.slice(0, -1), 'processedCssConfig', ...parts.slice(-1)].join('.');
   }
 
   private generateStandaloneDynamicConfig({shouldEscapeContent, params}) {
-    const sourceCode = fs.readFileSync(path.join(__dirname, './getProcessedCssConfig.js')).toString();
+    const sourceCode = fs.readFileSync(path.join(__dirname, './processedCssConfigTemplate.js')).toString();
 
     return new RawSource(
       sourceCode.replace(`'INJECTED_DATA_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))

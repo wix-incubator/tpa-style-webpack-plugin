@@ -22,7 +22,7 @@ describe('StandaloneConfig', () => {
         },
       });
 
-      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.getProcessedCssConfig.js`);
+      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.processedCssConfig.js`);
     });
 
     it('should generate css config for bundles using getProcessedCss', () => {
@@ -46,7 +46,7 @@ describe('StandaloneConfig', () => {
         },
       });
 
-      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.getProcessedCssConfig.js`);
+      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.processedCssConfig.js`);
     });
 
     it('should not generate css config for bundles not using getProcessedCss', () => {
@@ -71,7 +71,7 @@ describe('StandaloneConfig', () => {
         },
       });
 
-      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.getProcessedCssConfig.js`);
+      cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.processedCssConfig.js`);
     });
 
     it('should generate css config for files using dynamic getProcessedCss', () => {

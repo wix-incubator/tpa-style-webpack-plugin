@@ -21,7 +21,7 @@ export type IGetProcessedCssFn = typeof getProcessedCss;
 export type IGetProcessedCssWithConfigFn = typeof getProcessedCssWithConfig;
 export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
 
-export interface DynamicCssConfig {
+export interface ProcessedCssConfig {
   cssVars: {[key: string]: string};
   customSyntaxStrs: string[];
   css: string;
@@ -36,35 +36,35 @@ const defaultOptions = {
 export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  const dynamicCssConfig: DynamicCssConfig = {
+  const processedCssConfig: ProcessedCssConfig = {
     ...injectedData,
     compilationHash: '__COMPILATION_HASH__',
   };
 
-  return getProcessedCssWithConfig(dynamicCssConfig, styles, options);
+  return getProcessedCssWithConfig(processedCssConfig, styles, options);
 }
 
 export function getProcessedCssWithConfig(
-  dynamicCssConfig: DynamicCssConfig,
+  processedCssConfig: ProcessedCssConfig,
   {siteColors, siteTextPresets, styleParams}: IStyles,
   options?: Partial<IOptions>
 ): string {
   options = {...defaultOptions, ...(options || {})};
 
-  if (!dynamicCssConfig.css) {
+  if (!processedCssConfig.css) {
     return '';
   }
 
-  const prefixedCss = dynamicCssConfig.css.replace(
-    new RegExp(dynamicCssConfig.compilationHash, 'g'),
+  const prefixedCss = processedCssConfig.css.replace(
+    new RegExp(processedCssConfig.compilationHash, 'g'),
     options.prefixSelector ? `${options.prefixSelector}` : ''
   );
 
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-  const processor = getProcessor({cssVars: dynamicCssConfig.cssVars, plugins});
+  const processor = getProcessor({cssVars: processedCssConfig.cssVars, plugins});
 
-  return dynamicCssConfig.customSyntaxStrs.reduce((processedContent, part) => {
+  return processedCssConfig.customSyntaxStrs.reduce((processedContent, part) => {
     let newValue;
     try {
       newValue = processor.process({part, tpaParams});
