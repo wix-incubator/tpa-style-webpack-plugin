@@ -125,13 +125,13 @@ class TPAStylePlugin {
     return containsPlaceholder;
   }
 
-  private generateStandaloneDynamicConfigFilename(fileName: string) {
+  private generateStandaloneGetProcessCssConfigFilename(fileName: string) {
     const parts = fileName.split('.');
 
     return [...parts.slice(0, -1), 'processedCssConfig', ...parts.slice(-1)].join('.');
   }
 
-  private generateStandaloneDynamicConfig({shouldEscapeContent, params}) {
+  private generateStandaloneGetProcessedCssConfig({shouldEscapeContent, params}) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './processedCssConfigTemplate.js')).toString();
 
     return new RawSource(
@@ -172,7 +172,7 @@ class TPAStylePlugin {
           });
 
           if (containsDynamicCss) {
-            const dynamicConfigFilename = this.generateStandaloneDynamicConfigFilename(file);
+            const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
 
             const params = {
               cssVars,
@@ -181,7 +181,7 @@ class TPAStylePlugin {
               compilationHash: this.compilationHash,
             };
 
-            compilation.assets[dynamicConfigFilename] = this.generateStandaloneDynamicConfig({
+            compilation.assets[dynamicConfigFilename] = this.generateStandaloneGetProcessedCssConfig({
               shouldEscapeContent,
               params,
             });
