@@ -30,8 +30,8 @@ describe('StandaloneConfig', () => {
     });
   });
 
-  describe('Bundle not using getProcessedCss', () => {
-    const outputDirPath = path.resolve(__dirname, './output/standalone-config-no-entry');
+  describe('Bundle not using dynamic css', () => {
+    const outputDirPath = path.resolve(__dirname, './output/standalone-config-no-dynamic-css');
     let cssConfigPath: string;
 
     beforeAll(async () => {
@@ -42,7 +42,7 @@ describe('StandaloneConfig', () => {
           libraryTarget: 'commonjs',
         },
         entry: {
-          [entryName]: './tests/fixtures/without-getProcessedCss.ts',
+          [entryName]: './tests/fixtures/without-dynamic-css.ts',
         },
       });
 

@@ -111,18 +111,13 @@ class TPAStylePlugin {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
-    let containsPlaceholder = false;
     if (placeHolderPos > -1) {
       newSource.replace(
         placeHolderPos,
         placeHolderPos + placeHolder.length - 1,
         this.getPlaceholderContent(params, shouldEscapeContent)
       );
-
-      containsPlaceholder = true;
     }
-
-    return containsPlaceholder;
   }
 
   private generateStandaloneGetProcessCssConfigFilename(fileName: string) {
@@ -149,7 +144,7 @@ class TPAStylePlugin {
           const sourceCode = compilation.assets[file].source();
           const newSource = new ReplaceSource(compilation.assets[file], file);
 
-          const containsDynamicCss = this.replaceByPlaceHolder({
+          this.replaceByPlaceHolder({
             sourceCode,
             newSource,
             shouldEscapeContent,
@@ -171,7 +166,7 @@ class TPAStylePlugin {
             },
           });
 
-          if (containsDynamicCss) {
+          if (css.length > 0) {
             const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
 
             const params = {
