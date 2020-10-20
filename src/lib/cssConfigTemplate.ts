@@ -6,10 +6,10 @@ declare var define;
   } else if (typeof exports === 'object') {
     module.exports = factory();
   } else {
-    root.processedCssConfig = factory();
+    root.cssConfig = factory();
   }
 })(this, function() {
   return {
-    processedCssConfig: 'INJECTED_DATA_PLACEHOLDER',
+    cssConfig: 'CSS_CONFIG_PLACEHOLDER',
   };
 });

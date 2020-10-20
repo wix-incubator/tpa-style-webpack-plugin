@@ -19,12 +19,14 @@ export interface IOptions {
 
 export type IGetProcessedCssFn = typeof getProcessedCss;
 export type IGetProcessedCssWithConfigFn = typeof getProcessedCssWithConfig;
-export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
+export type IGetStaticCssFn = typeof getStaticCss;
+export type IGetStaticCssWithConfigFn = typeof getStaticCssWithConfig;
 
-export interface ProcessedCssConfig {
+export interface CssConfig {
   cssVars: {[key: string]: string};
   customSyntaxStrs: string[];
   css: string;
+  staticCss: string;
   compilationHash: string;
 }
 
@@ -36,7 +38,7 @@ const defaultOptions = {
 export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  const processedCssConfig: ProcessedCssConfig = {
+  const processedCssConfig = {
     ...injectedData,
     compilationHash: '__COMPILATION_HASH__',
   };
@@ -45,7 +47,7 @@ export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): s
 }
 
 export function getProcessedCssWithConfig(
-  processedCssConfig: ProcessedCssConfig,
+  processedCssConfig: CssConfig,
   {siteColors, siteTextPresets, styleParams}: IStyles,
   options?: Partial<IOptions>
 ): string {
@@ -79,8 +81,21 @@ export function getProcessedCssWithConfig(
   }, prefixedCss);
 }
 
-export const getStaticCss: IGetStaticCssFn = ({prefixSelector} = {prefixSelector: ''}) => {
-  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
-  const prefixedCss = (injectedData.staticCss || '').replace(new RegExp('__COMPILATION_HASH__', 'g'), prefixSelector);
+export function getStaticCssWithConfig(staticCssConfig: CssConfig, {prefixSelector} = {prefixSelector: ''}) {
+  const prefixedCss = (staticCssConfig.staticCss || '').replace(
+    new RegExp(staticCssConfig.compilationHash, 'g'),
+    prefixSelector
+  );
   return prefixedCss;
-};
+}
+
+export function getStaticCss(options?: Pick<IOptions, 'prefixSelector'>) {
+  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
+
+  const cssConfig = {
+    ...injectedData,
+    compilationHash: '__COMPILATION_HASH__',
+  };
+
+  return getStaticCssWithConfig(cssConfig, options);
+}

@@ -122,14 +122,14 @@ class TPAStylePlugin {
 
   private generateStandaloneGetProcessCssConfigFilename(fileName: string) {
     const parts = fileName.split('.');
-    return [...parts.slice(0, -1), 'processedCssConfig', ...parts.slice(-1)].join('.');
+    return [...parts.slice(0, -1), 'cssConfig', ...parts.slice(-1)].join('.');
   }
 
   private generateStandaloneGetProcessedCssConfig({shouldEscapeContent, params}) {
-    const sourceCode = fs.readFileSync(path.join(__dirname, './processedCssConfigTemplate.js')).toString();
+    const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
 
     return new RawSource(
-      sourceCode.replace(`'INJECTED_DATA_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
+      sourceCode.replace(`'CSS_CONFIG_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
     );
   }
 
@@ -165,22 +165,20 @@ class TPAStylePlugin {
             },
           });
 
-          const hasDynamicCss = css.length > 0;
-          if (hasDynamicCss) {
-            const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
+          const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
 
-            const params = {
-              cssVars,
-              customSyntaxStrs,
-              css,
-              compilationHash: this.compilationHash,
-            };
+          const params = {
+            cssVars,
+            customSyntaxStrs,
+            css,
+            staticCss,
+            compilationHash: this.compilationHash,
+          };
 
-            compilation.assets[dynamicConfigFilename] = this.generateStandaloneGetProcessedCssConfig({
-              shouldEscapeContent,
-              params,
-            });
-          }
+          compilation.assets[dynamicConfigFilename] = this.generateStandaloneGetProcessedCssConfig({
+            shouldEscapeContent,
+            params,
+          });
 
           compilation.assets[file] = newSource;
         });
