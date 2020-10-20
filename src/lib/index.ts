@@ -122,7 +122,6 @@ class TPAStylePlugin {
 
   private generateStandaloneGetProcessCssConfigFilename(fileName: string) {
     const parts = fileName.split('.');
-
     return [...parts.slice(0, -1), 'processedCssConfig', ...parts.slice(-1)].join('.');
   }
 
@@ -166,7 +165,8 @@ class TPAStylePlugin {
             },
           });
 
-          if (css.length > 0) {
+          const hasDynamicCss = css.length > 0;
+          if (hasDynamicCss) {
             const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
 
             const params = {
