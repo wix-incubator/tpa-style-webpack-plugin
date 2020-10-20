@@ -120,12 +120,12 @@ class TPAStylePlugin {
     }
   }
 
-  private generateStandaloneGetProcessCssConfigFilename(fileName: string) {
+  private generateStandaloneCssConfigFilename(fileName: string) {
     const parts = fileName.split('.');
     return [...parts.slice(0, -1), 'cssConfig', ...parts.slice(-1)].join('.');
   }
 
-  private generateStandaloneGetProcessedCssConfig({shouldEscapeContent, params}) {
+  private generateStandaloneCssConfig({shouldEscapeContent, params}) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
 
     return new RawSource(
@@ -165,7 +165,7 @@ class TPAStylePlugin {
             },
           });
 
-          const dynamicConfigFilename = this.generateStandaloneGetProcessCssConfigFilename(file);
+          const cssConfigFilename = this.generateStandaloneCssConfigFilename(file);
 
           const params = {
             cssVars,
@@ -175,7 +175,7 @@ class TPAStylePlugin {
             compilationHash: this.compilationHash,
           };
 
-          compilation.assets[dynamicConfigFilename] = this.generateStandaloneGetProcessedCssConfig({
+          compilation.assets[cssConfigFilename] = this.generateStandaloneCssConfig({
             shouldEscapeContent,
             params,
           });

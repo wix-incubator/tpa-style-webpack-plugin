@@ -18,14 +18,14 @@ describe('StandaloneConfig', () => {
           libraryTarget: 'commonjs',
         },
         entry: {
-          [entryName]: './tests/fixtures/runtime-entry.ts',
+          [entryName]: './tests/fixtures/with-css.ts',
         },
       });
 
       cssConfigPath = path.join(outputDirPath, `${entryName}.bundle.cssConfig.js`);
     });
 
-    it('should generate css config for bundles using getProcessedCss', () => {
+    it('should generate css config for bundles using css', () => {
       expect(fs.existsSync(cssConfigPath)).toBe(true);
     });
   });
