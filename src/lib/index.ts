@@ -104,7 +104,6 @@ class TPAStylePlugin {
     }
 
     const escapedContent = JSON.stringify(content);
-
     return escapedContent.substring(1, escapedContent.length - 1);
   }
 
