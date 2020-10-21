@@ -17,35 +17,56 @@ export interface IOptions {
   strictMode: boolean;
 }
 
-export type IGetProcessedCssFn = (styles: IStyles, options?: Partial<IOptions>) => string;
-export type IGetStaticCssFn = (options?: Pick<IOptions, 'prefixSelector'>) => string;
+export type IGetProcessedCssFn = typeof getProcessedCss;
+export type IGetProcessedCssWithConfigFn = typeof getProcessedCssWithConfig;
+export type IGetStaticCssFn = typeof getStaticCss;
+export type IGetStaticCssWithConfigFn = typeof getStaticCssWithConfig;
+
+export interface CssConfig {
+  cssVars: {[key: string]: string};
+  customSyntaxStrs: string[];
+  css: string;
+  staticCss: string;
+  compilationHash: string;
+}
 
 const defaultOptions = {
   isRTL: false,
   strictMode: true,
 };
 
-export function getProcessedCss(
-  {siteColors, siteTextPresets, styleParams}: IStyles,
-  options: Partial<IOptions>
-): string {
-  options = {...defaultOptions, ...options};
-  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
+export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
+  const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
-  if (!injectedData.css) {
+  const processedCssConfig = {
+    ...injectedData,
+    compilationHash: '__COMPILATION_HASH__',
+  };
+
+  return getProcessedCssWithConfig(processedCssConfig, styles, options);
+}
+
+export function getProcessedCssWithConfig(
+  processedCssConfig: CssConfig,
+  {siteColors, siteTextPresets, styleParams}: IStyles,
+  options?: Partial<IOptions>
+): string {
+  options = {...defaultOptions, ...(options || {})};
+
+  if (!processedCssConfig.css) {
     return '';
   }
 
-  const prefixedCss = injectedData.css.replace(
-    new RegExp('__COMPILATION_HASH__', 'g'),
+  const prefixedCss = processedCssConfig.css.replace(
+    new RegExp(processedCssConfig.compilationHash, 'g'),
     options.prefixSelector ? `${options.prefixSelector}` : ''
   );
 
   const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
 
-  const processor = getProcessor({cssVars: injectedData.cssVars, plugins});
+  const processor = getProcessor({cssVars: processedCssConfig.cssVars, plugins});
 
-  return injectedData.customSyntaxStrs.reduce((processedContent, part) => {
+  return processedCssConfig.customSyntaxStrs.reduce((processedContent, part) => {
     let newValue;
     try {
       newValue = processor.process({part, tpaParams});
@@ -60,8 +81,21 @@ export function getProcessedCss(
   }, prefixedCss);
 }
 
-export const getStaticCss: IGetStaticCssFn = ({prefixSelector} = {prefixSelector: ''}) => {
-  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
-  const prefixedCss = (injectedData.staticCss || '').replace(new RegExp('__COMPILATION_HASH__', 'g'), prefixSelector);
+export function getStaticCssWithConfig(staticCssConfig: CssConfig, {prefixSelector} = {prefixSelector: ''}) {
+  const prefixedCss = (staticCssConfig.staticCss || '').replace(
+    new RegExp(staticCssConfig.compilationHash, 'g'),
+    prefixSelector
+  );
   return prefixedCss;
-};
+}
+
+export function getStaticCss(options?: Pick<IOptions, 'prefixSelector'>) {
+  const injectedData: IInjectedData = '__COMPILATION_HASH__INJECTED_STATIC_DATA_PLACEHOLDER' as any;
+
+  const cssConfig = {
+    ...injectedData,
+    compilationHash: '__COMPILATION_HASH__',
+  };
+
+  return getStaticCssWithConfig(cssConfig, options);
+}

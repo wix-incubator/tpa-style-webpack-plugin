@@ -8,6 +8,7 @@ import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
+import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename';
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
@@ -96,20 +97,36 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
+  private getPlaceholderContent(params: object, shouldEscapeContent: boolean) {
+    const content = JSON.stringify(params);
+
+    if (!shouldEscapeContent) {
+      return content;
+    }
+
+    const escapedContent = JSON.stringify(content);
+    return escapedContent.substring(1, escapedContent.length - 1);
+  }
+
   private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
     if (placeHolderPos > -1) {
-      const content = JSON.stringify(params);
-      const escapedContent = JSON.stringify(content);
-
       newSource.replace(
         placeHolderPos,
         placeHolderPos + placeHolder.length - 1,
-        shouldEscapeContent ? escapedContent.substring(1, escapedContent.length - 1) : content
+        this.getPlaceholderContent(params, shouldEscapeContent)
       );
     }
+  }
+
+  private generateStandaloneCssConfig({shouldEscapeContent, params}) {
+    const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
+
+    return new RawSource(
+      sourceCode.replace(`'CSS_CONFIG_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
+    );
   }
 
   private replaceSource(compilation, extractResults, shouldEscapeContent) {
@@ -142,6 +159,21 @@ class TPAStylePlugin {
             params: {
               staticCss,
             },
+          });
+
+          const cssConfigFilename = generateStandaloneCssConfigFilename(file);
+
+          const params = {
+            cssVars,
+            customSyntaxStrs,
+            css,
+            staticCss,
+            compilationHash: this.compilationHash,
+          };
+
+          compilation.assets[cssConfigFilename] = this.generateStandaloneCssConfig({
+            shouldEscapeContent,
+            params,
           });
 
           compilation.assets[file] = newSource;
