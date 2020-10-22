@@ -3,13 +3,6 @@ import {getProcessedCssWithConfig, getStaticCssWithConfig} from './standalone';
 export type IGetProcessedCssFn = typeof getProcessedCss;
 export type IGetStaticCssFn = typeof getStaticCss;
 
-export interface CssConfig {
-  cssVars: {[key: string]: string};
-  customSyntaxStrs: string[];
-  css: string;
-  staticCss: string;
-  compilationHash: string;
-}
 export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 

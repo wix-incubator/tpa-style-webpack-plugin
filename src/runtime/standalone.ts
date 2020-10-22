@@ -4,7 +4,7 @@ import {cssFunctions} from './cssFunctions';
 import {Plugins} from './plugins';
 import {IOptions, IStyles} from './types';
 
-function escapeRegExp(str) {
+function escapeRegExp(str: string) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
