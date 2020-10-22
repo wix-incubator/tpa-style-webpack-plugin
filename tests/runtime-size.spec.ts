@@ -10,7 +10,7 @@ describe('runtime size', () => {
     await clearDir(outputDirPath);
   });
 
-  it('should throw when lib size exceeds 26kb', () => {
+  it('should throw when lib size exceeds 27kb', () => {
     return runWebpack({
       output: {
         path: path.resolve(outputDirPath),
