@@ -1,5 +1,4 @@
-import {IStyles} from './types';
-import {IOptions} from './main';
+import {IStyles, IOptions} from './types';
 
 exports.getProcessedCss = function getProcessedCss(styles: IStyles, options: IOptions): string {
   return '';

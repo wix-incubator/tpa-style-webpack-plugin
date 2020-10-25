@@ -70,3 +70,9 @@ export interface ITextPreset {
   value: string;
   weight: string;
 }
+
+export interface IOptions {
+  isRTL: boolean;
+  prefixSelector: string;
+  strictMode: boolean;
+}

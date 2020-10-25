@@ -1,13 +1,8 @@
 import * as path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
-import {
-  IGetProcessedCssFn,
-  IGetProcessedCssWithConfigFn,
-  IGetStaticCssFn,
-  IGetStaticCssWithConfigFn,
-  CssConfig,
-} from '../src/runtime/main';
+import {IGetProcessedCssFn, IGetStaticCssFn} from '../src/runtime/main';
+import {getProcessedCssWithConfig, getStaticCssWithConfig, CssConfig} from '../src/runtime/standalone';
 import {siteColors} from './fixtures/siteColors';
 import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
@@ -15,11 +10,7 @@ import {styleParams} from './fixtures/styleParams';
 describe('runtime standalone', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime-standalone');
   const entryName = 'app';
-  let getProcessedCss: IGetProcessedCssFn,
-    getStaticCss: IGetStaticCssFn,
-    getProcessedCssWithConfig: IGetProcessedCssWithConfigFn,
-    getStaticCssWithConfig: IGetStaticCssWithConfigFn,
-    cssConfig: CssConfig;
+  let getProcessedCss: IGetProcessedCssFn, getStaticCss: IGetStaticCssFn, cssConfig: CssConfig;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
@@ -39,8 +30,6 @@ describe('runtime standalone', () => {
 
     getProcessedCss = runtime.getProcessedCss;
     getStaticCss = runtime.getStaticCss;
-    getStaticCssWithConfig = runtime.getStaticCssWithConfig;
-    getProcessedCssWithConfig = runtime.getProcessedCssWithConfig;
   });
 
   it('should generate identical dynamic css as injected config', () => {
