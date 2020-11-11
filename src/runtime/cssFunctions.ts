@@ -1,10 +1,12 @@
-import {TinyColor} from '@ctrl/tinycolor';
+import {TinyColor, isReadable, readability} from '@ctrl/tinycolor';
 import {ITPAParams} from './generateTPAParams';
 import {escapeHtml, isJsonLike, parseJson} from './utils/utils';
 import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
 import {directionMap, IS_RTL_PARAM} from './constants';
 
 const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+const WHITE = new TinyColor('white');
+const BLACK = new TinyColor('black');
 
 export const cssFunctions = {
   join: (color1, strength1, color2, strength2) => {
@@ -120,5 +122,26 @@ export const cssFunctions = {
     } else {
       return numbersWithoutTPAParams[0];
     }
+  },
+  smartContrast: (baseColor: string, varColor: string) => {
+    const fgColor = new TinyColor(baseColor);
+    let bgColor = new TinyColor(varColor);
+    const fgLuminance = fgColor.getLuminance();
+    const bgLuminance = bgColor.getLuminance();
+    const luminanceRatio = bgLuminance !== 0 ? fgLuminance / bgLuminance : 0;
+    const method = luminanceRatio ? (luminanceRatio < 1 ? 'lighten' : 'darken') : null;
+
+    if (method) {
+      while (!isReadable(fgColor, bgColor)) {
+        bgColor = bgColor[method](1);
+
+        if (bgColor.equals(WHITE) || bgColor.equals(BLACK)) {
+          // break if white or black
+          break;
+        }
+      }
+    }
+
+    return bgColor.toRgbString();
   },
 };
