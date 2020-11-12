@@ -646,6 +646,33 @@ describe('runtime', () => {
     });
   });
 
+  describe('smartContrast', () => {
+    const fgColor = '#DFF0D8';
+    const badBGColor = '#468847';
+    const lightenedFGColor = 'rgb(255, 255, 255)';
+    const darkenedBGColor = 'rgb(61, 119, 62)';
+
+    it('should return a11y compliant colors', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {
+          fgColor: {value: fgColor},
+          badBGColor: {value: badBGColor},
+          lightenedFGColor: {value: lightenedFGColor},
+          darkenedBGColor: {value: darkenedBGColor},
+        },
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      const acceptGivenGoodColor = `.smart-contrast-good {background-color: ${darkenedBGColor};}`;
+      expect(css).toContain(acceptGivenGoodColor);
+      const adjustGivenBadColor = `.smart-contrast-bad {background-color: ${darkenedBGColor};}`;
+      expect(css).toContain(adjustGivenBadColor);
+      const adjustFlippedColors = `.smart-contrast-bad-flipped {background-color: ${lightenedFGColor};}`;
+      expect(css).toContain(adjustFlippedColors);
+    });
+  });
+
   describe('Options', () => {
     describe('isRTL', () => {
       it('should support LTR', () => {
