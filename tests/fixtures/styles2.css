@@ -93,6 +93,8 @@
 
 .font-without-font-family {font: "font(--bodyText)"};
 
+.font-with-multiple-font-family {font: "font(--bodyText)"};
+
 .smart-contrast-good {background-color: "smartContrast(color(--fgColor), color(--darkenedBGColor))";}
 
 .smart-contrast-bad {background-color: "smartContrast(color(--fgColor), color(--badBGColor))";}
