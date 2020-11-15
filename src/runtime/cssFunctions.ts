@@ -1,4 +1,4 @@
-import {TinyColor, isReadable, readability} from '@ctrl/tinycolor';
+import {TinyColor, isReadable} from '@ctrl/tinycolor';
 import {ITPAParams} from './generateTPAParams';
 import {escapeHtml, isJsonLike, parseJson} from './utils/utils';
 import {wixStylesFontUtils} from './utils/wixStyleFontUtils';
