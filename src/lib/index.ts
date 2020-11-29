@@ -1,4 +1,4 @@
-import webpackSources from 'webpack-sources';
+import * as webpackSources from 'webpack-sources';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as postcss from 'postcss';
