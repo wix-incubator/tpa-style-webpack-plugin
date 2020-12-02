@@ -1,4 +1,4 @@
-import {RawSource, ReplaceSource} from 'webpack-sources';
+import * as webpackSources from 'webpack-sources';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as postcss from 'postcss';
@@ -9,6 +9,11 @@ import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
 import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename';
+
+const isWebpack5 = parseInt(webpack.version, 10) === 5;
+
+// use webpack's `webpack-sources` version, if it's v5, we'll get v2.0.0
+const {RawSource, ReplaceSource} = isWebpack5 ? webpack.source : webpackSources;
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
@@ -45,6 +50,12 @@ class TPAStylePlugin {
   private replaceRuntimeModule(compiler) {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
     const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
+      if (isWebpack5) {
+        // `resource`, `request`, and `loaders` are exposed under `createData`
+        // in webpack v5
+        resource = resource.createData;
+      }
+
       if (fs.realpathSync(resource.resource) !== runtimePath) {
         return;
       }
