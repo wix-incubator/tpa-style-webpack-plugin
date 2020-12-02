@@ -51,7 +51,7 @@ class TPAStylePlugin {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
     const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
       if (isWebpack5) {
-        // `resource`, `request`, and `loaders` are exposed as `createData`
+        // `resource`, `request`, and `loaders` are exposed under `createData`
         // in webpack v5
         resource = resource.createData;
       }
