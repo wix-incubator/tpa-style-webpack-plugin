@@ -13,7 +13,7 @@ import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename
 const isWebpack5 = parseInt(webpack.version, 10) === 5;
 
 // use webpack's `webpack-sources` version, if it's v5, we'll get v2.0.0
-const {RawSource, ReplaceSource} = isWebpack5 ? webpack.source : webpackSources;
+const {RawSource, ReplaceSource} = isWebpack5 ? webpack.sources : webpackSources;
 
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
