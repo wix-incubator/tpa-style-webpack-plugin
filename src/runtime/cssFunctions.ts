@@ -123,22 +123,41 @@ export const cssFunctions = {
       return numbersWithoutTPAParams[0];
     }
   },
-  smartContrast: (baseColor: string, varColor: string) => {
-    const fgColor = new TinyColor(baseColor);
-    let bgColor = new TinyColor(varColor);
+  /**
+   * Given foreground and background colors, checks to see if the colors are readable together.
+   * If not, it returns the first to be readable among:
+   * background color lightened/darkened by 1%
+   * background color lightened/darkened by 5%
+   * background color lightened/darkened by 10%
+   * background color lightened/darkened by 20%
+   * background color lightened/darkened by 30%
+   * background color lightened/darkened by 40%
+   * background color lightened/darkened by 50%
+   * background color lightened/darkened by 60%
+   * the method (lighten or darken) is determined by the ratio between the two given colors
+   * @param foreground - the foreground (text) color
+   * @param background - a background color
+   */
+  smartBGContrast: (foreground: string, background: string) => {
+    const fgColor = new TinyColor(foreground);
+    let bgColor = new TinyColor(background);
     const fgLuminance = fgColor.getLuminance();
     const bgLuminance = bgColor.getLuminance();
-    const luminanceRatio = bgLuminance !== 0 ? fgLuminance / bgLuminance : 0;
-    const method = luminanceRatio ? (luminanceRatio < 1 ? 'lighten' : 'darken') : null;
+    const isBackgroundBrighter = fgLuminance <= bgLuminance;
+    const luminositySteps = [1, 5, 10, 20, 30, 40, 50, 60];
 
-    if (method) {
-      while (!isReadable(fgColor, bgColor)) {
-        bgColor = bgColor[method](1);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < luminositySteps.length; i++) {
+      if (!isReadable(fgColor, bgColor)) {
+        const luminosityStep = luminositySteps[i];
 
-        if (bgColor.equals(WHITE) || bgColor.equals(BLACK)) {
-          // break if white or black
-          break;
+        if (isBackgroundBrighter) {
+          bgColor = bgColor.lighten(luminosityStep);
+        } else {
+          bgColor = bgColor.darken(luminosityStep);
         }
+      } else {
+        break;
       }
     }
 
