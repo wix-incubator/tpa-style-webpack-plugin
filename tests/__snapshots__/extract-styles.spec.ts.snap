@@ -114,7 +114,9 @@ exports[`Extract Styles should contain only TPA styles: dynamic-css 1`] = `
  .smart-contrast-bad-light {background-color: rgb(168, 168, 168);}
  .smart-contrast-bad-dark {background-color: rgb(168, 168, 168);}
  .smart-contrast-bad-with-opacity {background-color: rgba(168, 168, 168, 0.7);}
- .smart-contrast-ssr-crash-of-16-12-21 {background-color: rgb(168, 168, 168);}"
+ .smart-contrast-ssr-crash-of-16-12-21 {background-color: rgb(168, 168, 168);}
+ .readable-fallback-good {color: ;}
+ .readable-fallback-bad {color: ;}"
 `;
 
 exports[`Extract Styles should extract out TPA styles from regular css: static-css 1`] = `

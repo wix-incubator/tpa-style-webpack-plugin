@@ -698,6 +698,29 @@ describe('runtime', () => {
     });
   });
 
+  describe('readableFallback', () => {
+    const baseColor = '#ffffff';
+    const goodSuggestionColor = '#333333';
+    const fallbackColor = '#000000';
+    const badSuggestionColor = '#ffff00';
+
+    it('should return a11y compliant colors', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {
+          baseColor: {value: baseColor},
+          goodSuggestionColor: {value: goodSuggestionColor},
+          fallbackColor: {value: fallbackColor},
+          badSuggestionColor: {value: badSuggestionColor},
+        },
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      expect(css).toContain(`.readable-fallback-good {color: ${goodSuggestionColor};}`);
+      expect(css).toContain(`.readable-fallback-bad {color: ${fallbackColor};}`);
+    });
+  });
+
   describe('Options', () => {
     describe('isRTL', () => {
       it('should support LTR', () => {

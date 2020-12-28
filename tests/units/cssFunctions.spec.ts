@@ -295,4 +295,19 @@ describe('cssFunctions', () => {
       );
     });
   });
+
+  describe('readableFallback', () => {
+    const baseColor = 'white';
+    const goodSuggestionColor = '#333333';
+    const fallbackColor = 'black';
+    const badSuggestionColor = 'yellow';
+
+    it('should return suggested color if base and suggestion colors are readable together', () => {
+      expect(cssFunctions.readableFallback(baseColor, goodSuggestionColor, fallbackColor)).toBe(goodSuggestionColor);
+    });
+
+    it('should return fallback color if base and suggestion colors are not readable together', () => {
+      expect(cssFunctions.readableFallback(baseColor, badSuggestionColor, fallbackColor)).toBe(fallbackColor);
+    });
+  });
 });

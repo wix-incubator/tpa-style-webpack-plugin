@@ -106,3 +106,7 @@
 .smart-contrast-bad-with-opacity {background-color: "smartBGContrast(opacity(color(--textColor), 0.7), opacity(color(--badDarkBgColor), 0.7))";}
 
 .smart-contrast-ssr-crash-of-16-12-21 {background-color: "smartBGContrast(color(--infiniteLoopFGColor), color(--infiniteLoopBGColor))";}
+
+.readable-fallback-good {color: "readableFallback(color(--baseColor), color(--goodSuggestionColor), color(--fallbackColor))";}
+
+.readable-fallback-bad {color: "readableFallback(color(--baseColor), color(--badSuggestionColor), color(--fallbackColor))";}

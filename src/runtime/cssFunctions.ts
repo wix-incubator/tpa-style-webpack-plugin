@@ -123,6 +123,11 @@ export const cssFunctions = {
       return numbersWithoutTPAParams[0];
     }
   },
+  readableFallback: (baseColor: string, suggestedColor: string, fallbackColor: string) => {
+    const baseColorTC = new TinyColor(baseColor);
+    const suggestedColorTC = new TinyColor(suggestedColor);
+    return isReadable(baseColorTC, suggestedColorTC) ? suggestedColor : fallbackColor;
+  },
   /**
    * Given foreground and background colors, checks to see if the colors are readable together.
    * If not, it returns the first to be readable among:
