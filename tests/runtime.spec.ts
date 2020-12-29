@@ -7,6 +7,7 @@ import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
 import {clonedWith} from './helpers/cloned-with';
 import {readFile} from './helpers/readfile';
+import {TinyColor} from '@ctrl/tinycolor';
 
 describe('runtime', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime');
@@ -647,29 +648,76 @@ describe('runtime', () => {
   });
 
   describe('smartContrast', () => {
-    const fgColor = '#DFF0D8';
-    const badBGColor = '#468847';
-    const lightenedFGColor = 'rgb(255, 255, 255)';
-    const darkenedBGColor = 'rgb(61, 119, 62)';
+    const textColor = new TinyColor('hsl(196, 57, 39)').toRgbString(); // some kind of blue
+    const goodLightBgColor = new TinyColor(textColor).lighten(60).toRgbString(); // 'hsl(196, 57, 99)';
+    const goodDarkBgColor = new TinyColor(textColor).darken(40).toRgbString(); // 'hsl(196, 57, 99)';
+    const badLightBgColor = new TinyColor('hsl(196, 57, 60)').toRgbString(); // brighter than textColor
+    const badDarkBgColor = new TinyColor('hsl(196, 57, 35)').toRgbString(); // darker than textColor
+    const fallbackForBadLightColor = new TinyColor(badLightBgColor).lighten(40).toRgbString();
+    const fallbackForBadDarkColor = new TinyColor(badDarkBgColor).darken(40).toRgbString();
 
     it('should return a11y compliant colors', () => {
       const newStyleParams = clonedWith(styleParams, {
         numbers: {},
         colors: {
-          fgColor: {value: fgColor},
-          badBGColor: {value: badBGColor},
-          lightenedFGColor: {value: lightenedFGColor},
-          darkenedBGColor: {value: darkenedBGColor},
+          textColor: {value: textColor},
+          goodLightBgColor: {value: goodLightBgColor},
+          goodDarkBgColor: {value: goodDarkBgColor},
+          badLightBgColor: {value: badLightBgColor},
+          badDarkBgColor: {value: badDarkBgColor},
+          fallbackForBadLightColor: {value: fallbackForBadLightColor},
+          fallbackForBadDarkColor: {value: fallbackForBadDarkColor},
         },
         fonts: {},
       });
       const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
-      const acceptGivenGoodColor = `.smart-contrast-good {background-color: ${darkenedBGColor};}`;
-      expect(css).toContain(acceptGivenGoodColor);
-      const adjustGivenBadColor = `.smart-contrast-bad {background-color: ${darkenedBGColor};}`;
-      expect(css).toContain(adjustGivenBadColor);
-      const adjustFlippedColors = `.smart-contrast-bad-flipped {background-color: ${lightenedFGColor};}`;
-      expect(css).toContain(adjustFlippedColors);
+      expect(css).toContain(`.smart-contrast-good-light {background-color: ${goodLightBgColor};}`);
+      expect(css).toContain(`.smart-contrast-good-dark {background-color: ${goodDarkBgColor};}`);
+      expect(css).toContain(`.smart-contrast-bad-light {background-color: ${fallbackForBadLightColor};}`);
+      expect(css).toContain(`.smart-contrast-bad-dark {background-color: ${fallbackForBadDarkColor};}`);
+      expect(css).toContain(
+        `.smart-contrast-bad-with-opacity {background-color: ${new TinyColor(fallbackForBadDarkColor)
+          .setAlpha(0.7)
+          .toRgbString()};}`
+      );
+    });
+
+    it('should not cause an infinite loop', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {
+          infiniteLoopFGColor: {value: 'rgba(186, 131, 240, 0.7)'},
+          infiniteLoopBGColor: {value: 'rgba(249, 197, 180, 0.7)'},
+        },
+        fonts: {},
+      });
+
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+
+      expect(css).toContain('.smart-contrast-ssr-crash-of-16-12-21 {background-color: rgba(255, 255, 255, 0.7);}');
+    });
+  });
+
+  describe('readableFallback', () => {
+    const baseColor = '#ffffff';
+    const goodSuggestionColor = '#333333';
+    const fallbackColor = '#000000';
+    const badSuggestionColor = '#ffff00';
+
+    it('should return a11y compliant colors', () => {
+      const newStyleParams = clonedWith(styleParams, {
+        numbers: {},
+        colors: {
+          baseColor: {value: baseColor},
+          goodSuggestionColor: {value: goodSuggestionColor},
+          fallbackColor: {value: fallbackColor},
+          badSuggestionColor: {value: badSuggestionColor},
+        },
+        fonts: {},
+      });
+      const css = getProcessedCss({styleParams: newStyleParams, siteColors, siteTextPresets}, {});
+      expect(css).toContain(`.readable-fallback-good {color: ${goodSuggestionColor};}`);
+      expect(css).toContain(`.readable-fallback-bad {color: ${fallbackColor};}`);
     });
   });
 

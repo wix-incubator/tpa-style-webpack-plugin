@@ -1,3 +1,4 @@
+import {TinyColor} from '@ctrl/tinycolor';
 import {cssFunctions} from '../../src/runtime/cssFunctions';
 import {IS_RTL_PARAM} from '../../src/runtime/constants';
 import {clonedWith} from '../helpers/cloned-with';
@@ -260,21 +261,53 @@ describe('cssFunctions', () => {
   });
 
   describe('smartContrast', () => {
-    const textColor = '#DFF0D8';
-    const lightenedColor = 'rgb(255, 255, 255)';
-    const badBgColor = '#468847';
-    const darkenedColor = 'rgb(61, 119, 62)';
+    const textColor = 'hsl(196, 57, 39)'; // some kind of blue
+    const goodLightBgColor = new TinyColor(textColor).lighten(60).toHslString(); // 'hsl(196, 57, 99)';
+    const goodDarkBgColor = new TinyColor(textColor).darken(40).toHslString(); // 'hsl(196, 57, 99)';
+    const badLightBgColor = 'hsl(196, 57, 60)'; // brighter than textColor
+    const badDarkBgColor = 'hsl(196, 57, 35)'; // darker than textColor
+    const fallbackForBadLightColor = new TinyColor(badLightBgColor).lighten(40).toRgbString();
+    const fallbackForBadDarkColor = new TinyColor(badDarkBgColor).darken(40).toRgbString();
 
-    it('should return darkened color when contrast to low', () => {
-      expect(cssFunctions.smartContrast(textColor, badBgColor)).toBe(darkenedColor);
+    it('should give fallback for bad contrast - with lightening', () => {
+      expect(cssFunctions.smartBGContrast(textColor, badLightBgColor)).toBe(fallbackForBadLightColor);
     });
 
-    it('should return lightened color when contrast to low', () => {
-      expect(cssFunctions.smartContrast(badBgColor, textColor)).toBe(lightenedColor);
+    it('ignores opacity for the time being', () => {
+      expect(
+        cssFunctions.smartBGContrast(cssFunctions.opacity(textColor, 0.7), cssFunctions.opacity(badLightBgColor, 0.7))
+      ).toBe(cssFunctions.opacity(fallbackForBadLightColor, 0.7));
     });
 
-    it('should return same color when good contrast', () => {
-      expect(cssFunctions.smartContrast(textColor, darkenedColor)).toBe(darkenedColor);
+    it('should give fallback for bad contrast - with darkening', () => {
+      expect(cssFunctions.smartBGContrast(textColor, badDarkBgColor)).toBe(fallbackForBadDarkColor);
+    });
+
+    it('should return bg color if contrast is good - lighter background', () => {
+      expect(cssFunctions.smartBGContrast(textColor, goodLightBgColor)).toBe(
+        new TinyColor(goodLightBgColor).toRgbString()
+      );
+    });
+
+    it('should return bg color if contrast is good - darker background', () => {
+      expect(cssFunctions.smartBGContrast(textColor, goodDarkBgColor)).toBe(
+        new TinyColor(goodDarkBgColor).toRgbString()
+      );
+    });
+  });
+
+  describe('readableFallback', () => {
+    const baseColor = 'white';
+    const goodSuggestionColor = '#333333';
+    const fallbackColor = 'black';
+    const badSuggestionColor = 'yellow';
+
+    it('should return suggested color if base and suggestion colors are readable together', () => {
+      expect(cssFunctions.readableFallback(baseColor, goodSuggestionColor, fallbackColor)).toBe(goodSuggestionColor);
+    });
+
+    it('should return fallback color if base and suggestion colors are not readable together', () => {
+      expect(cssFunctions.readableFallback(baseColor, badSuggestionColor, fallbackColor)).toBe(fallbackColor);
     });
   });
 });

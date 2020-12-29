@@ -95,8 +95,18 @@
 
 .font-with-multiple-font-family {font: "font(--bodyText)"};
 
-.smart-contrast-good {background-color: "smartContrast(color(--fgColor), color(--darkenedBGColor))";}
+.smart-contrast-good-light {background-color: "smartBGContrast(color(--textColor), color(--goodLightBgColor))";}
 
-.smart-contrast-bad {background-color: "smartContrast(color(--fgColor), color(--badBGColor))";}
+.smart-contrast-good-dark {background-color: "smartBGContrast(color(--textColor), color(--goodDarkeBgColor))";}
 
-.smart-contrast-bad-flipped {background-color: "smartContrast(color(--badBGColor), color(--fgColor))";}
+.smart-contrast-bad-light {background-color: "smartBGContrast(color(--textColor), color(--badLightBgColor))";}
+
+.smart-contrast-bad-dark {background-color: "smartBGContrast(color(--textColor), color(--badDarkBgColor))";}
+
+.smart-contrast-bad-with-opacity {background-color: "smartBGContrast(opacity(color(--textColor), 0.7), opacity(color(--badDarkBgColor), 0.7))";}
+
+.smart-contrast-ssr-crash-of-16-12-21 {background-color: "smartBGContrast(color(--infiniteLoopFGColor), color(--infiniteLoopBGColor))";}
+
+.readable-fallback-good {color: "readableFallback(color(--baseColor), color(--goodSuggestionColor), color(--fallbackColor))";}
+
+.readable-fallback-bad {color: "readableFallback(color(--baseColor), color(--badSuggestionColor), color(--fallbackColor))";}
