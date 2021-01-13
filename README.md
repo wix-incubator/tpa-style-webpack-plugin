@@ -72,7 +72,7 @@ addStyles(dynamicCss, 'tag-id');
     --my-font: "font(Body-M)";                                              /* define a custom variable with a default value */
     --my-font2: "font({theme: 'Body-M', size: '10px', lineHeight: '2em', weight: 'bold', style:'italic'})"     /* will use Body-M as base font and override the given attributes */
     --default-width: "number(42)";                                          /* define a numeric custom var */
-
+    font: "font({theme: 'var-from-settings', size: '32px', lineHeight: '40px'})"; /* will use var-from-settings as base font and override the given attributes */
     font: "font(--my-font)";                                                /* assign a dynamic font value from a custom var */
     width: calc(100% - "number(--default-width)");                          /* assign a dynamic numeric value from a custom var */
     color: "color(color-8)";                                                /* assign a color from the site's palette */
