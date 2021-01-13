@@ -83,10 +83,12 @@ class TPAStylePlugin {
   private extract(compilation, chunks) {
     const promises = [];
 
+    const files = isWebpack5 ? [...chunk.files] : chunk.files;
+
     chunks.forEach(chunk => {
       promises.push(
         // webpack 5 turned this from an array to a set
-        ...[...chunk.files]
+        ...files
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile =>
             postcss([extractStyles(this._options)])
@@ -152,9 +154,11 @@ class TPAStylePlugin {
   private replaceSource(compilation, extractResults, shouldEscapeContent) {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
+    const files = isWebpack5 ? [...chunk.files] : chunk.files;
+
     entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css, staticCss}) => {
       // webpack 5 turned this from an array to a set
-      [...chunk.files]
+      files
         .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
           const sourceCode = compilation.assets[file].source();
