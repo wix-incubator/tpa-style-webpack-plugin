@@ -45,8 +45,10 @@ class TPAStylePlugin {
             name: TPAStylePlugin.pluginName,
             stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
           };
+      
+      const hook = isWebpack5 ? compilation.hooks.processAssets : compilation.hooks.optimizeChunkAssets;
 
-      compilation.hooks.processAssets.tapAsync(pluginDescriptor, (chunks, callback) => {
+      hook.tapAsync(pluginDescriptor, (chunks, callback) => {
         this.extract(compilation, chunks)
           .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
