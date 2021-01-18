@@ -40,12 +40,12 @@ class TPAStylePlugin {
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
       const pluginDescriptor = isWebpack5
-        ? TPAStylePlugin.pluginName
-        : {
+        ? {
             name: TPAStylePlugin.pluginName,
             stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
-          };
-      
+          }
+        : TPAStylePlugin.pluginName;
+
       const hook = isWebpack5 ? compilation.hooks.processAssets : compilation.hooks.optimizeChunkAssets;
 
       hook.tapAsync(pluginDescriptor, (chunks, callback) => {
