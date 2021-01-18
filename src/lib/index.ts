@@ -39,7 +39,16 @@ class TPAStylePlugin {
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
-      compilation.hooks.optimizeChunkAssets.tapAsync(TPAStylePlugin.pluginName, (chunks, callback) => {
+      const pluginDescriptor = isWebpack5
+        ? {
+            name: TPAStylePlugin.pluginName,
+            stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
+          }
+        : TPAStylePlugin.pluginName;
+
+      const hook = isWebpack5 ? compilation.hooks.processAssets : compilation.hooks.optimizeChunkAssets;
+
+      hook.tapAsync(pluginDescriptor, (chunks, callback) => {
         this.extract(compilation, chunks)
           .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
@@ -77,8 +86,11 @@ class TPAStylePlugin {
     const promises = [];
 
     chunks.forEach(chunk => {
+      // webpack 5 turned this from an array to a set
+      const files = isWebpack5 ? [...chunk.files] : chunk.files;
+
       promises.push(
-        ...chunk.files
+        ...files
           .filter(fileName => fileName.endsWith('.css'))
           .map(cssFile =>
             postcss([extractStyles(this._options)])
@@ -145,7 +157,10 @@ class TPAStylePlugin {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
     entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css, staticCss}) => {
-      chunk.files
+      // webpack 5 turned this from an array to a set
+      const files = isWebpack5 ? [...chunk.files] : chunk.files;
+
+      files
         .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
           const sourceCode = compilation.assets[file].source();
