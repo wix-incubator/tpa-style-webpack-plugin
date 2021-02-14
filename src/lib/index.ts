@@ -25,10 +25,18 @@ class TPAStylePlugin {
       pattern: [/"\w+\([^"]*\)"/, /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/],
       ...options,
     };
-    const hash = createHash('md5')
-      .update(new Date().getTime().toString())
-      .digest('hex');
+    const hash = this.getCompilationHash();
     this.compilationHash = `__${hash.substr(0, 6)}__`;
+  }
+
+  getCompilationHash() {
+    if (isWebpack5) {
+      return createHash("md5").update(this._options.packageName).digest("hex");
+    }
+
+    return createHash("md5")
+      .update(new Date().getTime().toString())
+      .digest("hex");
   }
 
   apply(compiler) {
