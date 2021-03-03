@@ -18,5 +18,8 @@
   ],
   "include": [
     "**/*.ts"
+  ],
+  "files": [
+    "./external-types.d.ts"
   ]
 }
