@@ -31,11 +31,11 @@ export class Plugins {
   }
 
   public isSupportedFunction(str: any) {
-    return this.regex?.test(str);
+    return this.regex && this.regex.test(str);
   }
 
   public getFunctionSignature(str: string): {funcName: string; args: string[]} | null {
-    const groups = this.regex?.exec(str);
+    const groups = this.regex && this.regex.exec(str);
     if (groups) {
       return {
         funcName: groups[1],

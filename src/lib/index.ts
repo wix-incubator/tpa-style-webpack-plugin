@@ -297,3 +297,4 @@ class TPAStylePlugin implements webpack.Plugin {
 }
 
 export default TPAStylePlugin;
+module.exports = TPAStylePlugin;
