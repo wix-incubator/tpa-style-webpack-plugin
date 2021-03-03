@@ -1,6 +1,6 @@
 {
   "name": "tpa-style-webpack-plugin",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "A Webpack plugin that handles wix tpa styles, it separates static css file that injects dynamic style at runtime.",
   "main": "dist/lib/index.js",
   "scripts": {
