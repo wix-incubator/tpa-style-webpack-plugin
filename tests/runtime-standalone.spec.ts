@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
 import {IGetProcessedCssFn, IGetStaticCssFn} from '../src/runtime/main';
