@@ -1,14 +1,20 @@
+import webpack from 'webpack';
 import {RawSource} from 'webpack-sources';
 
-export class AddAssetsPlugin {
-  public static pluginName = 'add-assets-plugin';
-  private readonly options;
+interface AddAssetsPluginOptions {
+  src: string;
+  filename: string;
+}
 
-  constructor(options) {
+export class AddAssetsPlugin implements webpack.Plugin {
+  public static pluginName = 'add-assets-plugin';
+  private readonly options: AddAssetsPluginOptions;
+
+  constructor(options: AddAssetsPluginOptions) {
     this.options = options;
   }
 
-  apply(compiler) {
+  apply(compiler: webpack.Compiler) {
     compiler.hooks.compilation.tap(AddAssetsPlugin.pluginName, compilation => {
       compilation.hooks.additionalChunkAssets.tap(AddAssetsPlugin.pluginName, chunks => {
         chunks

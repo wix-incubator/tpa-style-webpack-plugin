@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
     "noEmit": true,
+    "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es2015",

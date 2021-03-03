@@ -1,14 +1,15 @@
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTPAStylePlugin = require('../../dist/lib/index');
-const merge = require('webpack-merge');
+import webpack from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ExtractTPAStylePlugin from '../../dist/lib/index';
+import merge from 'webpack-merge';
 
-const commonConfig = {
+const commonConfig: webpack.Configuration = {
   output: {
     filename: '[name].bundle.js',
   },
   mode: 'development',
+  //@ts-ignore
   devtool: 'none',
   module: {
     rules: [
@@ -28,14 +29,14 @@ const commonConfig = {
   plugins: [
     new MiniCssExtractPlugin({filename: '[name].styles.css'}),
     new HtmlWebpackPlugin(),
-    new ExtractTPAStylePlugin(),
+    new ExtractTPAStylePlugin({packageName: 'test'}),
   ],
 };
 
-export async function runWebpack(originalConfig: any) {
+export async function runWebpack(originalConfig: webpack.Configuration) {
   const config = merge(commonConfig, originalConfig);
 
-  return new Promise((resolve, reject) => {
+  return new Promise<string[]>((resolve, reject) => {
     webpack(config).run((err, stats) => {
       if (err) {
         return reject(err);
@@ -45,7 +46,7 @@ export async function runWebpack(originalConfig: any) {
         return reject(stats.compilation.errors[0]);
       }
 
-      const files = stats.compilation.chunks.reduce((fileList, x) => fileList.concat(x.files), []);
+      const files = stats.compilation.chunks.reduce<string[]>((fileList, x) => fileList.concat(x.files), []);
 
       resolve(files);
     });

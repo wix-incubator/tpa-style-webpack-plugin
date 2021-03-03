@@ -5,22 +5,41 @@ import postcss from 'postcss';
 import extractStyles from 'postcss-extract-styles';
 import {extractTPACustomSyntax} from './postcssPlugin';
 import prefixer from 'postcss-prefix-selector';
-import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import webpack from 'webpack';
 import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename';
 
-const isWebpack5 = parseInt(webpack.version, 10) === 5;
+const isWebpack5 = parseInt(String(webpack.version), 10) === 5;
 
 // use webpack's `webpack-sources` version, if it's v5, we'll get v2.0.0
-const {RawSource, ReplaceSource} = isWebpack5 ? webpack.sources : webpackSources;
+const {RawSource, ReplaceSource} = isWebpack5 ? (webpack as any).sources : webpackSources;
 
-class TPAStylePlugin {
+interface PostCssExtractionResult {
+  chunk: webpack.Chunk;
+  cssVars: {[key: string]: string};
+  customSyntaxStrs: string[];
+  css: string;
+  staticCss: string;
+}
+
+interface PostCssExtractionResultParams {
+  cssVars?: PostCssExtractionResult['cssVars'];
+  customSyntaxStrs?: PostCssExtractionResult['customSyntaxStrs'];
+  css?: PostCssExtractionResult['css'];
+  staticCss?: PostCssExtractionResult['staticCss'];
+}
+
+interface TPAStylePluginOptions {
+  packageName: string;
+  pattern?: RegExp[];
+}
+
+class TPAStylePlugin implements webpack.Plugin {
   public static pluginName = 'tpa-style-webpack-plugin';
-  private readonly _options;
+  private readonly _options: TPAStylePluginOptions;
   private readonly compilationHash: string;
 
-  constructor(options) {
+  constructor(options: TPAStylePluginOptions) {
     this._options = {
       pattern: [/"\w+\([^"]*\)"/, /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/],
       ...options,
@@ -41,23 +60,29 @@ class TPAStylePlugin {
       .digest('hex');
   }
 
-  apply(compiler) {
+  apply(compiler: webpack.Compiler) {
     const cheapModuleEvalSourceMap = isWebpack5 ? 'eval-cheap-module-source-map' : 'cheap-module-eval-source-map';
-    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(compiler.options.devtool);
+    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(
+      compiler.options.devtool
+    );
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
       const pluginDescriptor = isWebpack5
         ? {
             name: TPAStylePlugin.pluginName,
-            stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
+            stage: (compilation as any).PROCESS_ASSETS_STAGE_OPTIMIZE,
           }
         : TPAStylePlugin.pluginName;
 
-      const hook = isWebpack5 ? compilation.hooks.processAssets : compilation.hooks.optimizeChunkAssets;
+      type OptimizeChunkAssets = webpack.compilation.Compilation['hooks']['optimizeChunkAssets'];
+
+      const hook: OptimizeChunkAssets = isWebpack5
+        ? (compilation.hooks as any).processAssets
+        : compilation.hooks.optimizeChunkAssets;
 
       hook.tapAsync(pluginDescriptor, (chunks, callback) => {
-        const actualChunks = isWebpack5 ? compilation.chunks : chunks;
+        const actualChunks: webpack.Chunk[] = isWebpack5 ? compilation.chunks : chunks;
 
         this.extract(compilation, actualChunks)
           .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
@@ -67,9 +92,9 @@ class TPAStylePlugin {
     });
   }
 
-  private replaceRuntimeModule(compiler) {
+  private replaceRuntimeModule(compiler: webpack.Compiler) {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
-    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, (resource: any) => {
       if (isWebpack5) {
         // `resource`, `request`, and `loaders` are exposed under `createData`
         // in webpack v5
@@ -92,8 +117,8 @@ class TPAStylePlugin {
     nmrp.apply(compiler);
   }
 
-  private extract(compilation, chunks) {
-    const promises = [];
+  private extract(compilation: webpack.compilation.Compilation, chunks: webpack.Chunk[]) {
+    const promises: Promise<PostCssExtractionResult>[] = [];
 
     chunks.forEach(chunk => {
       // webpack 5 turned this from an array to a set
@@ -106,12 +131,13 @@ class TPAStylePlugin {
             postcss([extractStyles(this._options)])
               .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
               .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
-              .then((result: Result & {extracted: string}) => {
+              // @ts-ignore
+              .then((result: postcss.Result & {extracted: string}) => {
                 compilation.assets[cssFile] = new RawSource(
                   result.css.replace(new RegExp(`${this.compilationHash} `, 'g'), '')
                 );
 
-                return new Promise(resolve => {
+                return new Promise<PostCssExtractionResult>(resolve => {
                   postcss([
                     prefixer({
                       prefix: this.compilationHash,
@@ -131,7 +157,7 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
-  private getPlaceholderContent(params: object, shouldEscapeContent: boolean) {
+  private getPlaceholderContent(params: PostCssExtractionResultParams, shouldEscapeContent: boolean) {
     const content = JSON.stringify(params);
 
     if (!shouldEscapeContent) {
@@ -142,7 +168,19 @@ class TPAStylePlugin {
     return escapedContent.substring(1, escapedContent.length - 1);
   }
 
-  private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
+  private replaceByPlaceHolder({
+    sourceCode,
+    newSource,
+    shouldEscapeContent,
+    placeholder,
+    params,
+  }: {
+    sourceCode: string;
+    newSource: webpackSources.ReplaceSource;
+    shouldEscapeContent: boolean;
+    placeholder: 'INJECTED_DATA_PLACEHOLDER' | 'INJECTED_STATIC_DATA_PLACEHOLDER';
+    params: PostCssExtractionResultParams;
+  }) {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
 
@@ -155,7 +193,13 @@ class TPAStylePlugin {
     }
   }
 
-  private generateStandaloneCssConfig({shouldEscapeContent, params}) {
+  private generateStandaloneCssConfig({
+    shouldEscapeContent,
+    params,
+  }: {
+    shouldEscapeContent: boolean;
+    params: PostCssExtractionResultParams;
+  }) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
 
     return new RawSource(
@@ -163,18 +207,22 @@ class TPAStylePlugin {
     );
   }
 
-  private replaceSource(compilation, extractResults, shouldEscapeContent) {
+  private replaceSource(
+    compilation: webpack.compilation.Compilation,
+    extractResults: PostCssExtractionResult[],
+    shouldEscapeContent: boolean
+  ) {
     const entryMergedChunks = this.getEntryMergedChunks(extractResults);
 
     entryMergedChunks.forEach(({chunk, cssVars, customSyntaxStrs, css, staticCss}) => {
       // webpack 5 turned this from an array to a set
-      const files = isWebpack5 ? [...chunk.files] : chunk.files;
+      const files: string[] = isWebpack5 ? [...chunk.files] : chunk.files;
 
       files
         .filter(fileName => fileName.endsWith('.js'))
         .forEach(file => {
-          const sourceCode = compilation.assets[file].source();
-          const newSource = new ReplaceSource(compilation.assets[file], file);
+          const sourceCode: string = compilation.assets[file].source();
+          const newSource: webpackSources.ReplaceSource = new ReplaceSource(compilation.assets[file], file);
 
           this.replaceByPlaceHolder({
             sourceCode,
@@ -218,23 +266,25 @@ class TPAStylePlugin {
     });
   }
 
-  private getEntryMergedChunks(extractResults) {
+  private getEntryMergedChunks(extractResults: PostCssExtractionResult[]) {
     const entryMergedChunks = extractResults
       .filter(({chunk}) => chunk.canBeInitial())
       .reduce((chunkMap, currentResult) => {
         const currentChunk = currentResult.chunk;
-        if (chunkMap.hasOwnProperty(currentChunk.id)) {
-          chunkMap[currentChunk.id] = this.mergeExtractResults(chunkMap[currentChunk.id], currentResult);
+        const currentChunkId = (currentChunk.id as unknown) as string;
+
+        if (chunkMap.hasOwnProperty(currentChunkId)) {
+          chunkMap[currentChunkId] = this.mergeExtractResults(chunkMap[currentChunkId], currentResult);
         } else {
-          chunkMap[currentChunk.id] = currentResult;
+          chunkMap[currentChunkId] = currentResult;
         }
         return chunkMap;
-      }, {});
+      }, {} as {[key: number]: PostCssExtractionResult});
 
-    return Object.keys(entryMergedChunks).map(key => entryMergedChunks[key]);
+    return Object.keys(entryMergedChunks).map(key => entryMergedChunks[key]) as PostCssExtractionResult[];
   }
 
-  private mergeExtractResults(extractResult1, extractResult2) {
+  private mergeExtractResults(extractResult1: PostCssExtractionResult, extractResult2: PostCssExtractionResult) {
     const newResult = {...extractResult1};
 
     newResult.cssVars = {...newResult.cssVars, ...extractResult2.cssVars};
@@ -246,4 +296,4 @@ class TPAStylePlugin {
   }
 }
 
-module.exports = TPAStylePlugin;
+export default TPAStylePlugin;

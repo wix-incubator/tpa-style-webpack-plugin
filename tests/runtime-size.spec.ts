@@ -10,8 +10,8 @@ describe('runtime size', () => {
     await clearDir(outputDirPath);
   });
 
-  it('should throw when lib size exceeds 27kb', () => {
-    return runWebpack({
+  it('should throw when lib size exceeds 27kb', async () => {
+    const executionResult = runWebpack({
       output: {
         path: path.resolve(outputDirPath),
         libraryTarget: 'commonjs',
@@ -25,5 +25,7 @@ describe('runtime size', () => {
         [entryName]: './runtime',
       },
     });
+
+    await expect(executionResult).rejects.toThrow();
   });
 });
