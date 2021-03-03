@@ -31,19 +31,19 @@ class TPAStylePlugin {
 
   getCompilationHash() {
     if (isWebpack5) {
-      return createHash("md5").update(this._options.packageName).digest("hex");
+      return createHash('md5')
+        .update(this._options.packageName)
+        .digest('hex');
     }
 
-    return createHash("md5")
+    return createHash('md5')
       .update(new Date().getTime().toString())
-      .digest("hex");
+      .digest('hex');
   }
 
   apply(compiler) {
     const cheapModuleEvalSourceMap = isWebpack5 ? 'eval-cheap-module-source-map' : 'cheap-module-eval-source-map';
-    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(
-      compiler.options.devtool
-    );
+    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(compiler.options.devtool);
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
