@@ -63,7 +63,7 @@ class TPAStylePlugin implements webpack.Plugin {
   apply(compiler: webpack.Compiler) {
     const cheapModuleEvalSourceMap = isWebpack5 ? 'eval-cheap-module-source-map' : 'cheap-module-eval-source-map';
     const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(
-      compiler.options.devtool
+      compiler.options.devtool as string
     );
     this.replaceRuntimeModule(compiler);
 

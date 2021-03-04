@@ -61,7 +61,7 @@ export const cssFunctions = {
       };
     } else if (tpaParams.fonts[font]) {
       fontValue = tpaParams.fonts[font];
-    } else if (font.indexOf('font:') === 0) {
+    } else if (typeof font === 'string' && font.indexOf('font:') === 0) {
       return font.slice(5, font.length - 1);
     } else {
       return escapeHtml(font);
