@@ -25,11 +25,27 @@ export const cssFunctions = {
     return new TinyColor({r, g, b, a}).toRgbString();
   },
   color: (colorValue: string | ColorInput | undefined | null, tpaParams: ITPAParams) => {
-    if (typeof colorValue === 'string' && tpaParams.colors[colorValue]) {
+    /**
+     * TODO: check `@ts-ignore` in this function, fixing code here could lead to new problems, without ts-ignore there would be:
+     * TS2538: Type 'HSL' cannot be used as an index type.
+     * TS2538: Type 'HSLA' cannot be used as an index type.
+     * TS2538: Type 'HSV' cannot be used as an index type.
+     * TS2538: Type 'HSVA' cannot be used as an index type.
+     * TS2538: Type 'RGB' cannot be used as an index type.
+     * TS2538: Type 'RGBA' cannot be used as an index type.
+     * TS2538: Type 'TinyColor' cannot be used as an index type.
+     * TS2538: Type 'null' cannot be used as an index type.
+     * TS2538: Type 'undefined' cannot be used as an index type.
+     */
+
+    // @ts-ignore
+    if (tpaParams.colors[colorValue]) {
+      // @ts-ignore
       return tpaParams.colors[colorValue];
     }
 
-    if (typeof colorValue === 'string' && hexColorRegex.test(colorValue)) {
+    // @ts-ignore
+    if (hexColorRegex.test(colorValue)) {
       return colorValue;
     } else if (colorValue) {
       const color = new TinyColor(colorValue);
@@ -99,7 +115,13 @@ export const cssFunctions = {
     return +value;
   },
   underline: (font: Partial<IStyleFont['style']>): string => {
-    return font && typeof font === 'object' && font.underline ? 'underline' : '';
+    /**
+     * TODO: check this ts-ignore, without it:
+     * TS2339: Property 'underline' does not exist on type 'string | Partial<{ bold: boolean; italic: boolean; underline: boolean; }>'.
+     * Property 'underline' does not exist on type 'string'.
+     */
+    // @ts-ignore
+    return font && font.underline ? 'underline' : '';
   },
   unit: (value: number | string, unit: string): string => {
     return escapeHtml(`${value}${unit}`);

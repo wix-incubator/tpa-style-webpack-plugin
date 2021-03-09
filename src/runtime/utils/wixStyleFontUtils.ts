@@ -66,10 +66,9 @@ export const wixStylesFontUtils = {
   toFontCssValue(value: Required<IStyleFont>) {
     const size = isNumber(value.size) ? value.size + 'px' : value.size;
     const lineHeight = isNumber(value.lineHeight) ? value.lineHeight + 'px' : value.lineHeight;
-    const family =
-      typeof value.family === 'string'
-        ? value.family
-        : value.family.map((val: string) => (val.indexOf(' ') > -1 ? JSON.stringify(val) : val)).join(',');
+    // TODO: check `@ts-ignore`
+    // @ts-ignore
+    const family = value.family.map(val => (val.indexOf(' ') > -1 ? JSON.stringify(val) : val)).join(',');
 
     return `${value.style} ${value.variant} ${value.weight} ${size}/${lineHeight} ${family}`;
   },
@@ -97,15 +96,15 @@ function parseWixStylesFont(font: IStyleFont) {
 
   let value = '';
 
-  if (
-    (font && font.style === 'italic') ||
-    (font && font.style === '<italic>') ||
-    (typeof font.style === 'object' && font.style.italic)
-  ) {
+  // TODO: check `@ts-ignore`
+  // @ts-ignore
+  if (font.style.italic) {
     value += 'italic ';
   }
 
-  if (font.style && font.style.bold) {
+  // TODO: check `@ts-ignore`
+  // @ts-ignore
+  if (font.style.bold) {
     value += 'bold ';
   }
 
@@ -127,6 +126,8 @@ function parseWixStylesFont(font: IStyleFont) {
     fontObj.family = parsedValue.family;
   }
 
-  fontObj.underline = font.style && typeof font.style === 'object' && font.style.underline;
+  // TODO: check `@ts-ignore`
+  // @ts-ignore
+  fontObj.underline = font.style && font.style.underline;
   return fontObj;
 }
