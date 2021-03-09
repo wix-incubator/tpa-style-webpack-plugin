@@ -1,8 +1,8 @@
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTPAStylePlugin from '../../dist/lib/index';
 import merge from 'webpack-merge';
+const ExtractTPAStylePlugin = require('../../dist/lib/index');
 
 const commonConfig: webpack.Configuration = {
   output: {
