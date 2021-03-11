@@ -1,8 +1,8 @@
 import {Declaration} from 'postcss';
 
-const annotateDirection = match => `"direction(${match})"`;
+const annotateDirection = (match: string) => `"direction(${match})"`;
 
-function replaceRtlStrings(str) {
+function replaceRtlStrings(str: string) {
   return str
     .replace(/STARTSIGN/g, annotateDirection)
     .replace(/ENDSIGN/g, annotateDirection)
@@ -11,7 +11,7 @@ function replaceRtlStrings(str) {
     .replace(/DIR/g, annotateDirection);
 }
 
-function replaceValue(str) {
+function replaceValue(str: string) {
   str = str.trim();
 
   if (str.match(/STARTSIGN\d/)) {

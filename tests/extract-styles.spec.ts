@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import {IGetProcessedCssFn} from '../src/runtime/main';
 import {styleParams} from './fixtures/styleParams';
 import {siteColors} from './fixtures/siteColors';
@@ -10,11 +10,11 @@ import {readFile} from './helpers/readfile';
 describe('Extract Styles', () => {
   const outputDirPath = path.resolve(__dirname, './output/extract-styles');
   const entryName = 'app';
-  let stats, cssFile, getProcessedCss: IGetProcessedCssFn;
+  let cssFile: string, getProcessedCss: IGetProcessedCssFn;
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
-    stats = await runWebpack({
+    await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
         libraryTarget: 'commonjs',

@@ -25,19 +25,24 @@ export interface IStyleColor {
 }
 
 export interface IStyleFont {
+  lineHeight?: string;
   cssFontFamily?: string;
-  family?: string;
+  family?: string | string[];
   index?: number;
   fontStyleParam?: boolean;
   fontParam?: boolean;
   preset?: string;
-  size?: number;
-  style?: {
-    bold: boolean;
-    italic: boolean;
-    underline: boolean;
-  };
-  value: string;
+  size?: number | string;
+  weight?: string;
+  variant?: string;
+  style?:
+    | {
+        bold: boolean;
+        italic: boolean;
+        underline: boolean;
+      }
+    | string;
+  value?: string;
 }
 
 export interface ISiteColor {
@@ -73,6 +78,6 @@ export interface ITextPreset {
 
 export interface IOptions {
   isRTL: boolean;
-  prefixSelector: string;
   strictMode: boolean;
+  prefixSelector?: string;
 }

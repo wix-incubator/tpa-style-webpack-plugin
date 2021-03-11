@@ -1,11 +1,10 @@
-import * as path from 'path';
+import path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
 import {IGetProcessedCssFn} from '../src/runtime/main';
-import {siteColors, getSiteColor} from './fixtures/siteColors';
+import {siteColors} from './fixtures/siteColors';
 import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
-import {clonedWith} from './helpers/cloned-with';
 
 describe('runtime without css', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime-no-css');

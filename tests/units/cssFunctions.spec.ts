@@ -1,10 +1,7 @@
 import {TinyColor} from '@ctrl/tinycolor';
 import {cssFunctions} from '../../src/runtime/cssFunctions';
 import {IS_RTL_PARAM} from '../../src/runtime/constants';
-import {clonedWith} from '../helpers/cloned-with';
-import {styleParams} from '../fixtures/styleParams';
-import {siteColors} from '../fixtures/siteColors';
-import {siteTextPresets} from '../fixtures/siteTextPresets';
+import {IStyleFont} from '../../src/runtime/types';
 
 describe('cssFunctions', () => {
   describe('join', () => {
@@ -90,7 +87,7 @@ describe('cssFunctions', () => {
 
   describe('font', () => {
     it('should support font as an object', () => {
-      const font = {
+      const font: IStyleFont = {
         size: '10',
         lineHeight: '1.4',
         style: 'italic',
@@ -152,7 +149,7 @@ describe('cssFunctions', () => {
     });
 
     it('should escape html entities', () => {
-      const font = {
+      const font: IStyleFont = {
         size: '<10>',
         lineHeight: '<1.4>',
         style: '<italic>',

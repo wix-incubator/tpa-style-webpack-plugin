@@ -1,8 +1,9 @@
+import {Plugins} from './plugins';
 import {ITPAParams} from './generateTPAParams';
 import {isCssVar, isNumber} from './utils/utils';
 
-export function getProcessor({cssVars, plugins}) {
-  function executeFunction(value) {
+export function getProcessor({cssVars, plugins}: {cssVars: {[key: string]: string}; plugins: Plugins}) {
+  function executeFunction(value: string): ReturnType<typeof getVarOrPrimitiveValue> {
     const functionSignature = plugins.getFunctionSignature(value);
 
     if (functionSignature) {
@@ -14,7 +15,7 @@ export function getProcessor({cssVars, plugins}) {
     }
   }
 
-  function getVarOrPrimitiveValue(varName) {
+  function getVarOrPrimitiveValue(varName: string): Function {
     if (isCssVar(varName)) {
       const varValue = cssVars[varName];
       let defaultVarValue;
@@ -30,7 +31,7 @@ export function getProcessor({cssVars, plugins}) {
     return () => varName;
   }
 
-  function getDefaultValueOrValueFromSettings(varName, defaultVarValue) {
+  function getDefaultValueOrValueFromSettings(varName: string, defaultVarValue: Function) {
     return (tpaParams: ITPAParams) => {
       const varNameInSettings = varName.substring(2, varName.length);
       if (tpaParams.strings[varNameInSettings] && tpaParams.strings[varNameInSettings].value) {
@@ -47,7 +48,7 @@ export function getProcessor({cssVars, plugins}) {
     };
   }
 
-  function process({part, tpaParams}) {
+  function process({part, tpaParams}: {part: string; tpaParams: ITPAParams}) {
     if (plugins.isSupportedFunction(part)) {
       const evaluationFunc = executeFunction(part);
       return evaluationFunc(tpaParams);
