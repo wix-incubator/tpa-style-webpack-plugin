@@ -8,7 +8,7 @@ export function isJsonLike(value: any) {
 
 export function parseJson(
   strValue: string
-): {theme: string; size?: string; lineHeight?: string; style?: string; weight?: string} {
+): {theme: string; size?: string; lineHeight?: string; style?: string; weight: string} {
   return strValue
     .slice(1, -1)
     .split(',')
@@ -23,13 +23,13 @@ export function isNumber(value: any): boolean {
   return typeof value === 'number';
 }
 
-export function forEach(obj: object, iteratee: (value: any, key: string) => void) {
+export function forEach(obj: object, iteratee: (value, key) => void) {
   Object.keys(obj).forEach(key => iteratee(obj[key], key));
 }
 
 export function reduceObj(
   obj: object,
-  iteratee: (acc: object, currentValue: {key: string; value: any}, index?: number) => object
+  iteratee: (acc, currentValue: {key: string; value: any}, index?: number) => object
 ): object {
   return Object.keys(obj).reduce((acc, key: string, index) => iteratee(acc, {key, value: obj[key]}, index), {});
 }

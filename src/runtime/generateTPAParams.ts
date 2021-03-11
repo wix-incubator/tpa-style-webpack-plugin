@@ -7,7 +7,7 @@ import {IOptions, ISiteColor, ISiteTextPreset, IStyleFont, IStyleParams} from '.
 export interface ITPAParams {
   colors: {[index: string]: {value: string}};
   numbers: {[index: string]: number};
-  booleans: {[index: string]: boolean | undefined};
+  booleans: {[index: string]: boolean};
   fonts: Object;
   strings: Object;
 }
@@ -26,6 +26,5 @@ export function generateTPAParams(
   const fonts = wixStylesFontUtils.getFullFontStyles({fontStyles, siteTextPresets}) || {};
   const strings = pickBy(styleParams.fonts, wixStylesFontUtils.isStringHack);
   const booleans = {...styleParams.booleans, [IS_RTL_PARAM]: options.isRTL};
-
   return {colors, fonts, numbers, strings, booleans};
 }

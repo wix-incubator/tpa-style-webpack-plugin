@@ -7,12 +7,10 @@ export class Plugins {
   public cssFunctions: {[index: string]: Function};
   public declarationReplacers: Function[];
 
-  private regex: RegExp | undefined;
+  private regex: RegExp;
 
   constructor() {
-    this.cssFunctions = {};
-    this.declarationReplacers = [];
-    this.regex = undefined;
+    this.resetPlugins();
   }
 
   public addCssFunction(funcName: string, func: Function) {
@@ -31,11 +29,11 @@ export class Plugins {
   }
 
   public isSupportedFunction(str: any) {
-    return this.regex && this.regex.test(str);
+    return this.regex.test(str);
   }
 
-  public getFunctionSignature(str: string): {funcName: string; args: string[]} | null {
-    const groups = this.regex && this.regex.exec(str);
+  public getFunctionSignature(str: string): {funcName: string; args: string[]} {
+    const groups = this.regex.exec(str);
     if (groups) {
       return {
         funcName: groups[1],
@@ -59,7 +57,7 @@ export class Plugins {
 
         return acc;
       },
-      {args: [], tmpParts: []} as {args: string[]; tmpParts: string[]}
+      {args: [], tmpParts: []}
     );
 
     if (result.tmpParts.length > 0) {
@@ -75,14 +73,5 @@ export class Plugins {
 }
 
 function wrapWithValueProvider(fnToWrap: Function) {
-  return (...args: ((tpaParams: any) => any)[]) => {
-    return (tpaParams: ITPAParams) => {
-      return fnToWrap(
-        ...args.map(fn => {
-          return fn(tpaParams);
-        }),
-        tpaParams
-      );
-    };
-  };
+  return (...args) => (tpaParams: ITPAParams) => fnToWrap(...args.map(fn => fn(tpaParams)), tpaParams);
 }

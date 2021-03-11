@@ -32,7 +32,7 @@ export function getProcessedCssWithConfig(
   {siteColors, siteTextPresets, styleParams}: IStyles,
   options?: Partial<IOptions>
 ): string {
-  options = {...defaultOptions, ...(options || {})} as IOptions;
+  options = {...defaultOptions, ...(options || {})};
 
   if (!processedCssConfig.css) {
     return '';
@@ -52,7 +52,7 @@ export function getProcessedCssWithConfig(
     try {
       newValue = processor.process({part, tpaParams});
     } catch (e) {
-      if (options && options.strictMode) {
+      if (options.strictMode) {
         throw e;
       } else {
         newValue = '';
@@ -62,13 +62,10 @@ export function getProcessedCssWithConfig(
   }, prefixedCss);
 }
 
-export function getStaticCssWithConfig(
-  staticCssConfig: CssConfig,
-  {prefixSelector}: Pick<IOptions, 'prefixSelector'> = {prefixSelector: ''}
-) {
-  if (prefixSelector) {
-    return (staticCssConfig.staticCss || '').replace(new RegExp(staticCssConfig.compilationHash, 'g'), prefixSelector);
-  }
-
-  return staticCssConfig.staticCss;
+export function getStaticCssWithConfig(staticCssConfig: CssConfig, {prefixSelector} = {prefixSelector: ''}) {
+  const prefixedCss = (staticCssConfig.staticCss || '').replace(
+    new RegExp(staticCssConfig.compilationHash, 'g'),
+    prefixSelector
+  );
+  return prefixedCss;
 }

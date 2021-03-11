@@ -1,4 +1,8 @@
-import fs from 'fs';
-import {promisify} from 'util';
+/* global Promise */
+const fs = require('fs');
 
-export const readFile = promisify(fs.readFile);
+export function readFile(...args): Promise<string> {
+  return new Promise((resolve, reject) =>
+    fs.readFile(...args, (err, payload) => (err ? reject(err) : resolve(payload)))
+  );
+}

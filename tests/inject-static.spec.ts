@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import {runWebpack} from './helpers/run-webpack';
 import {clearDir} from './helpers/clear-dir';
 import {AddAssetsPlugin} from './helpers/AddAssetsPlugin';

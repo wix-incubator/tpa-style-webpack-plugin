@@ -1,8 +1,8 @@
-import postcss from 'postcss';
-import {Declaration, ContainerBase} from 'postcss';
 import * as replacers from './replacers';
+import * as postcss from 'postcss';
+import {Declaration, ContainerBase} from 'postcss';
 
-function isCssVar(key: string) {
+function isCssVar(key) {
   return key.indexOf('--') === 0;
 }
 
@@ -18,7 +18,7 @@ export interface IOptionResult {
   css: string;
 }
 
-function collectCustomSyntaxFrom(value: string, customSyntaxStrs: string[]): void {
+function collectCustomSyntaxFrom(value: string, customSyntaxStrs): void {
   let match;
   if ((match = value.match(customSyntaxRegex))) {
     customSyntaxStrs.push(...match);
@@ -27,13 +27,11 @@ function collectCustomSyntaxFrom(value: string, customSyntaxStrs: string[]): voi
 
 export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as IOptions) => {
   const cssVars = {};
-  const customSyntaxStrs: string[] = [];
+  const customSyntaxStrs = [];
 
   return (css: ContainerBase) => {
     css.walkDecls((decl: Declaration) => {
-      const replacersNames = (Object.keys(replacers) as unknown) as (keyof typeof replacers)[];
-
-      replacersNames.forEach(replacerName => (decl = replacers[replacerName](decl)));
+      Object.keys(replacers).forEach(replacerName => (decl = replacers[replacerName](decl)));
 
       if (isCssVar(decl.prop)) {
         cssVars[decl.prop] = decl.value;
