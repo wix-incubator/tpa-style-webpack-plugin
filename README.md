@@ -131,7 +131,7 @@ You can use a [built in method](https://github.com/wix-incubator/tpa-style-webpa
 ### Usage example (React)
 
 ```javascript
-import React from "react";
+import * as React from "react";
 import {getProcessedCss} from "tpa-style-webpack-plugin/runtime";
 
 export const withStyles = (Component, options) => {

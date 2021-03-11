@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
 import {readFile} from './helpers/readfile';
@@ -11,14 +11,15 @@ describe('multiple-entries', () => {
   const outputDirPath = path.resolve(__dirname, './output/multiple-entries');
   const entryName1 = 'app1';
   const entryName2 = 'app2';
-  let cssFile1: string,
+  let stats,
+    cssFile1,
     tpaRuntime1: {getProcessedCss: IGetProcessedCssFn},
-    cssFile2: string,
+    cssFile2,
     tpaRuntime2: {getProcessedCss: IGetProcessedCssFn};
 
   beforeAll(async () => {
     await clearDir(outputDirPath);
-    await runWebpack({
+    stats = await runWebpack({
       output: {
         path: path.resolve(outputDirPath),
         libraryTarget: 'commonjs',
