@@ -1,4 +1,4 @@
-import * as rimraf from 'rimraf';
+import rimraf from 'rimraf';
 
 export function clearDir(dir) {
   return new Promise((resolve, reject) => {

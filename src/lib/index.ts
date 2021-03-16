@@ -1,13 +1,13 @@
-import * as webpackSources from 'webpack-sources';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as postcss from 'postcss';
-import * as extractStyles from 'postcss-extract-styles';
+import webpackSources from 'webpack-sources';
+import fs from 'fs';
+import path from 'path';
+import postcss from 'postcss';
+import extractStyles from 'postcss-extract-styles';
 import {extractTPACustomSyntax} from './postcssPlugin';
-import * as prefixer from 'postcss-prefix-selector';
+import prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
-import * as webpack from 'webpack';
+import webpack from 'webpack';
 import {generateStandaloneCssConfigFilename, getRelatedStyleParamsFileName} from './standaloneCssConfigFilename';
 
 const isWebpack5 = parseInt(webpack.version, 10) === 5;
