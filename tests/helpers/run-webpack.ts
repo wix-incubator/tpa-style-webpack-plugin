@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTPAStylePlugin = require('../../dist/lib/index');
 const merge = require('webpack-merge');
 
-const commonConfig = {
+const getCommonConfig = options => ({
   output: {
     filename: '[name].bundle.js',
   },
@@ -28,12 +28,12 @@ const commonConfig = {
   plugins: [
     new MiniCssExtractPlugin({filename: '[name].styles.css'}),
     new HtmlWebpackPlugin(),
-    new ExtractTPAStylePlugin(),
+    new ExtractTPAStylePlugin(options),
   ],
-};
+});
 
-export async function runWebpack(originalConfig: any) {
-  const config = merge(commonConfig, originalConfig);
+export async function runWebpack(originalConfig: any, tpaStylePluginOptions?: any) {
+  const config = merge(getCommonConfig(tpaStylePluginOptions), originalConfig);
 
   return new Promise((resolve, reject) => {
     webpack(config).run((err, stats) => {

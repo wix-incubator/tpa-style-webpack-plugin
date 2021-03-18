@@ -15,14 +15,22 @@ const isWebpack5 = parseInt(webpack.version, 10) === 5;
 // use webpack's `webpack-sources` version, if it's v5, we'll get v2.0.0
 const {RawSource, ReplaceSource} = isWebpack5 ? webpack.sources : webpackSources;
 
+interface Options {
+  pattern: RegExp;
+  jsChunkPattern: RegExp;
+  cssChunkPattern: RegExp;
+  packageName?: string;
+}
 class TPAStylePlugin {
   public static pluginName = 'tpa-style-webpack-plugin';
-  private readonly _options;
+  private readonly _options: Options;
   private readonly compilationHash: string;
 
   constructor(options) {
     this._options = {
       pattern: [/"\w+\([^"]*\)"/, /START|END|DIR|STARTSIGN|ENDSIGN|DEG\-START|DEG\-END/],
+      jsChunkPattern: /\.js$/,
+      cssChunkPattern: /\.css$/,
       ...options,
     };
     const hash = this.getCompilationHash();
@@ -31,19 +39,19 @@ class TPAStylePlugin {
 
   getCompilationHash() {
     if (isWebpack5) {
-      return createHash("md5").update(this._options.packageName).digest("hex");
+      return createHash('md5')
+        .update(this._options.packageName)
+        .digest('hex');
     }
 
-    return createHash("md5")
+    return createHash('md5')
       .update(new Date().getTime().toString())
-      .digest("hex");
+      .digest('hex');
   }
 
   apply(compiler) {
     const cheapModuleEvalSourceMap = isWebpack5 ? 'eval-cheap-module-source-map' : 'cheap-module-eval-source-map';
-    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(
-      compiler.options.devtool
-    );
+    const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(compiler.options.devtool);
     this.replaceRuntimeModule(compiler);
 
     compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
@@ -101,7 +109,7 @@ class TPAStylePlugin {
 
       promises.push(
         ...files
-          .filter(fileName => fileName.endsWith('.css'))
+          .filter(fileName => this._options.cssChunkPattern.test(fileName))
           .map(cssFile =>
             postcss([extractStyles(this._options)])
               .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
@@ -171,7 +179,7 @@ class TPAStylePlugin {
       const files = isWebpack5 ? [...chunk.files] : chunk.files;
 
       files
-        .filter(fileName => fileName.endsWith('.js'))
+        .filter(fileName => this._options.jsChunkPattern.test(fileName))
         .forEach(file => {
           const sourceCode = compilation.assets[file].source();
           const newSource = new ReplaceSource(compilation.assets[file], file);
