@@ -9,11 +9,11 @@ export class AddAssetsPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.compilation.tap(AddAssetsPlugin.pluginName, compilation => {
-      compilation.hooks.additionalChunkAssets.tap(AddAssetsPlugin.pluginName, chunks => {
+    compiler.hooks.compilation.tap(AddAssetsPlugin.pluginName, (compilation) => {
+      compilation.hooks.additionalChunkAssets.tap(AddAssetsPlugin.pluginName, (chunks) => {
         chunks
-          .filter(chunk => chunk.canBeInitial())
-          .forEach(chunk => {
+          .filter((chunk) => chunk.canBeInitial())
+          .forEach((chunk) => {
             const cssSources = this.options.src;
             const cssBundleFilename = compilation.getPath(this.options.filename, {chunk, hash: compilation.hash});
             compilation.assets[cssBundleFilename] = new RawSource(cssSources);

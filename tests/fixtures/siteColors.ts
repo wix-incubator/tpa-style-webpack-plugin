@@ -1,7 +1,7 @@
 import {ISiteColor} from '../../src/runtime/types';
 
 export const getSiteColor = (colorsRef: string, siteColorList: ISiteColor[]) => {
-  return siteColorList.filter(ele => ele.reference === colorsRef)[0].value;
+  return siteColorList.filter((ele) => ele.reference === colorsRef)[0].value;
 };
 
 export const siteColors: ISiteColor[] = [

@@ -1,6 +1,6 @@
 import {Declaration} from 'postcss';
 
-const annotateDirection = match => `"direction(${match})"`;
+const annotateDirection = (match) => `"direction(${match})"`;
 
 function replaceRtlStrings(str) {
   return str

@@ -249,8 +249,8 @@ describe('cssFunctions', () => {
       DIR: {ltr: 'ltr', rtl: 'rtl'},
     };
 
-    [false, true].forEach(isRtl => {
-      Object.keys(directionMap).forEach(directionKey => {
+    [false, true].forEach((isRtl) => {
+      Object.keys(directionMap).forEach((directionKey) => {
         it(`should support ${directionKey}`, () => {
           expect(cssFunctions.direction(directionKey, {booleans: {[IS_RTL_PARAM]: isRtl}} as any)).toBe(
             directionMap[directionKey][isRtl ? 'rtl' : 'ltr']

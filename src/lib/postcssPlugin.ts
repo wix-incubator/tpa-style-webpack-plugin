@@ -1,6 +1,5 @@
 import * as replacers from './replacers';
-import postcss from 'postcss';
-import {Declaration, ContainerBase} from 'postcss';
+import postcss, {Declaration, ContainerBase} from 'postcss';
 
 function isCssVar(key) {
   return key.indexOf('--') === 0;
@@ -31,7 +30,7 @@ export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (o
 
   return (css: ContainerBase) => {
     css.walkDecls((decl: Declaration) => {
-      Object.keys(replacers).forEach(replacerName => (decl = replacers[replacerName](decl)));
+      Object.keys(replacers).forEach((replacerName) => (decl = replacers[replacerName](decl)));
 
       if (isCssVar(decl.prop)) {
         cssVars[decl.prop] = decl.value;

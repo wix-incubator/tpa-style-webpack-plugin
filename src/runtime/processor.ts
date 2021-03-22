@@ -7,7 +7,7 @@ export function getProcessor({cssVars, plugins}) {
 
     if (functionSignature) {
       return plugins.cssFunctions[functionSignature.funcName](
-        ...functionSignature.args.map(arg => executeFunction(arg.trim()))
+        ...functionSignature.args.map((arg) => executeFunction(arg.trim()))
       );
     } else {
       return getVarOrPrimitiveValue(value);
@@ -42,7 +42,7 @@ export function getProcessor({cssVars, plugins}) {
       } else if (isNumber(tpaParams.numbers[varNameInSettings])) {
         return tpaParams.numbers[varNameInSettings];
       }
-      //not found in settings
+      // not found in settings
       return defaultVarValue(tpaParams);
     };
   }

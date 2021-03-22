@@ -9,7 +9,7 @@ function escapeRegExp(str: string) {
 }
 
 const plugins = new Plugins();
-Object.keys(cssFunctions).forEach(funcName => plugins.addCssFunction(funcName, cssFunctions[funcName]));
+Object.keys(cssFunctions).forEach((funcName) => plugins.addCssFunction(funcName, cssFunctions[funcName]));
 
 export type IGetProcessedCssWithConfigFn = typeof getProcessedCssWithConfig;
 export type IGetStaticCssWithConfigFn = typeof getStaticCssWithConfig;

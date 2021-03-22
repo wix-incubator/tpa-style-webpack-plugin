@@ -1,5 +1,6 @@
 import {IOptions, IInjectedData, IStyles} from './types';
 import {getProcessedCssWithConfig, getStaticCssWithConfig} from './standalone';
+
 export type IGetProcessedCssFn = typeof getProcessedCss;
 export type IGetStaticCssFn = typeof getStaticCss;
 

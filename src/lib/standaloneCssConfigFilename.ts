@@ -15,8 +15,8 @@ export function getRelatedStyleParamsFileName(fileName: string) {
 function appendFileName(fileName: string, injectedString: 'cssConfig' | 'stylesParams') {
   const parts = fileName.split('.');
 
-  const hasPart = (part: string) => parts.some(x => part === x);
-  const index = [hasPart('js'), hasPart('min'), hasPart('bundle')].filter(x => x).length;
+  const hasPart = (part: string) => parts.some((x) => part === x);
+  const index = [hasPart('js'), hasPart('min'), hasPart('bundle')].filter((x) => x).length;
 
   return [...parts.slice(0, -index), injectedString, ...parts.slice(-index)].join('.');
 }

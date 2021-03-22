@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTPAStylePlugin = require('../../dist/lib/index');
 const merge = require('webpack-merge');
 
-const getCommonConfig = options => ({
+const getCommonConfig = (options) => ({
   output: {
     filename: '[name].bundle.js',
   },

@@ -73,5 +73,5 @@ export class Plugins {
 }
 
 function wrapWithValueProvider(fnToWrap: Function) {
-  return (...args) => (tpaParams: ITPAParams) => fnToWrap(...args.map(fn => fn(tpaParams)), tpaParams);
+  return (...args) => (tpaParams: ITPAParams) => fnToWrap(...args.map((fn) => fn(tpaParams)), tpaParams);
 }

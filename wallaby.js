@@ -1,5 +1,4 @@
 module.exports = function () {
-
   return {
     files: ['src/lib/replacers.ts', 'src/runtime/**/*.ts', 'tests/**/*.ts', '!tests/**/*.spec.ts'],
 
@@ -7,9 +6,9 @@ module.exports = function () {
 
     env: {
       type: 'node',
-      runner: 'node'
+      runner: 'node',
     },
 
-    testFramework: 'jest'
+    testFramework: 'jest',
   };
 };

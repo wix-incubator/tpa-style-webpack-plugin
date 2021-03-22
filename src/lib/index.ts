@@ -1,11 +1,10 @@
 import webpackSources from 'webpack-sources';
 import fs from 'fs';
 import path from 'path';
-import postcss from 'postcss';
+import postcss, {Result} from 'postcss';
 import extractStyles from 'postcss-extract-styles';
 import {extractTPACustomSyntax} from './postcssPlugin';
 import prefixer from 'postcss-prefix-selector';
-import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import webpack from 'webpack';
 import {generateStandaloneCssConfigFilename, getRelatedStyleParamsFileName} from './standaloneCssConfigFilename';
@@ -39,14 +38,10 @@ class TPAStylePlugin {
 
   getCompilationHash() {
     if (isWebpack5) {
-      return createHash('md5')
-        .update(this._options.packageName)
-        .digest('hex');
+      return createHash('md5').update(this._options.packageName).digest('hex');
     }
 
-    return createHash('md5')
-      .update(new Date().getTime().toString())
-      .digest('hex');
+    return createHash('md5').update(new Date().getTime().toString()).digest('hex');
   }
 
   apply(compiler) {
@@ -54,7 +49,7 @@ class TPAStylePlugin {
     const shouldEscapeContent = [cheapModuleEvalSourceMap, 'cheap-eval-source-map'].includes(compiler.options.devtool);
     this.replaceRuntimeModule(compiler);
 
-    compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, compilation => {
+    compiler.hooks.compilation.tap(TPAStylePlugin.pluginName, (compilation) => {
       const pluginDescriptor = isWebpack5
         ? {
             name: TPAStylePlugin.pluginName,
@@ -68,7 +63,7 @@ class TPAStylePlugin {
         const actualChunks = isWebpack5 ? compilation.chunks : chunks;
 
         this.extract(compilation, actualChunks)
-          .then(extractResults => this.replaceSource(compilation, extractResults, shouldEscapeContent))
+          .then((extractResults) => this.replaceSource(compilation, extractResults, shouldEscapeContent))
           .then(() => callback())
           .catch(callback);
       });
@@ -77,7 +72,7 @@ class TPAStylePlugin {
 
   private replaceRuntimeModule(compiler) {
     const runtimePath = path.resolve(__dirname, '../../runtime.js');
-    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, resource => {
+    const nmrp = new webpack.NormalModuleReplacementPlugin(/runtime\.js$/, (resource) => {
       if (isWebpack5) {
         // `resource`, `request`, and `loaders` are exposed under `createData`
         // in webpack v5
@@ -103,14 +98,14 @@ class TPAStylePlugin {
   private extract(compilation, chunks) {
     const promises = [];
 
-    chunks.forEach(chunk => {
+    chunks.forEach((chunk) => {
       // webpack 5 turned this from an array to a set
       const files = isWebpack5 ? [...chunk.files] : chunk.files;
 
       promises.push(
         ...files
-          .filter(fileName => this._options.cssChunkPattern.test(fileName))
-          .map(cssFile =>
+          .filter((fileName) => this._options.cssChunkPattern.test(fileName))
+          .map((cssFile) =>
             postcss([extractStyles(this._options)])
               .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
               .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
@@ -119,7 +114,7 @@ class TPAStylePlugin {
                   result.css.replace(new RegExp(`${this.compilationHash} `, 'g'), '')
                 );
 
-                return new Promise(resolve => {
+                return new Promise((resolve) => {
                   postcss([
                     prefixer({
                       prefix: this.compilationHash,
@@ -201,8 +196,8 @@ class TPAStylePlugin {
       const files = isWebpack5 ? [...chunk.files] : chunk.files;
 
       files
-        .filter(fileName => this._options.jsChunkPattern.test(fileName))
-        .forEach(file => {
+        .filter((fileName) => this._options.jsChunkPattern.test(fileName))
+        .forEach((file) => {
           const sourceCode = compilation.assets[file].source();
           const newSource = new ReplaceSource(compilation.assets[file], file);
 
@@ -264,7 +259,7 @@ class TPAStylePlugin {
         return chunkMap;
       }, {});
 
-    return Object.keys(entryMergedChunks).map(key => entryMergedChunks[key]);
+    return Object.keys(entryMergedChunks).map((key) => entryMergedChunks[key]);
   }
 
   private mergeExtractResults(extractResult1, extractResult2) {

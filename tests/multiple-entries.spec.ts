@@ -37,7 +37,7 @@ describe('multiple-entries', () => {
   });
 
   it('should generate 2 css files without tpa styles', () => {
-    [cssFile1, cssFile2].forEach(file => {
+    [cssFile1, cssFile2].forEach((file) => {
       expect(file).not.toContain('.only-tpa');
       expect(file).not.toContain('START');
       expect(file).not.toContain('END');

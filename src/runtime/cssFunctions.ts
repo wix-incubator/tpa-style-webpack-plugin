@@ -14,8 +14,8 @@ export const cssFunctions = {
     color2 = new TinyColor(color2).toRgb();
 
     //  todo: use strength
-    //let color1strength = args[1];
-    //let color2strength = args[3];
+    // let color1strength = args[1];
+    // let color2strength = args[3];
     const r = (color1.r / 255 + color2.r / 255) * 255;
     const g = (color1.g / 255 + color2.g / 255) * 255;
     const b = (color1.b / 255 + color2.b / 255) * 255;
@@ -79,7 +79,7 @@ export const cssFunctions = {
     const newOpacity = oldColor.toRgb().a * opacity;
     return oldColor.setAlpha(newOpacity).toRgbString();
   },
-  withoutOpacity: color => {
+  withoutOpacity: (color) => {
     return new TinyColor(color).setAlpha(1).toRgbString();
   },
   string: (value: string): string => {
@@ -111,10 +111,10 @@ export const cssFunctions = {
     const direction = tpaParams.booleans[IS_RTL_PARAM] ? 'rtl' : 'ltr';
     return directionMap[value][direction];
   },
-  zeroAsTrue: zero => {
+  zeroAsTrue: (zero) => {
     return typeof zero === 'number' ? `${zero}` : zero;
   },
-  //a work around for https://github.com/thysultan/stylis.js/issues/116
+  // a work around for https://github.com/thysultan/stylis.js/issues/116
   calculate: (operator, ...args) => {
     const numbersWithoutTPAParams = args.slice(0, -1);
     if (numbersWithoutTPAParams.length > 1) {
@@ -151,7 +151,7 @@ export const cssFunctions = {
     const isBackgroundBrighter = fgLuminance <= bgLuminance;
     const luminositySteps = [1, 5, 10, 20, 30, 40, 50, 60];
 
-    // tslint:disable-next-line:prefer-for-of
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < luminositySteps.length; i++) {
       if (!isReadable(fgColor, bgColor)) {
         const luminosityStep = luminositySteps[i];

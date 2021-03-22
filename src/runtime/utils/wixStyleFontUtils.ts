@@ -48,7 +48,7 @@ export const wixStylesFontUtils = {
     forEach(ret, (font, key) => {
       ret[key] = {...font, supports: {uppercase: true}};
 
-      if (['snellroundhandw', 'niconne'].some(fontName => font.family.indexOf(fontName) > -1)) {
+      if (['snellroundhandw', 'niconne'].some((fontName) => font.family.indexOf(fontName) > -1)) {
         ret[key].supports.uppercase = false;
       }
 
@@ -66,7 +66,7 @@ export const wixStylesFontUtils = {
   toFontCssValue(value) {
     const size = isNumber(value.size) ? value.size + 'px' : value.size;
     const lineHeight = isNumber(value.lineHeight) ? value.lineHeight + 'px' : value.lineHeight;
-    const family = value.family.map(val => (val.indexOf(' ') > -1 ? JSON.stringify(val) : val)).join(',');
+    const family = value.family.map((val) => (val.indexOf(' ') > -1 ? JSON.stringify(val) : val)).join(',');
 
     return `${value.style} ${value.variant} ${value.weight} ${size}/${lineHeight} ${family}`;
   },
