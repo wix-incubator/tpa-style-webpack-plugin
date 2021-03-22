@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "eslint-config-prettier",
+    "./eslint-test",
+    "./eslint-yoshi-base"
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "tests/output"
+  ],
+  "rules": {
+    "no-var": "off",
+    "no-cond-assign": "off",
+    "no-useless-escape": "off",
+    "no-useless-computed-key": "off",
+    "jest/no-identical-title": "off",
+    "prettier/prettier": [
+      "warn",
+      {
+        "singleQuote": true,
+        "trailingComma": "es5"
+      }
+    ]
+  }
+}
