@@ -8,12 +8,12 @@ import * as prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
 import {createHash} from 'crypto';
 import * as webpack from 'webpack';
-import {generateStandaloneCssConfigFilename} from './standaloneCssConfigFilename';
+import {generateStandaloneCssConfigFilename, getRelatedStyleParamsFileName} from './standaloneCssConfigFilename';
 
 const isWebpack5 = parseInt(webpack.version, 10) === 5;
 
 // use webpack's `webpack-sources` version, if it's v5, we'll get v2.0.0
-const {RawSource, ReplaceSource} = isWebpack5 ? webpack.sources : webpackSources;
+const {RawSource, ReplaceSource} = isWebpack5 ? (webpack as any).sources : webpackSources;
 
 interface Options {
   pattern: RegExp;
@@ -150,6 +150,26 @@ class TPAStylePlugin {
     return escapedContent.substring(1, escapedContent.length - 1);
   }
 
+  private getStyleParamsDefaultsContent(assets: any, fileName: string) {
+    const styleParamsFileName = getRelatedStyleParamsFileName(fileName);
+    const styleParamsFile = assets[styleParamsFileName];
+
+    if (styleParamsFile) {
+      return `(() => {
+        var styleParamsModule = {};
+        var styleParamsExports = {};
+
+        (function(module, exports) {
+          ${styleParamsFile.source()}
+        })(styleParamsModule, styleParamsExports);
+
+        return styleParamsModule.exports && styleParamsModule.exports.default ? styleParamsModule.exports.default : null;  
+      })()`;
+    }
+
+    return null;
+  }
+
   private replaceByPlaceHolder({sourceCode, newSource, shouldEscapeContent, placeholder, params}) {
     const placeHolder = `'${this.compilationHash}${placeholder}'`;
     const placeHolderPos = sourceCode.indexOf(placeHolder);
@@ -163,11 +183,13 @@ class TPAStylePlugin {
     }
   }
 
-  private generateStandaloneCssConfig({shouldEscapeContent, params}) {
+  private generateStandaloneCssConfig({shouldEscapeContent, params, defaults}) {
     const sourceCode = fs.readFileSync(path.join(__dirname, './cssConfigTemplate.js')).toString();
 
     return new RawSource(
-      sourceCode.replace(`'CSS_CONFIG_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
+      sourceCode
+        .replace(`'CSS_CONFIG_PLACEHOLDER'`, this.getPlaceholderContent(params, shouldEscapeContent))
+        .replace(`"STYLE_PARAMS_DEFAULTS_PLACEHOLDER"`, defaults)
     );
   }
 
@@ -207,6 +229,7 @@ class TPAStylePlugin {
           });
 
           const cssConfigFilename = generateStandaloneCssConfigFilename(file);
+          const defaults = this.getStyleParamsDefaultsContent(compilation.assets, file);
 
           const params = {
             cssVars,
@@ -214,11 +237,13 @@ class TPAStylePlugin {
             css,
             staticCss,
             compilationHash: this.compilationHash,
+            defaults: 'STYLE_PARAMS_DEFAULTS_PLACEHOLDER',
           };
 
           compilation.assets[cssConfigFilename] = this.generateStandaloneCssConfig({
             shouldEscapeContent,
             params,
+            defaults,
           });
 
           compilation.assets[file] = newSource;

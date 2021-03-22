@@ -20,6 +20,7 @@ export interface CssConfig {
   css: string;
   staticCss: string;
   compilationHash: string;
+  defaults?: string;
 }
 
 const defaultOptions = {
