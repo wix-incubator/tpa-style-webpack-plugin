@@ -1,5 +1,5 @@
 import * as replacers from './replacers';
-import * as postcss from 'postcss';
+import postcss from 'postcss';
 import {Declaration, ContainerBase} from 'postcss';
 
 function isCssVar(key) {

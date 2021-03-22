@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import {IGetProcessedCssFn} from '../src/runtime/main';
 import {styleParams} from './fixtures/styleParams';
 import {siteColors} from './fixtures/siteColors';
