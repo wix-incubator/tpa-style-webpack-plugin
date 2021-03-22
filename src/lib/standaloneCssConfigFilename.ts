@@ -1,5 +1,5 @@
 export function generateStandaloneCssConfigFilename(fileName: string) {
-  return injectFileNamePart(fileName, 'cssConfig');
+  return appendFileName(fileName, 'cssConfig');
 }
 
 export function getRelatedStyleParamsFileName(fileName: string) {
@@ -9,10 +9,10 @@ export function getRelatedStyleParamsFileName(fileName: string) {
    * https://github.com/wix-private/yoshi/blob/7fd08397f8fb744a6fcceb38defd5afb90e86ba8/packages/yoshi-flow-editor/src/wrappers/stylesParamsWrapping.ts#L18
    * https://github.com/wix-private/yoshi/blob/7fd08397f8fb744a6fcceb38defd5afb90e86ba8/packages/yoshi-flow-editor/src/wrappers/stylesParamsWrapping.ts#L27
    */
-  return injectFileNamePart(fileName, 'stylesParams');
+  return appendFileName(fileName, 'stylesParams');
 }
 
-function injectFileNamePart(fileName: string, injectedString: 'cssConfig' | 'stylesParams') {
+function appendFileName(fileName: string, injectedString: 'cssConfig' | 'stylesParams') {
   const parts = fileName.split('.');
 
   const hasPart = (part: string) => parts.some(x => part === x);
