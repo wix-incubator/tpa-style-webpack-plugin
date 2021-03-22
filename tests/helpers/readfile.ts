@@ -1,4 +1,3 @@
-/* global Promise */
 const fs = require('fs');
 
 export function readFile(...args): Promise<string> {

@@ -115,7 +115,7 @@ class TPAStylePlugin {
                 );
 
                 return new Promise((resolve) => {
-                  postcss([
+                  void postcss([
                     prefixer({
                       prefix: this.compilationHash,
                     }),

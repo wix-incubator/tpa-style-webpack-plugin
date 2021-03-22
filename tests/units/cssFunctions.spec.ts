@@ -1,10 +1,6 @@
 import {TinyColor} from '@ctrl/tinycolor';
 import {cssFunctions} from '../../src/runtime/cssFunctions';
 import {IS_RTL_PARAM} from '../../src/runtime/constants';
-import {clonedWith} from '../helpers/cloned-with';
-import {styleParams} from '../fixtures/styleParams';
-import {siteColors} from '../fixtures/siteColors';
-import {siteTextPresets} from '../fixtures/siteTextPresets';
 
 describe('cssFunctions', () => {
   describe('join', () => {

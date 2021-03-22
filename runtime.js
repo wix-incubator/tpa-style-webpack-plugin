@@ -1,5 +1,6 @@
 // The following code is compiled `export * from './dist/runtime/fakeMain';` in order to support commonjs
 
+// eslint-disable-next-line import/no-unresolved
 var fakeMain = require('./dist/runtime/fakeMain');
 
 Object.keys(fakeMain).forEach(function (key) {
