@@ -155,11 +155,11 @@ class TPAStylePlugin {
     const styleParamsFile = assets[styleParamsFileName];
 
     if (styleParamsFile) {
-      return `(() => {
+      return `(function () {
         var styleParamsModule = {};
         var styleParamsExports = {};
 
-        (function(module, exports) {
+        (function (module, exports) {
           ${styleParamsFile.source()}
         })(styleParamsModule, styleParamsExports);
 
