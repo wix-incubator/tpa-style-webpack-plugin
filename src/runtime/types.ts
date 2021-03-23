@@ -74,7 +74,6 @@ export interface ITextPreset {
 export interface IOptions {
   isRTL: boolean;
   isMobile: boolean;
-  multilingualLanguage: string;
   prefixSelector: string;
   strictMode: boolean;
 }
