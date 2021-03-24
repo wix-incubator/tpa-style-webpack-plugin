@@ -1,0 +1,7 @@
+.defaults-number {width: "number(--borderRadius)";}
+
+.defaults-fallback-number {width: "fallback(--borderRadius, number(5))";}
+
+.defaults-color {color: "color(--backgroundColor)";}
+
+.defaults-font {font: "font(--textFont)";}
