@@ -8,7 +8,6 @@ import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
 import {clonedWith} from './helpers/cloned-with';
 import {readFile} from './helpers/readfile';
-import {TinyColor} from '@ctrl/tinycolor';
 
 describe('runtime with defaults', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime-with-defaults');
