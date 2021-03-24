@@ -11,7 +11,7 @@ import {readFile} from './helpers/readfile';
 import {TinyColor} from '@ctrl/tinycolor';
 
 describe('runtime with defaults', () => {
-  const outputDirPath = path.resolve(__dirname, './output/runtime');
+  const outputDirPath = path.resolve(__dirname, './output/runtime-with-defaults');
   const entryName = 'app';
   let getProcessedCss: IGetProcessedCssFn, runtimeBundleStr: string;
 
