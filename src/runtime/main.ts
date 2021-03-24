@@ -1,12 +1,13 @@
-import {IOptions, IInjectedData, IStyles} from './types';
+import {IOptions, IInjectedData, IStyles, IDefaults} from './types';
 import {getProcessedCssWithConfig, getStaticCssWithConfig} from './standalone';
 export type IGetProcessedCssFn = typeof getProcessedCss;
 export type IGetStaticCssFn = typeof getStaticCss;
 
-export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>): string {
+export function getProcessedCss(styles: IStyles, options?: Partial<IOptions>, defaults?: IDefaults): string {
   const injectedData = '__COMPILATION_HASH__INJECTED_DATA_PLACEHOLDER' as any;
 
   const processedCssConfig = {
+    defaults,
     ...injectedData,
     compilationHash: '__COMPILATION_HASH__',
   };

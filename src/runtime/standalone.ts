@@ -2,7 +2,7 @@ import {generateTPAParams} from './generateTPAParams';
 import {getProcessor} from './processor';
 import {cssFunctions} from './cssFunctions';
 import {Plugins} from './plugins';
-import {IOptions, IStyles} from './types';
+import {IOptions, IStyles, IDefaults} from './types';
 
 function escapeRegExp(str: string) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -20,11 +20,12 @@ export interface CssConfig {
   css: string;
   staticCss: string;
   compilationHash: string;
-  defaults?: string;
+  defaults?: IDefaults;
 }
 
 const defaultOptions = {
   isRTL: false,
+  isMobile: false,
   strictMode: true,
 };
 
@@ -44,7 +45,7 @@ export function getProcessedCssWithConfig(
     options.prefixSelector ? `${options.prefixSelector}` : ''
   );
 
-  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options);
+  const tpaParams = generateTPAParams(siteColors, siteTextPresets, styleParams, options, processedCssConfig.defaults);
 
   const processor = getProcessor({cssVars: processedCssConfig.cssVars, plugins});
 

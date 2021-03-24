@@ -78,3 +78,5 @@ export interface IOptions {
   prefixSelector: string;
   strictMode: boolean;
 }
+
+export {IStyleParams as IDefaults} from '@wix/tpa-settings';

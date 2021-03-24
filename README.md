@@ -116,6 +116,37 @@ addStyles(dynamicCss, 'tag-id');
 
 You can check out an [example project](https://github.com/felixmosh/extract-tpa-style-test).
 
+### Default Values
+
+It's possible to prevent writing `fallback` helper for default values.
+Since you have to maintain the same value in both css and javascript thread, it's much more convenient to have a single source of truth for all default values.
+[TPA-settings](https://github.com/wix-private/tpa-settings) provides a good way to manage defaults.
+By generating a key definitions object, you can use it for both css and js runtimes:
+
+```js
+import {getProcessedCss} from 'tpa-style-webpack-plugin/runtime';
+import {addStyles} from 'tpa-style-webpack-plugin/addStyles';
+import { createStylesParams, StyleParamType } from '@wix/tpa-settings';
+
+const defaults = createStylesParams<{
+  appColor: StyleParamType.Color;
+}>({
+  borderRadius: {
+    type: StyleParamType.Number,
+    getDefaultValue() {
+      return 10;
+    },
+  },
+});
+
+const dynamicCss = getProcessedCss(
+  {styleParams, siteColors, siteTextPresets},
+  {isRTL: false, prefixSelector: '.style-id', strictMode: true},
+  defaults
+);
+addStyles(dynamicCss, 'tag-id');
+```
+
 ## getStaticCss
 
 Use it to inject the static css content to your .js bundle
