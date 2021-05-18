@@ -38,7 +38,7 @@ class TPAStylePlugin {
   }
 
   getCompilationHash() {
-    if (isWebpack5) {
+    if (isWebpack5 || this._options.packageName) {
       return createHash('md5')
         .update(this._options.packageName)
         .digest('hex');
