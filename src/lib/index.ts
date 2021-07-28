@@ -139,7 +139,13 @@ class TPAStylePlugin {
     return Promise.all(promises);
   }
 
-  private getPlaceholderContent(params: object, shouldEscapeContent: boolean) {
+  private getPlaceholderContent(params: Record<string, string>, shouldEscapeContent: boolean) {
+    if ('staticCss' in params) {
+      params.staticCssHash = createHash('sha1')
+        .update(params.staticCss)
+        .digest('base64');
+    }
+
     const content = JSON.stringify(params);
 
     if (!shouldEscapeContent) {
