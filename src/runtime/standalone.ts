@@ -19,6 +19,7 @@ export interface CssConfig {
   customSyntaxStrs: string[];
   css: string;
   staticCss: string;
+  staticCssHash: string;
   compilationHash: string;
   defaults?: string;
 }
@@ -63,10 +64,15 @@ export function getProcessedCssWithConfig(
   }, prefixedCss);
 }
 
-export function getStaticCssWithConfig(staticCssConfig: CssConfig, {prefixSelector} = {prefixSelector: ''}) {
+export function getStaticCssWithConfig(staticCssConfig: Partial<CssConfig>, {prefixSelector} = {prefixSelector: ''}) {
   const prefixedCss = (staticCssConfig.staticCss || '').replace(
     new RegExp(staticCssConfig.compilationHash, 'g'),
     prefixSelector
   );
   return prefixedCss;
+}
+
+export function getBuildTimeStaticCss(staticCssConfig: CssConfig) {
+  const prefixedCss = (staticCssConfig.staticCss || '').replace(new RegExp(staticCssConfig.compilationHash, 'g'), '');
+  return {css: prefixedCss, hash: staticCssConfig.staticCssHash};
 }

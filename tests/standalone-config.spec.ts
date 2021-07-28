@@ -28,6 +28,11 @@ describe('StandaloneConfig', () => {
     it('should generate css config for bundles using css', () => {
       expect(fs.existsSync(cssConfigPath)).toBe(true);
     });
+
+    it('should generate staticCssHash in css config for bundles using css', () => {
+      const {cssConfig} = require(cssConfigPath);
+      expect(cssConfig.staticCssHash).toBeTruthy();
+    });
   });
 
   describe('Bundle not using css', () => {

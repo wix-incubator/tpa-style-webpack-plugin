@@ -2,10 +2,16 @@ import path from 'path';
 import {clearDir} from './helpers/clear-dir';
 import {runWebpack} from './helpers/run-webpack';
 import {IGetProcessedCssFn, IGetStaticCssFn} from '../src/runtime/main';
-import {getProcessedCssWithConfig, getStaticCssWithConfig, CssConfig} from '../src/runtime/standalone';
+import {
+  getProcessedCssWithConfig,
+  getStaticCssWithConfig,
+  CssConfig,
+  getBuildTimeStaticCss,
+} from '../src/runtime/standalone';
 import {siteColors} from './fixtures/siteColors';
 import {siteTextPresets} from './fixtures/siteTextPresets';
 import {styleParams} from './fixtures/styleParams';
+import {createHash} from 'crypto';
 
 describe('runtime standalone', () => {
   const outputDirPath = path.resolve(__dirname, './output/runtime-standalone');
@@ -42,5 +48,19 @@ describe('runtime standalone', () => {
     const injectedCss = getStaticCss();
     const standaloneCss = getStaticCssWithConfig(cssConfig);
     expect(injectedCss).toContain(standaloneCss);
+  });
+
+  it('should generate identical static-css and build-time css', () => {
+    const standaloneCss = getStaticCssWithConfig(cssConfig, {prefixSelector: ''});
+    const buildTimeCss = getBuildTimeStaticCss(cssConfig);
+    expect(buildTimeCss.css).toEqual(standaloneCss);
+  });
+
+  it('should generate proper build-time css hash (identical to cssConfig.staticCss)', () => {
+    const buildtimeStaticCss = createHash('sha1')
+      .update(cssConfig.staticCss)
+      .digest('base64');
+    const buildTimeCss = getBuildTimeStaticCss(cssConfig);
+    expect(buildTimeCss.hash).toEqual(buildtimeStaticCss);
   });
 });
