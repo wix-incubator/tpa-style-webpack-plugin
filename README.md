@@ -1,4 +1,8 @@
+## 🚧 This plugin is deprecated in favour of the [private scoped version](https://github.com/wix-private/tpa-style-webpack-plugin) 🚧
+---
+
 # tpa-style-webpack-plugin
+
 
 [![Build Status][ci-img]][ci] [![NPM version][npm-img]][npm] [![code style: prettier][prettier-img]][prettier]
 
