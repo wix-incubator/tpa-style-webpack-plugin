@@ -2,7 +2,7 @@ import webpackSources from 'webpack-sources';
 import fs from 'fs';
 import path from 'path';
 import postcss from 'postcss';
-import extractStyles from 'postcss-extract-styles';
+import {extractStylesPlugin} from './postcssExtractStyles';
 import {extractTPACustomSyntax} from './postcssPlugin';
 import prefixer from 'postcss-prefix-selector';
 import {Result} from 'postcss';
@@ -111,13 +111,15 @@ class TPAStylePlugin {
         ...files
           .filter(fileName => this._options.cssChunkPattern.test(fileName))
           .map(cssFile =>
-            postcss([extractStyles(this._options)])
+            postcss([extractStylesPlugin(this._options)])
               .use(prefixer({prefix: this.compilationHash, exclude: [/^\w+/]}))
               .process(compilation.assets[cssFile].source(), {from: cssFile, to: cssFile})
-              .then((result: Result & {extracted: string}) => {
+              .then((result: Result) => {
                 compilation.assets[cssFile] = new RawSource(
                   result.css.replace(new RegExp(`${this.compilationHash} `, 'g'), '')
                 );
+
+                const {extracted} = result.messages.find(m => m.plugin === 'postcss-extract-styles');
 
                 return new Promise(resolve => {
                   postcss([
@@ -129,7 +131,7 @@ class TPAStylePlugin {
                         resolve({chunk, cssVars, customSyntaxStrs, css, staticCss: result.css});
                       },
                     }),
-                  ]).process(result.extracted, {from: undefined}).css;
+                  ]).process(extracted, {from: undefined}).css;
                 });
               })
           )

@@ -1,6 +1,5 @@
 import * as replacers from './replacers';
-import postcss from 'postcss';
-import {Declaration, ContainerBase} from 'postcss';
+import {Declaration, Plugin} from 'postcss';
 
 function isCssVar(key) {
   return key.indexOf('--') === 0;
@@ -25,26 +24,29 @@ function collectCustomSyntaxFrom(value: string, customSyntaxStrs): void {
   }
 }
 
-export const extractTPACustomSyntax = postcss.plugin('postcss-wix-tpa-style', (opts: IOptions = {} as IOptions) => {
+export const extractTPACustomSyntax = (opts: IOptions = {} as IOptions): Plugin => {
   const cssVars = {};
   const customSyntaxStrs = [];
 
-  return (css: ContainerBase) => {
-    css.walkDecls((decl: Declaration) => {
-      Object.keys(replacers).forEach(replacerName => (decl = replacers[replacerName](decl)));
+  return {
+    postcssPlugin: 'postcss-wix-tpa-style',
+    Once: css => {
+      css.walkDecls((decl: Declaration) => {
+        Object.keys(replacers).forEach(replacerName => (decl = replacers[replacerName](decl)));
 
-      if (isCssVar(decl.prop)) {
-        cssVars[decl.prop] = decl.value;
+        if (isCssVar(decl.prop)) {
+          cssVars[decl.prop] = decl.value;
+        }
+
+        collectCustomSyntaxFrom(decl.prop, customSyntaxStrs);
+        collectCustomSyntaxFrom(decl.value, customSyntaxStrs);
+      });
+
+      if (typeof opts.onFinish === 'function') {
+        const uniqueCustomSyntaxStrs = customSyntaxStrs.filter((value, index, self) => self.indexOf(value) === index);
+
+        opts.onFinish({cssVars, customSyntaxStrs: uniqueCustomSyntaxStrs, css: css.toString()});
       }
-
-      collectCustomSyntaxFrom(decl.prop, customSyntaxStrs);
-      collectCustomSyntaxFrom(decl.value, customSyntaxStrs);
-    });
-
-    if (typeof opts.onFinish === 'function') {
-      const uniqueCustomSyntaxStrs = customSyntaxStrs.filter((value, index, self) => self.indexOf(value) === index);
-
-      opts.onFinish({cssVars, customSyntaxStrs: uniqueCustomSyntaxStrs, css: css.toString()});
-    }
+    },
   };
-});
+};
